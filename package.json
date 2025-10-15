@@ -1,0 +1,25 @@
+{
+  "name": "bld-memory-trainer",
+  "version": "1.0.0",
+  "description": "A lightweight training app for blindfold cubers to improve visualization speed, story fluency, and recall accuracy",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "serve": "python serve.py",
+    "dev": "python serve.py",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "blindfold",
+    "cubing",
+    "memory",
+    "training",
+    "visualization"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+

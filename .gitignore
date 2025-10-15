@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+.env
+.vscode/
+*.swp
+*.swo
+# Compiled JavaScript files (generated from TypeScript)
+src/**/*.js
+src/**/*.js.map
+# Keep the data folder
+!src/data/**
+

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLD Memory Trainer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Setup Screen -->
+    <div id="setup-screen" class="screen">
+      <header>
+        <h1>🧠 BLD Memory Trainer</h1>
+        <p class="subtitle">Improve your blindfold cubing visualization</p>
+      </header>
+
+      <div class="card">
+        <h2>Start Training Session</h2>
+        
+        <div class="form-group">
+          <label for="drill-select">Drill Type</label>
+          <select id="drill-select" class="input-field">
+            <option value="">Select a drill...</option>
+          </select>
+          <p id="drill-description" class="help-text"></p>
+        </div>
+
+        <div class="form-group">
+          <label for="pair-count">Number of Pairs</label>
+          <input type="number" id="pair-count" class="input-field" min="1" max="50" value="30">
+          <p id="pair-count-warning" class="help-text warning"></p>
+        </div>
+
+        <button id="start-btn" class="btn btn-primary">Start Session</button>
+        <button id="view-dashboard-btn" class="btn btn-secondary">View Dashboard</button>
+      </div>
+    </div>
+
+    <!-- Session Screen -->
+    <div id="session-screen" class="screen hidden">
+      <div class="session-header">
+        <span id="pair-counter" class="counter">Pair 1 of 30</span>
+        <button id="cancel-session-btn" class="btn btn-text">Cancel</button>
+      </div>
+
+      <div class="session-content">
+        <div id="current-pair" class="pair-display">AB</div>
+        <p class="instruction">Visualize the image, then press Next</p>
+      </div>
+
+      <div class="session-controls">
+        <button id="next-btn" class="btn btn-large btn-primary">Next (Space)</button>
+      </div>
+    </div>
+
+    <!-- Rating Screen -->
+    <div id="rating-screen" class="screen hidden">
+      <header>
+        <h2>Session Complete!</h2>
+        <p class="subtitle">Rate your performance</p>
+      </header>
+
+      <div class="card">
+        <div class="form-group">
+          <label id="quality-label">Quality Rating</label>
+          <div id="quality-rating" class="rating-buttons">
+            <!-- Radio buttons will be dynamically generated -->
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="recall-input">Pairs Recalled Correctly</label>
+          <input type="number" id="recall-input" class="input-field" min="0" value="0">
+          <p id="recall-total" class="help-text">out of 0</p>
+        </div>
+
+        <div class="form-group">
+          <label for="notes-input">Notes (optional)</label>
+          <textarea id="notes-input" class="input-field" rows="3" placeholder="Any observations about this session..."></textarea>
+        </div>
+
+        <button id="save-btn" class="btn btn-primary">Save Session (Enter)</button>
+        <button id="discard-btn" class="btn btn-text">Discard</button>
+      </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboard-screen" class="screen hidden">
+      <header>
+        <h1>📊 Training Dashboard</h1>
+        <div class="header-actions">
+          <button id="new-session-btn" class="btn btn-primary">New Session</button>
+          <button id="export-btn" class="btn btn-secondary">Export CSV</button>
+        </div>
+      </header>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="total-sessions">0</div>
+          <div class="stat-label">Total Sessions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="total-pairs">0</div>
+          <div class="stat-label">Total Pairs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="avg-accuracy">0%</div>
+          <div class="stat-label">Avg Accuracy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="avg-speed">0s</div>
+          <div class="stat-label">Avg Speed/Pair</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Recent Sessions</h2>
+        <div id="sessions-table-container">
+          <table id="sessions-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Drill</th>
+                <th>Pairs</th>
+                <th>Avg Time</th>
+                <th>Accuracy</th>
+                <th>Quality</th>
+              </tr>
+            </thead>
+            <tbody id="sessions-tbody">
+              <!-- Sessions will be dynamically populated -->
+            </tbody>
+          </table>
+          <p id="no-sessions-message" class="empty-state hidden">
+            No sessions yet. Start your first training session!
+          </p>
+        </div>
+        
+        <button id="clear-all-btn" class="btn btn-danger-text">Clear All Data</button>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification hidden">
+      <span id="notification-message"></span>
+    </div>
+  </div>
+
+  <script type="module" src="../src/app.ts"></script>
+</body>
+</html>
+
