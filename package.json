@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "serve": "python serve.py",
-    "dev": "python serve.py",
+    "serve": "python3 serve.py",
+    "dev": "python3 serve.py",
     "watch": "tsc --watch"
   },
   "devDependencies": {
