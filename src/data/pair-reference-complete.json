@@ -1,0 +1,4734 @@
+{
+  "AA": {
+    "pair": "AA",
+    "person": "Astronaut",
+    "object": "Axe",
+    "image": "Astronaut + Axe",
+    "is_buffer": false
+  },
+  "AB": {
+    "pair": "AB",
+    "person": "Astronaut",
+    "object": "Ball",
+    "image": "Astronaut + Ball",
+    "is_buffer": false
+  },
+  "AC": {
+    "pair": "AC",
+    "person": "Astronaut",
+    "object": "Camera",
+    "image": "Astronaut + Camera",
+    "is_buffer": false
+  },
+  "AD": {
+    "pair": "AD",
+    "person": "Astronaut",
+    "object": "Drum",
+    "image": "Astronaut + Drum",
+    "is_buffer": false
+  },
+  "AE": {
+    "pair": "AE",
+    "person": "Astronaut",
+    "object": "Egg",
+    "image": "Astronaut + Egg",
+    "is_buffer": false
+  },
+  "AF": {
+    "pair": "AF",
+    "person": "Astronaut",
+    "object": "Flag",
+    "image": "Astronaut + Flag",
+    "is_buffer": false
+  },
+  "AG": {
+    "pair": "AG",
+    "person": "Astronaut",
+    "object": "Globe",
+    "image": "Astronaut + Globe",
+    "is_buffer": false
+  },
+  "AH": {
+    "pair": "AH",
+    "person": "Astronaut",
+    "object": "Hammer",
+    "image": "Astronaut + Hammer",
+    "is_buffer": false
+  },
+  "AI": {
+    "pair": "AI",
+    "person": "Astronaut",
+    "object": "[Buffer-1]",
+    "image": "Astronaut + [Buffer-1]",
+    "is_buffer": true
+  },
+  "AJ": {
+    "pair": "AJ",
+    "person": "Astronaut",
+    "object": "Jetpack",
+    "image": "Astronaut + Jetpack",
+    "is_buffer": false
+  },
+  "AK": {
+    "pair": "AK",
+    "person": "Astronaut",
+    "object": "Key",
+    "image": "Astronaut + Key",
+    "is_buffer": false
+  },
+  "AL": {
+    "pair": "AL",
+    "person": "Astronaut",
+    "object": "Ladder",
+    "image": "Astronaut + Ladder",
+    "is_buffer": false
+  },
+  "AM": {
+    "pair": "AM",
+    "person": "Astronaut",
+    "object": "Mask",
+    "image": "Astronaut + Mask",
+    "is_buffer": false
+  },
+  "AN": {
+    "pair": "AN",
+    "person": "Astronaut",
+    "object": "Net",
+    "image": "Astronaut + Net",
+    "is_buffer": false
+  },
+  "AO": {
+    "pair": "AO",
+    "person": "Astronaut",
+    "object": "[Buffer-0]",
+    "image": "Astronaut + [Buffer-0]",
+    "is_buffer": true
+  },
+  "AP": {
+    "pair": "AP",
+    "person": "Astronaut",
+    "object": "Pan",
+    "image": "Astronaut + Pan",
+    "is_buffer": false
+  },
+  "AQ": {
+    "pair": "AQ",
+    "person": "Astronaut",
+    "object": "Quill",
+    "image": "Astronaut + Quill",
+    "is_buffer": false
+  },
+  "AR": {
+    "pair": "AR",
+    "person": "Astronaut",
+    "object": "Rope",
+    "image": "Astronaut + Rope",
+    "is_buffer": false
+  },
+  "AS": {
+    "pair": "AS",
+    "person": "Astronaut",
+    "object": "Sword",
+    "image": "Astronaut + Sword",
+    "is_buffer": false
+  },
+  "AT": {
+    "pair": "AT",
+    "person": "Astronaut",
+    "object": "Torch",
+    "image": "Astronaut + Torch",
+    "is_buffer": false
+  },
+  "AU": {
+    "pair": "AU",
+    "person": "Astronaut",
+    "object": "Umbrella",
+    "image": "Astronaut + Umbrella",
+    "is_buffer": false
+  },
+  "AV": {
+    "pair": "AV",
+    "person": "Astronaut",
+    "object": "Vase",
+    "image": "Astronaut + Vase",
+    "is_buffer": false
+  },
+  "AW": {
+    "pair": "AW",
+    "person": "Astronaut",
+    "object": "Wheel",
+    "image": "Astronaut + Wheel",
+    "is_buffer": false
+  },
+  "AX": {
+    "pair": "AX",
+    "person": "Astronaut",
+    "object": "Xylophone",
+    "image": "Astronaut + Xylophone",
+    "is_buffer": false
+  },
+  "AY": {
+    "pair": "AY",
+    "person": "Astronaut",
+    "object": "Yo-yo",
+    "image": "Astronaut + Yo-yo",
+    "is_buffer": false
+  },
+  "AZ": {
+    "pair": "AZ",
+    "person": "Astronaut",
+    "object": "Zipper",
+    "image": "Astronaut + Zipper",
+    "is_buffer": false
+  },
+  "BA": {
+    "pair": "BA",
+    "person": "Boxer",
+    "object": "Axe",
+    "image": "Boxer + Axe",
+    "is_buffer": false
+  },
+  "BB": {
+    "pair": "BB",
+    "person": "Boxer",
+    "object": "Ball",
+    "image": "Boxer + Ball",
+    "is_buffer": false
+  },
+  "BC": {
+    "pair": "BC",
+    "person": "Boxer",
+    "object": "Camera",
+    "image": "Boxer + Camera",
+    "is_buffer": false
+  },
+  "BD": {
+    "pair": "BD",
+    "person": "Boxer",
+    "object": "Drum",
+    "image": "Boxer + Drum",
+    "is_buffer": false
+  },
+  "BE": {
+    "pair": "BE",
+    "person": "Boxer",
+    "object": "Egg",
+    "image": "Boxer + Egg",
+    "is_buffer": false
+  },
+  "BF": {
+    "pair": "BF",
+    "person": "Boxer",
+    "object": "Flag",
+    "image": "Boxer + Flag",
+    "is_buffer": false
+  },
+  "BG": {
+    "pair": "BG",
+    "person": "Boxer",
+    "object": "Globe",
+    "image": "Boxer + Globe",
+    "is_buffer": false
+  },
+  "BH": {
+    "pair": "BH",
+    "person": "Boxer",
+    "object": "Hammer",
+    "image": "Boxer + Hammer",
+    "is_buffer": false
+  },
+  "BI": {
+    "pair": "BI",
+    "person": "Boxer",
+    "object": "[Buffer-1]",
+    "image": "Boxer + [Buffer-1]",
+    "is_buffer": true
+  },
+  "BJ": {
+    "pair": "BJ",
+    "person": "Boxer",
+    "object": "Jetpack",
+    "image": "Boxer + Jetpack",
+    "is_buffer": false
+  },
+  "BK": {
+    "pair": "BK",
+    "person": "Boxer",
+    "object": "Key",
+    "image": "Boxer + Key",
+    "is_buffer": false
+  },
+  "BL": {
+    "pair": "BL",
+    "person": "Boxer",
+    "object": "Ladder",
+    "image": "Boxer + Ladder",
+    "is_buffer": false
+  },
+  "BM": {
+    "pair": "BM",
+    "person": "Boxer",
+    "object": "Mask",
+    "image": "Boxer + Mask",
+    "is_buffer": false
+  },
+  "BN": {
+    "pair": "BN",
+    "person": "Boxer",
+    "object": "Net",
+    "image": "Boxer + Net",
+    "is_buffer": false
+  },
+  "BO": {
+    "pair": "BO",
+    "person": "Boxer",
+    "object": "[Buffer-0]",
+    "image": "Boxer + [Buffer-0]",
+    "is_buffer": true
+  },
+  "BP": {
+    "pair": "BP",
+    "person": "Boxer",
+    "object": "Pan",
+    "image": "Boxer + Pan",
+    "is_buffer": false
+  },
+  "BQ": {
+    "pair": "BQ",
+    "person": "Boxer",
+    "object": "Quill",
+    "image": "Boxer + Quill",
+    "is_buffer": false
+  },
+  "BR": {
+    "pair": "BR",
+    "person": "Boxer",
+    "object": "Rope",
+    "image": "Boxer + Rope",
+    "is_buffer": false
+  },
+  "BS": {
+    "pair": "BS",
+    "person": "Boxer",
+    "object": "Sword",
+    "image": "Boxer + Sword",
+    "is_buffer": false
+  },
+  "BT": {
+    "pair": "BT",
+    "person": "Boxer",
+    "object": "Torch",
+    "image": "Boxer + Torch",
+    "is_buffer": false
+  },
+  "BU": {
+    "pair": "BU",
+    "person": "Boxer",
+    "object": "Umbrella",
+    "image": "Boxer + Umbrella",
+    "is_buffer": false
+  },
+  "BV": {
+    "pair": "BV",
+    "person": "Boxer",
+    "object": "Vase",
+    "image": "Boxer + Vase",
+    "is_buffer": false
+  },
+  "BW": {
+    "pair": "BW",
+    "person": "Boxer",
+    "object": "Wheel",
+    "image": "Boxer + Wheel",
+    "is_buffer": false
+  },
+  "BX": {
+    "pair": "BX",
+    "person": "Boxer",
+    "object": "Xylophone",
+    "image": "Boxer + Xylophone",
+    "is_buffer": false
+  },
+  "BY": {
+    "pair": "BY",
+    "person": "Boxer",
+    "object": "Yo-yo",
+    "image": "Boxer + Yo-yo",
+    "is_buffer": false
+  },
+  "BZ": {
+    "pair": "BZ",
+    "person": "Boxer",
+    "object": "Zipper",
+    "image": "Boxer + Zipper",
+    "is_buffer": false
+  },
+  "CA": {
+    "pair": "CA",
+    "person": "Chef",
+    "object": "Axe",
+    "image": "Chef + Axe",
+    "is_buffer": false
+  },
+  "CB": {
+    "pair": "CB",
+    "person": "Chef",
+    "object": "Ball",
+    "image": "Chef + Ball",
+    "is_buffer": false
+  },
+  "CC": {
+    "pair": "CC",
+    "person": "Chef",
+    "object": "Camera",
+    "image": "Chef + Camera",
+    "is_buffer": false
+  },
+  "CD": {
+    "pair": "CD",
+    "person": "Chef",
+    "object": "Drum",
+    "image": "Chef + Drum",
+    "is_buffer": false
+  },
+  "CE": {
+    "pair": "CE",
+    "person": "Chef",
+    "object": "Egg",
+    "image": "Chef + Egg",
+    "is_buffer": false
+  },
+  "CF": {
+    "pair": "CF",
+    "person": "Chef",
+    "object": "Flag",
+    "image": "Chef + Flag",
+    "is_buffer": false
+  },
+  "CG": {
+    "pair": "CG",
+    "person": "Chef",
+    "object": "Globe",
+    "image": "Chef + Globe",
+    "is_buffer": false
+  },
+  "CH": {
+    "pair": "CH",
+    "person": "Chef",
+    "object": "Hammer",
+    "image": "Chef + Hammer",
+    "is_buffer": false
+  },
+  "CI": {
+    "pair": "CI",
+    "person": "Chef",
+    "object": "[Buffer-1]",
+    "image": "Chef + [Buffer-1]",
+    "is_buffer": true
+  },
+  "CJ": {
+    "pair": "CJ",
+    "person": "Chef",
+    "object": "Jetpack",
+    "image": "Chef + Jetpack",
+    "is_buffer": false
+  },
+  "CK": {
+    "pair": "CK",
+    "person": "Chef",
+    "object": "Key",
+    "image": "Chef + Key",
+    "is_buffer": false
+  },
+  "CL": {
+    "pair": "CL",
+    "person": "Chef",
+    "object": "Ladder",
+    "image": "Chef + Ladder",
+    "is_buffer": false
+  },
+  "CM": {
+    "pair": "CM",
+    "person": "Chef",
+    "object": "Mask",
+    "image": "Chef + Mask",
+    "is_buffer": false
+  },
+  "CN": {
+    "pair": "CN",
+    "person": "Chef",
+    "object": "Net",
+    "image": "Chef + Net",
+    "is_buffer": false
+  },
+  "CO": {
+    "pair": "CO",
+    "person": "Chef",
+    "object": "[Buffer-0]",
+    "image": "Chef + [Buffer-0]",
+    "is_buffer": true
+  },
+  "CP": {
+    "pair": "CP",
+    "person": "Chef",
+    "object": "Pan",
+    "image": "Chef + Pan",
+    "is_buffer": false
+  },
+  "CQ": {
+    "pair": "CQ",
+    "person": "Chef",
+    "object": "Quill",
+    "image": "Chef + Quill",
+    "is_buffer": false
+  },
+  "CR": {
+    "pair": "CR",
+    "person": "Chef",
+    "object": "Rope",
+    "image": "Chef + Rope",
+    "is_buffer": false
+  },
+  "CS": {
+    "pair": "CS",
+    "person": "Chef",
+    "object": "Sword",
+    "image": "Chef + Sword",
+    "is_buffer": false
+  },
+  "CT": {
+    "pair": "CT",
+    "person": "Chef",
+    "object": "Torch",
+    "image": "Chef + Torch",
+    "is_buffer": false
+  },
+  "CU": {
+    "pair": "CU",
+    "person": "Chef",
+    "object": "Umbrella",
+    "image": "Chef + Umbrella",
+    "is_buffer": false
+  },
+  "CV": {
+    "pair": "CV",
+    "person": "Chef",
+    "object": "Vase",
+    "image": "Chef + Vase",
+    "is_buffer": false
+  },
+  "CW": {
+    "pair": "CW",
+    "person": "Chef",
+    "object": "Wheel",
+    "image": "Chef + Wheel",
+    "is_buffer": false
+  },
+  "CX": {
+    "pair": "CX",
+    "person": "Chef",
+    "object": "Xylophone",
+    "image": "Chef + Xylophone",
+    "is_buffer": false
+  },
+  "CY": {
+    "pair": "CY",
+    "person": "Chef",
+    "object": "Yo-yo",
+    "image": "Chef + Yo-yo",
+    "is_buffer": false
+  },
+  "CZ": {
+    "pair": "CZ",
+    "person": "Chef",
+    "object": "Zipper",
+    "image": "Chef + Zipper",
+    "is_buffer": false
+  },
+  "DA": {
+    "pair": "DA",
+    "person": "Detective",
+    "object": "Axe",
+    "image": "Detective + Axe",
+    "is_buffer": false
+  },
+  "DB": {
+    "pair": "DB",
+    "person": "Detective",
+    "object": "Ball",
+    "image": "Detective + Ball",
+    "is_buffer": false
+  },
+  "DC": {
+    "pair": "DC",
+    "person": "Detective",
+    "object": "Camera",
+    "image": "Detective + Camera",
+    "is_buffer": false
+  },
+  "DD": {
+    "pair": "DD",
+    "person": "Detective",
+    "object": "Drum",
+    "image": "Detective + Drum",
+    "is_buffer": false
+  },
+  "DE": {
+    "pair": "DE",
+    "person": "Detective",
+    "object": "Egg",
+    "image": "Detective + Egg",
+    "is_buffer": false
+  },
+  "DF": {
+    "pair": "DF",
+    "person": "Detective",
+    "object": "Flag",
+    "image": "Detective + Flag",
+    "is_buffer": false
+  },
+  "DG": {
+    "pair": "DG",
+    "person": "Detective",
+    "object": "Globe",
+    "image": "Detective + Globe",
+    "is_buffer": false
+  },
+  "DH": {
+    "pair": "DH",
+    "person": "Detective",
+    "object": "Hammer",
+    "image": "Detective + Hammer",
+    "is_buffer": false
+  },
+  "DI": {
+    "pair": "DI",
+    "person": "Detective",
+    "object": "[Buffer-1]",
+    "image": "Detective + [Buffer-1]",
+    "is_buffer": true
+  },
+  "DJ": {
+    "pair": "DJ",
+    "person": "Detective",
+    "object": "Jetpack",
+    "image": "Detective + Jetpack",
+    "is_buffer": false
+  },
+  "DK": {
+    "pair": "DK",
+    "person": "Detective",
+    "object": "Key",
+    "image": "Detective + Key",
+    "is_buffer": false
+  },
+  "DL": {
+    "pair": "DL",
+    "person": "Detective",
+    "object": "Ladder",
+    "image": "Detective + Ladder",
+    "is_buffer": false
+  },
+  "DM": {
+    "pair": "DM",
+    "person": "Detective",
+    "object": "Mask",
+    "image": "Detective + Mask",
+    "is_buffer": false
+  },
+  "DN": {
+    "pair": "DN",
+    "person": "Detective",
+    "object": "Net",
+    "image": "Detective + Net",
+    "is_buffer": false
+  },
+  "DO": {
+    "pair": "DO",
+    "person": "Detective",
+    "object": "[Buffer-0]",
+    "image": "Detective + [Buffer-0]",
+    "is_buffer": true
+  },
+  "DP": {
+    "pair": "DP",
+    "person": "Detective",
+    "object": "Pan",
+    "image": "Detective + Pan",
+    "is_buffer": false
+  },
+  "DQ": {
+    "pair": "DQ",
+    "person": "Detective",
+    "object": "Quill",
+    "image": "Detective + Quill",
+    "is_buffer": false
+  },
+  "DR": {
+    "pair": "DR",
+    "person": "Detective",
+    "object": "Rope",
+    "image": "Detective + Rope",
+    "is_buffer": false
+  },
+  "DS": {
+    "pair": "DS",
+    "person": "Detective",
+    "object": "Sword",
+    "image": "Detective + Sword",
+    "is_buffer": false
+  },
+  "DT": {
+    "pair": "DT",
+    "person": "Detective",
+    "object": "Torch",
+    "image": "Detective + Torch",
+    "is_buffer": false
+  },
+  "DU": {
+    "pair": "DU",
+    "person": "Detective",
+    "object": "Umbrella",
+    "image": "Detective + Umbrella",
+    "is_buffer": false
+  },
+  "DV": {
+    "pair": "DV",
+    "person": "Detective",
+    "object": "Vase",
+    "image": "Detective + Vase",
+    "is_buffer": false
+  },
+  "DW": {
+    "pair": "DW",
+    "person": "Detective",
+    "object": "Wheel",
+    "image": "Detective + Wheel",
+    "is_buffer": false
+  },
+  "DX": {
+    "pair": "DX",
+    "person": "Detective",
+    "object": "Xylophone",
+    "image": "Detective + Xylophone",
+    "is_buffer": false
+  },
+  "DY": {
+    "pair": "DY",
+    "person": "Detective",
+    "object": "Yo-yo",
+    "image": "Detective + Yo-yo",
+    "is_buffer": false
+  },
+  "DZ": {
+    "pair": "DZ",
+    "person": "Detective",
+    "object": "Zipper",
+    "image": "Detective + Zipper",
+    "is_buffer": false
+  },
+  "EA": {
+    "pair": "EA",
+    "person": "Engineer",
+    "object": "Axe",
+    "image": "Engineer + Axe",
+    "is_buffer": false
+  },
+  "EB": {
+    "pair": "EB",
+    "person": "Engineer",
+    "object": "Ball",
+    "image": "Engineer + Ball",
+    "is_buffer": false
+  },
+  "EC": {
+    "pair": "EC",
+    "person": "Engineer",
+    "object": "Camera",
+    "image": "Engineer + Camera",
+    "is_buffer": false
+  },
+  "ED": {
+    "pair": "ED",
+    "person": "Engineer",
+    "object": "Drum",
+    "image": "Engineer + Drum",
+    "is_buffer": false
+  },
+  "EE": {
+    "pair": "EE",
+    "person": "Engineer",
+    "object": "Egg",
+    "image": "Engineer + Egg",
+    "is_buffer": false
+  },
+  "EF": {
+    "pair": "EF",
+    "person": "Engineer",
+    "object": "Flag",
+    "image": "Engineer + Flag",
+    "is_buffer": false
+  },
+  "EG": {
+    "pair": "EG",
+    "person": "Engineer",
+    "object": "Globe",
+    "image": "Engineer + Globe",
+    "is_buffer": false
+  },
+  "EH": {
+    "pair": "EH",
+    "person": "Engineer",
+    "object": "Hammer",
+    "image": "Engineer + Hammer",
+    "is_buffer": false
+  },
+  "EI": {
+    "pair": "EI",
+    "person": "Engineer",
+    "object": "[Buffer-1]",
+    "image": "Engineer + [Buffer-1]",
+    "is_buffer": true
+  },
+  "EJ": {
+    "pair": "EJ",
+    "person": "Engineer",
+    "object": "Jetpack",
+    "image": "Engineer + Jetpack",
+    "is_buffer": false
+  },
+  "EK": {
+    "pair": "EK",
+    "person": "Engineer",
+    "object": "Key",
+    "image": "Engineer + Key",
+    "is_buffer": false
+  },
+  "EL": {
+    "pair": "EL",
+    "person": "Engineer",
+    "object": "Ladder",
+    "image": "Engineer + Ladder",
+    "is_buffer": false
+  },
+  "EM": {
+    "pair": "EM",
+    "person": "Engineer",
+    "object": "Mask",
+    "image": "Engineer + Mask",
+    "is_buffer": false
+  },
+  "EN": {
+    "pair": "EN",
+    "person": "Engineer",
+    "object": "Net",
+    "image": "Engineer + Net",
+    "is_buffer": false
+  },
+  "EO": {
+    "pair": "EO",
+    "person": "Engineer",
+    "object": "[Buffer-0]",
+    "image": "Engineer + [Buffer-0]",
+    "is_buffer": true
+  },
+  "EP": {
+    "pair": "EP",
+    "person": "Engineer",
+    "object": "Pan",
+    "image": "Engineer + Pan",
+    "is_buffer": false
+  },
+  "EQ": {
+    "pair": "EQ",
+    "person": "Engineer",
+    "object": "Quill",
+    "image": "Engineer + Quill",
+    "is_buffer": false
+  },
+  "ER": {
+    "pair": "ER",
+    "person": "Engineer",
+    "object": "Rope",
+    "image": "Engineer + Rope",
+    "is_buffer": false
+  },
+  "ES": {
+    "pair": "ES",
+    "person": "Engineer",
+    "object": "Sword",
+    "image": "Engineer + Sword",
+    "is_buffer": false
+  },
+  "ET": {
+    "pair": "ET",
+    "person": "Engineer",
+    "object": "Torch",
+    "image": "Engineer + Torch",
+    "is_buffer": false
+  },
+  "EU": {
+    "pair": "EU",
+    "person": "Engineer",
+    "object": "Umbrella",
+    "image": "Engineer + Umbrella",
+    "is_buffer": false
+  },
+  "EV": {
+    "pair": "EV",
+    "person": "Engineer",
+    "object": "Vase",
+    "image": "Engineer + Vase",
+    "is_buffer": false
+  },
+  "EW": {
+    "pair": "EW",
+    "person": "Engineer",
+    "object": "Wheel",
+    "image": "Engineer + Wheel",
+    "is_buffer": false
+  },
+  "EX": {
+    "pair": "EX",
+    "person": "Engineer",
+    "object": "Xylophone",
+    "image": "Engineer + Xylophone",
+    "is_buffer": false
+  },
+  "EY": {
+    "pair": "EY",
+    "person": "Engineer",
+    "object": "Yo-yo",
+    "image": "Engineer + Yo-yo",
+    "is_buffer": false
+  },
+  "EZ": {
+    "pair": "EZ",
+    "person": "Engineer",
+    "object": "Zipper",
+    "image": "Engineer + Zipper",
+    "is_buffer": false
+  },
+  "FA": {
+    "pair": "FA",
+    "person": "Firefighter",
+    "object": "Axe",
+    "image": "Firefighter + Axe",
+    "is_buffer": false
+  },
+  "FB": {
+    "pair": "FB",
+    "person": "Firefighter",
+    "object": "Ball",
+    "image": "Firefighter + Ball",
+    "is_buffer": false
+  },
+  "FC": {
+    "pair": "FC",
+    "person": "Firefighter",
+    "object": "Camera",
+    "image": "Firefighter + Camera",
+    "is_buffer": false
+  },
+  "FD": {
+    "pair": "FD",
+    "person": "Firefighter",
+    "object": "Drum",
+    "image": "Firefighter + Drum",
+    "is_buffer": false
+  },
+  "FE": {
+    "pair": "FE",
+    "person": "Firefighter",
+    "object": "Egg",
+    "image": "Firefighter + Egg",
+    "is_buffer": false
+  },
+  "FF": {
+    "pair": "FF",
+    "person": "Firefighter",
+    "object": "Flag",
+    "image": "Firefighter + Flag",
+    "is_buffer": false
+  },
+  "FG": {
+    "pair": "FG",
+    "person": "Firefighter",
+    "object": "Globe",
+    "image": "Firefighter + Globe",
+    "is_buffer": false
+  },
+  "FH": {
+    "pair": "FH",
+    "person": "Firefighter",
+    "object": "Hammer",
+    "image": "Firefighter + Hammer",
+    "is_buffer": false
+  },
+  "FI": {
+    "pair": "FI",
+    "person": "Firefighter",
+    "object": "[Buffer-1]",
+    "image": "Firefighter + [Buffer-1]",
+    "is_buffer": true
+  },
+  "FJ": {
+    "pair": "FJ",
+    "person": "Firefighter",
+    "object": "Jetpack",
+    "image": "Firefighter + Jetpack",
+    "is_buffer": false
+  },
+  "FK": {
+    "pair": "FK",
+    "person": "Firefighter",
+    "object": "Key",
+    "image": "Firefighter + Key",
+    "is_buffer": false
+  },
+  "FL": {
+    "pair": "FL",
+    "person": "Firefighter",
+    "object": "Ladder",
+    "image": "Firefighter + Ladder",
+    "is_buffer": false
+  },
+  "FM": {
+    "pair": "FM",
+    "person": "Firefighter",
+    "object": "Mask",
+    "image": "Firefighter + Mask",
+    "is_buffer": false
+  },
+  "FN": {
+    "pair": "FN",
+    "person": "Firefighter",
+    "object": "Net",
+    "image": "Firefighter + Net",
+    "is_buffer": false
+  },
+  "FO": {
+    "pair": "FO",
+    "person": "Firefighter",
+    "object": "[Buffer-0]",
+    "image": "Firefighter + [Buffer-0]",
+    "is_buffer": true
+  },
+  "FP": {
+    "pair": "FP",
+    "person": "Firefighter",
+    "object": "Pan",
+    "image": "Firefighter + Pan",
+    "is_buffer": false
+  },
+  "FQ": {
+    "pair": "FQ",
+    "person": "Firefighter",
+    "object": "Quill",
+    "image": "Firefighter + Quill",
+    "is_buffer": false
+  },
+  "FR": {
+    "pair": "FR",
+    "person": "Firefighter",
+    "object": "Rope",
+    "image": "Firefighter + Rope",
+    "is_buffer": false
+  },
+  "FS": {
+    "pair": "FS",
+    "person": "Firefighter",
+    "object": "Sword",
+    "image": "Firefighter + Sword",
+    "is_buffer": false
+  },
+  "FT": {
+    "pair": "FT",
+    "person": "Firefighter",
+    "object": "Torch",
+    "image": "Firefighter + Torch",
+    "is_buffer": false
+  },
+  "FU": {
+    "pair": "FU",
+    "person": "Firefighter",
+    "object": "Umbrella",
+    "image": "Firefighter + Umbrella",
+    "is_buffer": false
+  },
+  "FV": {
+    "pair": "FV",
+    "person": "Firefighter",
+    "object": "Vase",
+    "image": "Firefighter + Vase",
+    "is_buffer": false
+  },
+  "FW": {
+    "pair": "FW",
+    "person": "Firefighter",
+    "object": "Wheel",
+    "image": "Firefighter + Wheel",
+    "is_buffer": false
+  },
+  "FX": {
+    "pair": "FX",
+    "person": "Firefighter",
+    "object": "Xylophone",
+    "image": "Firefighter + Xylophone",
+    "is_buffer": false
+  },
+  "FY": {
+    "pair": "FY",
+    "person": "Firefighter",
+    "object": "Yo-yo",
+    "image": "Firefighter + Yo-yo",
+    "is_buffer": false
+  },
+  "FZ": {
+    "pair": "FZ",
+    "person": "Firefighter",
+    "object": "Zipper",
+    "image": "Firefighter + Zipper",
+    "is_buffer": false
+  },
+  "GA": {
+    "pair": "GA",
+    "person": "Guitarist",
+    "object": "Axe",
+    "image": "Guitarist + Axe",
+    "is_buffer": false
+  },
+  "GB": {
+    "pair": "GB",
+    "person": "Guitarist",
+    "object": "Ball",
+    "image": "Guitarist + Ball",
+    "is_buffer": false
+  },
+  "GC": {
+    "pair": "GC",
+    "person": "Guitarist",
+    "object": "Camera",
+    "image": "Guitarist + Camera",
+    "is_buffer": false
+  },
+  "GD": {
+    "pair": "GD",
+    "person": "Guitarist",
+    "object": "Drum",
+    "image": "Guitarist + Drum",
+    "is_buffer": false
+  },
+  "GE": {
+    "pair": "GE",
+    "person": "Guitarist",
+    "object": "Egg",
+    "image": "Guitarist + Egg",
+    "is_buffer": false
+  },
+  "GF": {
+    "pair": "GF",
+    "person": "Guitarist",
+    "object": "Flag",
+    "image": "Guitarist + Flag",
+    "is_buffer": false
+  },
+  "GG": {
+    "pair": "GG",
+    "person": "Guitarist",
+    "object": "Globe",
+    "image": "Guitarist + Globe",
+    "is_buffer": false
+  },
+  "GH": {
+    "pair": "GH",
+    "person": "Guitarist",
+    "object": "Hammer",
+    "image": "Guitarist + Hammer",
+    "is_buffer": false
+  },
+  "GI": {
+    "pair": "GI",
+    "person": "Guitarist",
+    "object": "[Buffer-1]",
+    "image": "Guitarist + [Buffer-1]",
+    "is_buffer": true
+  },
+  "GJ": {
+    "pair": "GJ",
+    "person": "Guitarist",
+    "object": "Jetpack",
+    "image": "Guitarist + Jetpack",
+    "is_buffer": false
+  },
+  "GK": {
+    "pair": "GK",
+    "person": "Guitarist",
+    "object": "Key",
+    "image": "Guitarist + Key",
+    "is_buffer": false
+  },
+  "GL": {
+    "pair": "GL",
+    "person": "Guitarist",
+    "object": "Ladder",
+    "image": "Guitarist + Ladder",
+    "is_buffer": false
+  },
+  "GM": {
+    "pair": "GM",
+    "person": "Guitarist",
+    "object": "Mask",
+    "image": "Guitarist + Mask",
+    "is_buffer": false
+  },
+  "GN": {
+    "pair": "GN",
+    "person": "Guitarist",
+    "object": "Net",
+    "image": "Guitarist + Net",
+    "is_buffer": false
+  },
+  "GO": {
+    "pair": "GO",
+    "person": "Guitarist",
+    "object": "[Buffer-0]",
+    "image": "Guitarist + [Buffer-0]",
+    "is_buffer": true
+  },
+  "GP": {
+    "pair": "GP",
+    "person": "Guitarist",
+    "object": "Pan",
+    "image": "Guitarist + Pan",
+    "is_buffer": false
+  },
+  "GQ": {
+    "pair": "GQ",
+    "person": "Guitarist",
+    "object": "Quill",
+    "image": "Guitarist + Quill",
+    "is_buffer": false
+  },
+  "GR": {
+    "pair": "GR",
+    "person": "Guitarist",
+    "object": "Rope",
+    "image": "Guitarist + Rope",
+    "is_buffer": false
+  },
+  "GS": {
+    "pair": "GS",
+    "person": "Guitarist",
+    "object": "Sword",
+    "image": "Guitarist + Sword",
+    "is_buffer": false
+  },
+  "GT": {
+    "pair": "GT",
+    "person": "Guitarist",
+    "object": "Torch",
+    "image": "Guitarist + Torch",
+    "is_buffer": false
+  },
+  "GU": {
+    "pair": "GU",
+    "person": "Guitarist",
+    "object": "Umbrella",
+    "image": "Guitarist + Umbrella",
+    "is_buffer": false
+  },
+  "GV": {
+    "pair": "GV",
+    "person": "Guitarist",
+    "object": "Vase",
+    "image": "Guitarist + Vase",
+    "is_buffer": false
+  },
+  "GW": {
+    "pair": "GW",
+    "person": "Guitarist",
+    "object": "Wheel",
+    "image": "Guitarist + Wheel",
+    "is_buffer": false
+  },
+  "GX": {
+    "pair": "GX",
+    "person": "Guitarist",
+    "object": "Xylophone",
+    "image": "Guitarist + Xylophone",
+    "is_buffer": false
+  },
+  "GY": {
+    "pair": "GY",
+    "person": "Guitarist",
+    "object": "Yo-yo",
+    "image": "Guitarist + Yo-yo",
+    "is_buffer": false
+  },
+  "GZ": {
+    "pair": "GZ",
+    "person": "Guitarist",
+    "object": "Zipper",
+    "image": "Guitarist + Zipper",
+    "is_buffer": false
+  },
+  "HA": {
+    "pair": "HA",
+    "person": "Hacker",
+    "object": "Axe",
+    "image": "Hacker + Axe",
+    "is_buffer": false
+  },
+  "HB": {
+    "pair": "HB",
+    "person": "Hacker",
+    "object": "Ball",
+    "image": "Hacker + Ball",
+    "is_buffer": false
+  },
+  "HC": {
+    "pair": "HC",
+    "person": "Hacker",
+    "object": "Camera",
+    "image": "Hacker + Camera",
+    "is_buffer": false
+  },
+  "HD": {
+    "pair": "HD",
+    "person": "Hacker",
+    "object": "Drum",
+    "image": "Hacker + Drum",
+    "is_buffer": false
+  },
+  "HE": {
+    "pair": "HE",
+    "person": "Hacker",
+    "object": "Egg",
+    "image": "Hacker + Egg",
+    "is_buffer": false
+  },
+  "HF": {
+    "pair": "HF",
+    "person": "Hacker",
+    "object": "Flag",
+    "image": "Hacker + Flag",
+    "is_buffer": false
+  },
+  "HG": {
+    "pair": "HG",
+    "person": "Hacker",
+    "object": "Globe",
+    "image": "Hacker + Globe",
+    "is_buffer": false
+  },
+  "HH": {
+    "pair": "HH",
+    "person": "Hacker",
+    "object": "Hammer",
+    "image": "Hacker + Hammer",
+    "is_buffer": false
+  },
+  "HI": {
+    "pair": "HI",
+    "person": "Hacker",
+    "object": "[Buffer-1]",
+    "image": "Hacker + [Buffer-1]",
+    "is_buffer": true
+  },
+  "HJ": {
+    "pair": "HJ",
+    "person": "Hacker",
+    "object": "Jetpack",
+    "image": "Hacker + Jetpack",
+    "is_buffer": false
+  },
+  "HK": {
+    "pair": "HK",
+    "person": "Hacker",
+    "object": "Key",
+    "image": "Hacker + Key",
+    "is_buffer": false
+  },
+  "HL": {
+    "pair": "HL",
+    "person": "Hacker",
+    "object": "Ladder",
+    "image": "Hacker + Ladder",
+    "is_buffer": false
+  },
+  "HM": {
+    "pair": "HM",
+    "person": "Hacker",
+    "object": "Mask",
+    "image": "Hacker + Mask",
+    "is_buffer": false
+  },
+  "HN": {
+    "pair": "HN",
+    "person": "Hacker",
+    "object": "Net",
+    "image": "Hacker + Net",
+    "is_buffer": false
+  },
+  "HO": {
+    "pair": "HO",
+    "person": "Hacker",
+    "object": "[Buffer-0]",
+    "image": "Hacker + [Buffer-0]",
+    "is_buffer": true
+  },
+  "HP": {
+    "pair": "HP",
+    "person": "Hacker",
+    "object": "Pan",
+    "image": "Hacker + Pan",
+    "is_buffer": false
+  },
+  "HQ": {
+    "pair": "HQ",
+    "person": "Hacker",
+    "object": "Quill",
+    "image": "Hacker + Quill",
+    "is_buffer": false
+  },
+  "HR": {
+    "pair": "HR",
+    "person": "Hacker",
+    "object": "Rope",
+    "image": "Hacker + Rope",
+    "is_buffer": false
+  },
+  "HS": {
+    "pair": "HS",
+    "person": "Hacker",
+    "object": "Sword",
+    "image": "Hacker + Sword",
+    "is_buffer": false
+  },
+  "HT": {
+    "pair": "HT",
+    "person": "Hacker",
+    "object": "Torch",
+    "image": "Hacker + Torch",
+    "is_buffer": false
+  },
+  "HU": {
+    "pair": "HU",
+    "person": "Hacker",
+    "object": "Umbrella",
+    "image": "Hacker + Umbrella",
+    "is_buffer": false
+  },
+  "HV": {
+    "pair": "HV",
+    "person": "Hacker",
+    "object": "Vase",
+    "image": "Hacker + Vase",
+    "is_buffer": false
+  },
+  "HW": {
+    "pair": "HW",
+    "person": "Hacker",
+    "object": "Wheel",
+    "image": "Hacker + Wheel",
+    "is_buffer": false
+  },
+  "HX": {
+    "pair": "HX",
+    "person": "Hacker",
+    "object": "Xylophone",
+    "image": "Hacker + Xylophone",
+    "is_buffer": false
+  },
+  "HY": {
+    "pair": "HY",
+    "person": "Hacker",
+    "object": "Yo-yo",
+    "image": "Hacker + Yo-yo",
+    "is_buffer": false
+  },
+  "HZ": {
+    "pair": "HZ",
+    "person": "Hacker",
+    "object": "Zipper",
+    "image": "Hacker + Zipper",
+    "is_buffer": false
+  },
+  "IA": {
+    "pair": "IA",
+    "person": "[Buffer-1]",
+    "object": "Axe",
+    "image": "[Buffer-1] + Axe",
+    "is_buffer": true
+  },
+  "IB": {
+    "pair": "IB",
+    "person": "[Buffer-1]",
+    "object": "Ball",
+    "image": "[Buffer-1] + Ball",
+    "is_buffer": true
+  },
+  "IC": {
+    "pair": "IC",
+    "person": "[Buffer-1]",
+    "object": "Camera",
+    "image": "[Buffer-1] + Camera",
+    "is_buffer": true
+  },
+  "ID": {
+    "pair": "ID",
+    "person": "[Buffer-1]",
+    "object": "Drum",
+    "image": "[Buffer-1] + Drum",
+    "is_buffer": true
+  },
+  "IE": {
+    "pair": "IE",
+    "person": "[Buffer-1]",
+    "object": "Egg",
+    "image": "[Buffer-1] + Egg",
+    "is_buffer": true
+  },
+  "IF": {
+    "pair": "IF",
+    "person": "[Buffer-1]",
+    "object": "Flag",
+    "image": "[Buffer-1] + Flag",
+    "is_buffer": true
+  },
+  "IG": {
+    "pair": "IG",
+    "person": "[Buffer-1]",
+    "object": "Globe",
+    "image": "[Buffer-1] + Globe",
+    "is_buffer": true
+  },
+  "IH": {
+    "pair": "IH",
+    "person": "[Buffer-1]",
+    "object": "Hammer",
+    "image": "[Buffer-1] + Hammer",
+    "is_buffer": true
+  },
+  "II": {
+    "pair": "II",
+    "person": "[Buffer-1]",
+    "object": "[Buffer-1]",
+    "image": "[Buffer-1] + [Buffer-1]",
+    "is_buffer": true
+  },
+  "IJ": {
+    "pair": "IJ",
+    "person": "[Buffer-1]",
+    "object": "Jetpack",
+    "image": "[Buffer-1] + Jetpack",
+    "is_buffer": true
+  },
+  "IK": {
+    "pair": "IK",
+    "person": "[Buffer-1]",
+    "object": "Key",
+    "image": "[Buffer-1] + Key",
+    "is_buffer": true
+  },
+  "IL": {
+    "pair": "IL",
+    "person": "[Buffer-1]",
+    "object": "Ladder",
+    "image": "[Buffer-1] + Ladder",
+    "is_buffer": true
+  },
+  "IM": {
+    "pair": "IM",
+    "person": "[Buffer-1]",
+    "object": "Mask",
+    "image": "[Buffer-1] + Mask",
+    "is_buffer": true
+  },
+  "IN": {
+    "pair": "IN",
+    "person": "[Buffer-1]",
+    "object": "Net",
+    "image": "[Buffer-1] + Net",
+    "is_buffer": true
+  },
+  "IO": {
+    "pair": "IO",
+    "person": "[Buffer-1]",
+    "object": "[Buffer-0]",
+    "image": "[Buffer-1] + [Buffer-0]",
+    "is_buffer": true
+  },
+  "IP": {
+    "pair": "IP",
+    "person": "[Buffer-1]",
+    "object": "Pan",
+    "image": "[Buffer-1] + Pan",
+    "is_buffer": true
+  },
+  "IQ": {
+    "pair": "IQ",
+    "person": "[Buffer-1]",
+    "object": "Quill",
+    "image": "[Buffer-1] + Quill",
+    "is_buffer": true
+  },
+  "IR": {
+    "pair": "IR",
+    "person": "[Buffer-1]",
+    "object": "Rope",
+    "image": "[Buffer-1] + Rope",
+    "is_buffer": true
+  },
+  "IS": {
+    "pair": "IS",
+    "person": "[Buffer-1]",
+    "object": "Sword",
+    "image": "[Buffer-1] + Sword",
+    "is_buffer": true
+  },
+  "IT": {
+    "pair": "IT",
+    "person": "[Buffer-1]",
+    "object": "Torch",
+    "image": "[Buffer-1] + Torch",
+    "is_buffer": true
+  },
+  "IU": {
+    "pair": "IU",
+    "person": "[Buffer-1]",
+    "object": "Umbrella",
+    "image": "[Buffer-1] + Umbrella",
+    "is_buffer": true
+  },
+  "IV": {
+    "pair": "IV",
+    "person": "[Buffer-1]",
+    "object": "Vase",
+    "image": "[Buffer-1] + Vase",
+    "is_buffer": true
+  },
+  "IW": {
+    "pair": "IW",
+    "person": "[Buffer-1]",
+    "object": "Wheel",
+    "image": "[Buffer-1] + Wheel",
+    "is_buffer": true
+  },
+  "IX": {
+    "pair": "IX",
+    "person": "[Buffer-1]",
+    "object": "Xylophone",
+    "image": "[Buffer-1] + Xylophone",
+    "is_buffer": true
+  },
+  "IY": {
+    "pair": "IY",
+    "person": "[Buffer-1]",
+    "object": "Yo-yo",
+    "image": "[Buffer-1] + Yo-yo",
+    "is_buffer": true
+  },
+  "IZ": {
+    "pair": "IZ",
+    "person": "[Buffer-1]",
+    "object": "Zipper",
+    "image": "[Buffer-1] + Zipper",
+    "is_buffer": true
+  },
+  "JA": {
+    "pair": "JA",
+    "person": "Juggler",
+    "object": "Axe",
+    "image": "Juggler + Axe",
+    "is_buffer": false
+  },
+  "JB": {
+    "pair": "JB",
+    "person": "Juggler",
+    "object": "Ball",
+    "image": "Juggler + Ball",
+    "is_buffer": false
+  },
+  "JC": {
+    "pair": "JC",
+    "person": "Juggler",
+    "object": "Camera",
+    "image": "Juggler + Camera",
+    "is_buffer": false
+  },
+  "JD": {
+    "pair": "JD",
+    "person": "Juggler",
+    "object": "Drum",
+    "image": "Juggler + Drum",
+    "is_buffer": false
+  },
+  "JE": {
+    "pair": "JE",
+    "person": "Juggler",
+    "object": "Egg",
+    "image": "Juggler + Egg",
+    "is_buffer": false
+  },
+  "JF": {
+    "pair": "JF",
+    "person": "Juggler",
+    "object": "Flag",
+    "image": "Juggler + Flag",
+    "is_buffer": false
+  },
+  "JG": {
+    "pair": "JG",
+    "person": "Juggler",
+    "object": "Globe",
+    "image": "Juggler + Globe",
+    "is_buffer": false
+  },
+  "JH": {
+    "pair": "JH",
+    "person": "Juggler",
+    "object": "Hammer",
+    "image": "Juggler + Hammer",
+    "is_buffer": false
+  },
+  "JI": {
+    "pair": "JI",
+    "person": "Juggler",
+    "object": "[Buffer-1]",
+    "image": "Juggler + [Buffer-1]",
+    "is_buffer": true
+  },
+  "JJ": {
+    "pair": "JJ",
+    "person": "Juggler",
+    "object": "Jetpack",
+    "image": "Juggler + Jetpack",
+    "is_buffer": false
+  },
+  "JK": {
+    "pair": "JK",
+    "person": "Juggler",
+    "object": "Key",
+    "image": "Juggler + Key",
+    "is_buffer": false
+  },
+  "JL": {
+    "pair": "JL",
+    "person": "Juggler",
+    "object": "Ladder",
+    "image": "Juggler + Ladder",
+    "is_buffer": false
+  },
+  "JM": {
+    "pair": "JM",
+    "person": "Juggler",
+    "object": "Mask",
+    "image": "Juggler + Mask",
+    "is_buffer": false
+  },
+  "JN": {
+    "pair": "JN",
+    "person": "Juggler",
+    "object": "Net",
+    "image": "Juggler + Net",
+    "is_buffer": false
+  },
+  "JO": {
+    "pair": "JO",
+    "person": "Juggler",
+    "object": "[Buffer-0]",
+    "image": "Juggler + [Buffer-0]",
+    "is_buffer": true
+  },
+  "JP": {
+    "pair": "JP",
+    "person": "Juggler",
+    "object": "Pan",
+    "image": "Juggler + Pan",
+    "is_buffer": false
+  },
+  "JQ": {
+    "pair": "JQ",
+    "person": "Juggler",
+    "object": "Quill",
+    "image": "Juggler + Quill",
+    "is_buffer": false
+  },
+  "JR": {
+    "pair": "JR",
+    "person": "Juggler",
+    "object": "Rope",
+    "image": "Juggler + Rope",
+    "is_buffer": false
+  },
+  "JS": {
+    "pair": "JS",
+    "person": "Juggler",
+    "object": "Sword",
+    "image": "Juggler + Sword",
+    "is_buffer": false
+  },
+  "JT": {
+    "pair": "JT",
+    "person": "Juggler",
+    "object": "Torch",
+    "image": "Juggler + Torch",
+    "is_buffer": false
+  },
+  "JU": {
+    "pair": "JU",
+    "person": "Juggler",
+    "object": "Umbrella",
+    "image": "Juggler + Umbrella",
+    "is_buffer": false
+  },
+  "JV": {
+    "pair": "JV",
+    "person": "Juggler",
+    "object": "Vase",
+    "image": "Juggler + Vase",
+    "is_buffer": false
+  },
+  "JW": {
+    "pair": "JW",
+    "person": "Juggler",
+    "object": "Wheel",
+    "image": "Juggler + Wheel",
+    "is_buffer": false
+  },
+  "JX": {
+    "pair": "JX",
+    "person": "Juggler",
+    "object": "Xylophone",
+    "image": "Juggler + Xylophone",
+    "is_buffer": false
+  },
+  "JY": {
+    "pair": "JY",
+    "person": "Juggler",
+    "object": "Yo-yo",
+    "image": "Juggler + Yo-yo",
+    "is_buffer": false
+  },
+  "JZ": {
+    "pair": "JZ",
+    "person": "Juggler",
+    "object": "Zipper",
+    "image": "Juggler + Zipper",
+    "is_buffer": false
+  },
+  "KA": {
+    "pair": "KA",
+    "person": "King",
+    "object": "Axe",
+    "image": "King + Axe",
+    "is_buffer": false
+  },
+  "KB": {
+    "pair": "KB",
+    "person": "King",
+    "object": "Ball",
+    "image": "King + Ball",
+    "is_buffer": false
+  },
+  "KC": {
+    "pair": "KC",
+    "person": "King",
+    "object": "Camera",
+    "image": "King + Camera",
+    "is_buffer": false
+  },
+  "KD": {
+    "pair": "KD",
+    "person": "King",
+    "object": "Drum",
+    "image": "King + Drum",
+    "is_buffer": false
+  },
+  "KE": {
+    "pair": "KE",
+    "person": "King",
+    "object": "Egg",
+    "image": "King + Egg",
+    "is_buffer": false
+  },
+  "KF": {
+    "pair": "KF",
+    "person": "King",
+    "object": "Flag",
+    "image": "King + Flag",
+    "is_buffer": false
+  },
+  "KG": {
+    "pair": "KG",
+    "person": "King",
+    "object": "Globe",
+    "image": "King + Globe",
+    "is_buffer": false
+  },
+  "KH": {
+    "pair": "KH",
+    "person": "King",
+    "object": "Hammer",
+    "image": "King + Hammer",
+    "is_buffer": false
+  },
+  "KI": {
+    "pair": "KI",
+    "person": "King",
+    "object": "[Buffer-1]",
+    "image": "King + [Buffer-1]",
+    "is_buffer": true
+  },
+  "KJ": {
+    "pair": "KJ",
+    "person": "King",
+    "object": "Jetpack",
+    "image": "King + Jetpack",
+    "is_buffer": false
+  },
+  "KK": {
+    "pair": "KK",
+    "person": "King",
+    "object": "Key",
+    "image": "King + Key",
+    "is_buffer": false
+  },
+  "KL": {
+    "pair": "KL",
+    "person": "King",
+    "object": "Ladder",
+    "image": "King + Ladder",
+    "is_buffer": false
+  },
+  "KM": {
+    "pair": "KM",
+    "person": "King",
+    "object": "Mask",
+    "image": "King + Mask",
+    "is_buffer": false
+  },
+  "KN": {
+    "pair": "KN",
+    "person": "King",
+    "object": "Net",
+    "image": "King + Net",
+    "is_buffer": false
+  },
+  "KO": {
+    "pair": "KO",
+    "person": "King",
+    "object": "[Buffer-0]",
+    "image": "King + [Buffer-0]",
+    "is_buffer": true
+  },
+  "KP": {
+    "pair": "KP",
+    "person": "King",
+    "object": "Pan",
+    "image": "King + Pan",
+    "is_buffer": false
+  },
+  "KQ": {
+    "pair": "KQ",
+    "person": "King",
+    "object": "Quill",
+    "image": "King + Quill",
+    "is_buffer": false
+  },
+  "KR": {
+    "pair": "KR",
+    "person": "King",
+    "object": "Rope",
+    "image": "King + Rope",
+    "is_buffer": false
+  },
+  "KS": {
+    "pair": "KS",
+    "person": "King",
+    "object": "Sword",
+    "image": "King + Sword",
+    "is_buffer": false
+  },
+  "KT": {
+    "pair": "KT",
+    "person": "King",
+    "object": "Torch",
+    "image": "King + Torch",
+    "is_buffer": false
+  },
+  "KU": {
+    "pair": "KU",
+    "person": "King",
+    "object": "Umbrella",
+    "image": "King + Umbrella",
+    "is_buffer": false
+  },
+  "KV": {
+    "pair": "KV",
+    "person": "King",
+    "object": "Vase",
+    "image": "King + Vase",
+    "is_buffer": false
+  },
+  "KW": {
+    "pair": "KW",
+    "person": "King",
+    "object": "Wheel",
+    "image": "King + Wheel",
+    "is_buffer": false
+  },
+  "KX": {
+    "pair": "KX",
+    "person": "King",
+    "object": "Xylophone",
+    "image": "King + Xylophone",
+    "is_buffer": false
+  },
+  "KY": {
+    "pair": "KY",
+    "person": "King",
+    "object": "Yo-yo",
+    "image": "King + Yo-yo",
+    "is_buffer": false
+  },
+  "KZ": {
+    "pair": "KZ",
+    "person": "King",
+    "object": "Zipper",
+    "image": "King + Zipper",
+    "is_buffer": false
+  },
+  "LA": {
+    "pair": "LA",
+    "person": "Lifeguard",
+    "object": "Axe",
+    "image": "Lifeguard + Axe",
+    "is_buffer": false
+  },
+  "LB": {
+    "pair": "LB",
+    "person": "Lifeguard",
+    "object": "Ball",
+    "image": "Lifeguard + Ball",
+    "is_buffer": false
+  },
+  "LC": {
+    "pair": "LC",
+    "person": "Lifeguard",
+    "object": "Camera",
+    "image": "Lifeguard + Camera",
+    "is_buffer": false
+  },
+  "LD": {
+    "pair": "LD",
+    "person": "Lifeguard",
+    "object": "Drum",
+    "image": "Lifeguard + Drum",
+    "is_buffer": false
+  },
+  "LE": {
+    "pair": "LE",
+    "person": "Lifeguard",
+    "object": "Egg",
+    "image": "Lifeguard + Egg",
+    "is_buffer": false
+  },
+  "LF": {
+    "pair": "LF",
+    "person": "Lifeguard",
+    "object": "Flag",
+    "image": "Lifeguard + Flag",
+    "is_buffer": false
+  },
+  "LG": {
+    "pair": "LG",
+    "person": "Lifeguard",
+    "object": "Globe",
+    "image": "Lifeguard + Globe",
+    "is_buffer": false
+  },
+  "LH": {
+    "pair": "LH",
+    "person": "Lifeguard",
+    "object": "Hammer",
+    "image": "Lifeguard + Hammer",
+    "is_buffer": false
+  },
+  "LI": {
+    "pair": "LI",
+    "person": "Lifeguard",
+    "object": "[Buffer-1]",
+    "image": "Lifeguard + [Buffer-1]",
+    "is_buffer": true
+  },
+  "LJ": {
+    "pair": "LJ",
+    "person": "Lifeguard",
+    "object": "Jetpack",
+    "image": "Lifeguard + Jetpack",
+    "is_buffer": false
+  },
+  "LK": {
+    "pair": "LK",
+    "person": "Lifeguard",
+    "object": "Key",
+    "image": "Lifeguard + Key",
+    "is_buffer": false
+  },
+  "LL": {
+    "pair": "LL",
+    "person": "Lifeguard",
+    "object": "Ladder",
+    "image": "Lifeguard + Ladder",
+    "is_buffer": false
+  },
+  "LM": {
+    "pair": "LM",
+    "person": "Lifeguard",
+    "object": "Mask",
+    "image": "Lifeguard + Mask",
+    "is_buffer": false
+  },
+  "LN": {
+    "pair": "LN",
+    "person": "Lifeguard",
+    "object": "Net",
+    "image": "Lifeguard + Net",
+    "is_buffer": false
+  },
+  "LO": {
+    "pair": "LO",
+    "person": "Lifeguard",
+    "object": "[Buffer-0]",
+    "image": "Lifeguard + [Buffer-0]",
+    "is_buffer": true
+  },
+  "LP": {
+    "pair": "LP",
+    "person": "Lifeguard",
+    "object": "Pan",
+    "image": "Lifeguard + Pan",
+    "is_buffer": false
+  },
+  "LQ": {
+    "pair": "LQ",
+    "person": "Lifeguard",
+    "object": "Quill",
+    "image": "Lifeguard + Quill",
+    "is_buffer": false
+  },
+  "LR": {
+    "pair": "LR",
+    "person": "Lifeguard",
+    "object": "Rope",
+    "image": "Lifeguard + Rope",
+    "is_buffer": false
+  },
+  "LS": {
+    "pair": "LS",
+    "person": "Lifeguard",
+    "object": "Sword",
+    "image": "Lifeguard + Sword",
+    "is_buffer": false
+  },
+  "LT": {
+    "pair": "LT",
+    "person": "Lifeguard",
+    "object": "Torch",
+    "image": "Lifeguard + Torch",
+    "is_buffer": false
+  },
+  "LU": {
+    "pair": "LU",
+    "person": "Lifeguard",
+    "object": "Umbrella",
+    "image": "Lifeguard + Umbrella",
+    "is_buffer": false
+  },
+  "LV": {
+    "pair": "LV",
+    "person": "Lifeguard",
+    "object": "Vase",
+    "image": "Lifeguard + Vase",
+    "is_buffer": false
+  },
+  "LW": {
+    "pair": "LW",
+    "person": "Lifeguard",
+    "object": "Wheel",
+    "image": "Lifeguard + Wheel",
+    "is_buffer": false
+  },
+  "LX": {
+    "pair": "LX",
+    "person": "Lifeguard",
+    "object": "Xylophone",
+    "image": "Lifeguard + Xylophone",
+    "is_buffer": false
+  },
+  "LY": {
+    "pair": "LY",
+    "person": "Lifeguard",
+    "object": "Yo-yo",
+    "image": "Lifeguard + Yo-yo",
+    "is_buffer": false
+  },
+  "LZ": {
+    "pair": "LZ",
+    "person": "Lifeguard",
+    "object": "Zipper",
+    "image": "Lifeguard + Zipper",
+    "is_buffer": false
+  },
+  "MA": {
+    "pair": "MA",
+    "person": "Magician",
+    "object": "Axe",
+    "image": "Magician + Axe",
+    "is_buffer": false
+  },
+  "MB": {
+    "pair": "MB",
+    "person": "Magician",
+    "object": "Ball",
+    "image": "Magician + Ball",
+    "is_buffer": false
+  },
+  "MC": {
+    "pair": "MC",
+    "person": "Magician",
+    "object": "Camera",
+    "image": "Magician + Camera",
+    "is_buffer": false
+  },
+  "MD": {
+    "pair": "MD",
+    "person": "Magician",
+    "object": "Drum",
+    "image": "Magician + Drum",
+    "is_buffer": false
+  },
+  "ME": {
+    "pair": "ME",
+    "person": "Magician",
+    "object": "Egg",
+    "image": "Magician + Egg",
+    "is_buffer": false
+  },
+  "MF": {
+    "pair": "MF",
+    "person": "Magician",
+    "object": "Flag",
+    "image": "Magician + Flag",
+    "is_buffer": false
+  },
+  "MG": {
+    "pair": "MG",
+    "person": "Magician",
+    "object": "Globe",
+    "image": "Magician + Globe",
+    "is_buffer": false
+  },
+  "MH": {
+    "pair": "MH",
+    "person": "Magician",
+    "object": "Hammer",
+    "image": "Magician + Hammer",
+    "is_buffer": false
+  },
+  "MI": {
+    "pair": "MI",
+    "person": "Magician",
+    "object": "[Buffer-1]",
+    "image": "Magician + [Buffer-1]",
+    "is_buffer": true
+  },
+  "MJ": {
+    "pair": "MJ",
+    "person": "Magician",
+    "object": "Jetpack",
+    "image": "Magician + Jetpack",
+    "is_buffer": false
+  },
+  "MK": {
+    "pair": "MK",
+    "person": "Magician",
+    "object": "Key",
+    "image": "Magician + Key",
+    "is_buffer": false
+  },
+  "ML": {
+    "pair": "ML",
+    "person": "Magician",
+    "object": "Ladder",
+    "image": "Magician + Ladder",
+    "is_buffer": false
+  },
+  "MM": {
+    "pair": "MM",
+    "person": "Magician",
+    "object": "Mask",
+    "image": "Magician + Mask",
+    "is_buffer": false
+  },
+  "MN": {
+    "pair": "MN",
+    "person": "Magician",
+    "object": "Net",
+    "image": "Magician + Net",
+    "is_buffer": false
+  },
+  "MO": {
+    "pair": "MO",
+    "person": "Magician",
+    "object": "[Buffer-0]",
+    "image": "Magician + [Buffer-0]",
+    "is_buffer": true
+  },
+  "MP": {
+    "pair": "MP",
+    "person": "Magician",
+    "object": "Pan",
+    "image": "Magician + Pan",
+    "is_buffer": false
+  },
+  "MQ": {
+    "pair": "MQ",
+    "person": "Magician",
+    "object": "Quill",
+    "image": "Magician + Quill",
+    "is_buffer": false
+  },
+  "MR": {
+    "pair": "MR",
+    "person": "Magician",
+    "object": "Rope",
+    "image": "Magician + Rope",
+    "is_buffer": false
+  },
+  "MS": {
+    "pair": "MS",
+    "person": "Magician",
+    "object": "Sword",
+    "image": "Magician + Sword",
+    "is_buffer": false
+  },
+  "MT": {
+    "pair": "MT",
+    "person": "Magician",
+    "object": "Torch",
+    "image": "Magician + Torch",
+    "is_buffer": false
+  },
+  "MU": {
+    "pair": "MU",
+    "person": "Magician",
+    "object": "Umbrella",
+    "image": "Magician + Umbrella",
+    "is_buffer": false
+  },
+  "MV": {
+    "pair": "MV",
+    "person": "Magician",
+    "object": "Vase",
+    "image": "Magician + Vase",
+    "is_buffer": false
+  },
+  "MW": {
+    "pair": "MW",
+    "person": "Magician",
+    "object": "Wheel",
+    "image": "Magician + Wheel",
+    "is_buffer": false
+  },
+  "MX": {
+    "pair": "MX",
+    "person": "Magician",
+    "object": "Xylophone",
+    "image": "Magician + Xylophone",
+    "is_buffer": false
+  },
+  "MY": {
+    "pair": "MY",
+    "person": "Magician",
+    "object": "Yo-yo",
+    "image": "Magician + Yo-yo",
+    "is_buffer": false
+  },
+  "MZ": {
+    "pair": "MZ",
+    "person": "Magician",
+    "object": "Zipper",
+    "image": "Magician + Zipper",
+    "is_buffer": false
+  },
+  "NA": {
+    "pair": "NA",
+    "person": "Ninja",
+    "object": "Axe",
+    "image": "Ninja + Axe",
+    "is_buffer": false
+  },
+  "NB": {
+    "pair": "NB",
+    "person": "Ninja",
+    "object": "Ball",
+    "image": "Ninja + Ball",
+    "is_buffer": false
+  },
+  "NC": {
+    "pair": "NC",
+    "person": "Ninja",
+    "object": "Camera",
+    "image": "Ninja + Camera",
+    "is_buffer": false
+  },
+  "ND": {
+    "pair": "ND",
+    "person": "Ninja",
+    "object": "Drum",
+    "image": "Ninja + Drum",
+    "is_buffer": false
+  },
+  "NE": {
+    "pair": "NE",
+    "person": "Ninja",
+    "object": "Egg",
+    "image": "Ninja + Egg",
+    "is_buffer": false
+  },
+  "NF": {
+    "pair": "NF",
+    "person": "Ninja",
+    "object": "Flag",
+    "image": "Ninja + Flag",
+    "is_buffer": false
+  },
+  "NG": {
+    "pair": "NG",
+    "person": "Ninja",
+    "object": "Globe",
+    "image": "Ninja + Globe",
+    "is_buffer": false
+  },
+  "NH": {
+    "pair": "NH",
+    "person": "Ninja",
+    "object": "Hammer",
+    "image": "Ninja + Hammer",
+    "is_buffer": false
+  },
+  "NI": {
+    "pair": "NI",
+    "person": "Ninja",
+    "object": "[Buffer-1]",
+    "image": "Ninja + [Buffer-1]",
+    "is_buffer": true
+  },
+  "NJ": {
+    "pair": "NJ",
+    "person": "Ninja",
+    "object": "Jetpack",
+    "image": "Ninja + Jetpack",
+    "is_buffer": false
+  },
+  "NK": {
+    "pair": "NK",
+    "person": "Ninja",
+    "object": "Key",
+    "image": "Ninja + Key",
+    "is_buffer": false
+  },
+  "NL": {
+    "pair": "NL",
+    "person": "Ninja",
+    "object": "Ladder",
+    "image": "Ninja + Ladder",
+    "is_buffer": false
+  },
+  "NM": {
+    "pair": "NM",
+    "person": "Ninja",
+    "object": "Mask",
+    "image": "Ninja + Mask",
+    "is_buffer": false
+  },
+  "NN": {
+    "pair": "NN",
+    "person": "Ninja",
+    "object": "Net",
+    "image": "Ninja + Net",
+    "is_buffer": false
+  },
+  "NO": {
+    "pair": "NO",
+    "person": "Ninja",
+    "object": "[Buffer-0]",
+    "image": "Ninja + [Buffer-0]",
+    "is_buffer": true
+  },
+  "NP": {
+    "pair": "NP",
+    "person": "Ninja",
+    "object": "Pan",
+    "image": "Ninja + Pan",
+    "is_buffer": false
+  },
+  "NQ": {
+    "pair": "NQ",
+    "person": "Ninja",
+    "object": "Quill",
+    "image": "Ninja + Quill",
+    "is_buffer": false
+  },
+  "NR": {
+    "pair": "NR",
+    "person": "Ninja",
+    "object": "Rope",
+    "image": "Ninja + Rope",
+    "is_buffer": false
+  },
+  "NS": {
+    "pair": "NS",
+    "person": "Ninja",
+    "object": "Sword",
+    "image": "Ninja + Sword",
+    "is_buffer": false
+  },
+  "NT": {
+    "pair": "NT",
+    "person": "Ninja",
+    "object": "Torch",
+    "image": "Ninja + Torch",
+    "is_buffer": false
+  },
+  "NU": {
+    "pair": "NU",
+    "person": "Ninja",
+    "object": "Umbrella",
+    "image": "Ninja + Umbrella",
+    "is_buffer": false
+  },
+  "NV": {
+    "pair": "NV",
+    "person": "Ninja",
+    "object": "Vase",
+    "image": "Ninja + Vase",
+    "is_buffer": false
+  },
+  "NW": {
+    "pair": "NW",
+    "person": "Ninja",
+    "object": "Wheel",
+    "image": "Ninja + Wheel",
+    "is_buffer": false
+  },
+  "NX": {
+    "pair": "NX",
+    "person": "Ninja",
+    "object": "Xylophone",
+    "image": "Ninja + Xylophone",
+    "is_buffer": false
+  },
+  "NY": {
+    "pair": "NY",
+    "person": "Ninja",
+    "object": "Yo-yo",
+    "image": "Ninja + Yo-yo",
+    "is_buffer": false
+  },
+  "NZ": {
+    "pair": "NZ",
+    "person": "Ninja",
+    "object": "Zipper",
+    "image": "Ninja + Zipper",
+    "is_buffer": false
+  },
+  "OA": {
+    "pair": "OA",
+    "person": "[Buffer-0]",
+    "object": "Axe",
+    "image": "[Buffer-0] + Axe",
+    "is_buffer": true
+  },
+  "OB": {
+    "pair": "OB",
+    "person": "[Buffer-0]",
+    "object": "Ball",
+    "image": "[Buffer-0] + Ball",
+    "is_buffer": true
+  },
+  "OC": {
+    "pair": "OC",
+    "person": "[Buffer-0]",
+    "object": "Camera",
+    "image": "[Buffer-0] + Camera",
+    "is_buffer": true
+  },
+  "OD": {
+    "pair": "OD",
+    "person": "[Buffer-0]",
+    "object": "Drum",
+    "image": "[Buffer-0] + Drum",
+    "is_buffer": true
+  },
+  "OE": {
+    "pair": "OE",
+    "person": "[Buffer-0]",
+    "object": "Egg",
+    "image": "[Buffer-0] + Egg",
+    "is_buffer": true
+  },
+  "OF": {
+    "pair": "OF",
+    "person": "[Buffer-0]",
+    "object": "Flag",
+    "image": "[Buffer-0] + Flag",
+    "is_buffer": true
+  },
+  "OG": {
+    "pair": "OG",
+    "person": "[Buffer-0]",
+    "object": "Globe",
+    "image": "[Buffer-0] + Globe",
+    "is_buffer": true
+  },
+  "OH": {
+    "pair": "OH",
+    "person": "[Buffer-0]",
+    "object": "Hammer",
+    "image": "[Buffer-0] + Hammer",
+    "is_buffer": true
+  },
+  "OI": {
+    "pair": "OI",
+    "person": "[Buffer-0]",
+    "object": "[Buffer-1]",
+    "image": "[Buffer-0] + [Buffer-1]",
+    "is_buffer": true
+  },
+  "OJ": {
+    "pair": "OJ",
+    "person": "[Buffer-0]",
+    "object": "Jetpack",
+    "image": "[Buffer-0] + Jetpack",
+    "is_buffer": true
+  },
+  "OK": {
+    "pair": "OK",
+    "person": "[Buffer-0]",
+    "object": "Key",
+    "image": "[Buffer-0] + Key",
+    "is_buffer": true
+  },
+  "OL": {
+    "pair": "OL",
+    "person": "[Buffer-0]",
+    "object": "Ladder",
+    "image": "[Buffer-0] + Ladder",
+    "is_buffer": true
+  },
+  "OM": {
+    "pair": "OM",
+    "person": "[Buffer-0]",
+    "object": "Mask",
+    "image": "[Buffer-0] + Mask",
+    "is_buffer": true
+  },
+  "ON": {
+    "pair": "ON",
+    "person": "[Buffer-0]",
+    "object": "Net",
+    "image": "[Buffer-0] + Net",
+    "is_buffer": true
+  },
+  "OO": {
+    "pair": "OO",
+    "person": "[Buffer-0]",
+    "object": "[Buffer-0]",
+    "image": "[Buffer-0] + [Buffer-0]",
+    "is_buffer": true
+  },
+  "OP": {
+    "pair": "OP",
+    "person": "[Buffer-0]",
+    "object": "Pan",
+    "image": "[Buffer-0] + Pan",
+    "is_buffer": true
+  },
+  "OQ": {
+    "pair": "OQ",
+    "person": "[Buffer-0]",
+    "object": "Quill",
+    "image": "[Buffer-0] + Quill",
+    "is_buffer": true
+  },
+  "OR": {
+    "pair": "OR",
+    "person": "[Buffer-0]",
+    "object": "Rope",
+    "image": "[Buffer-0] + Rope",
+    "is_buffer": true
+  },
+  "OS": {
+    "pair": "OS",
+    "person": "[Buffer-0]",
+    "object": "Sword",
+    "image": "[Buffer-0] + Sword",
+    "is_buffer": true
+  },
+  "OT": {
+    "pair": "OT",
+    "person": "[Buffer-0]",
+    "object": "Torch",
+    "image": "[Buffer-0] + Torch",
+    "is_buffer": true
+  },
+  "OU": {
+    "pair": "OU",
+    "person": "[Buffer-0]",
+    "object": "Umbrella",
+    "image": "[Buffer-0] + Umbrella",
+    "is_buffer": true
+  },
+  "OV": {
+    "pair": "OV",
+    "person": "[Buffer-0]",
+    "object": "Vase",
+    "image": "[Buffer-0] + Vase",
+    "is_buffer": true
+  },
+  "OW": {
+    "pair": "OW",
+    "person": "[Buffer-0]",
+    "object": "Wheel",
+    "image": "[Buffer-0] + Wheel",
+    "is_buffer": true
+  },
+  "OX": {
+    "pair": "OX",
+    "person": "[Buffer-0]",
+    "object": "Xylophone",
+    "image": "[Buffer-0] + Xylophone",
+    "is_buffer": true
+  },
+  "OY": {
+    "pair": "OY",
+    "person": "[Buffer-0]",
+    "object": "Yo-yo",
+    "image": "[Buffer-0] + Yo-yo",
+    "is_buffer": true
+  },
+  "OZ": {
+    "pair": "OZ",
+    "person": "[Buffer-0]",
+    "object": "Zipper",
+    "image": "[Buffer-0] + Zipper",
+    "is_buffer": true
+  },
+  "PA": {
+    "pair": "PA",
+    "person": "Pilot",
+    "object": "Axe",
+    "image": "Pilot + Axe",
+    "is_buffer": false
+  },
+  "PB": {
+    "pair": "PB",
+    "person": "Pilot",
+    "object": "Ball",
+    "image": "Pilot + Ball",
+    "is_buffer": false
+  },
+  "PC": {
+    "pair": "PC",
+    "person": "Pilot",
+    "object": "Camera",
+    "image": "Pilot + Camera",
+    "is_buffer": false
+  },
+  "PD": {
+    "pair": "PD",
+    "person": "Pilot",
+    "object": "Drum",
+    "image": "Pilot + Drum",
+    "is_buffer": false
+  },
+  "PE": {
+    "pair": "PE",
+    "person": "Pilot",
+    "object": "Egg",
+    "image": "Pilot + Egg",
+    "is_buffer": false
+  },
+  "PF": {
+    "pair": "PF",
+    "person": "Pilot",
+    "object": "Flag",
+    "image": "Pilot + Flag",
+    "is_buffer": false
+  },
+  "PG": {
+    "pair": "PG",
+    "person": "Pilot",
+    "object": "Globe",
+    "image": "Pilot + Globe",
+    "is_buffer": false
+  },
+  "PH": {
+    "pair": "PH",
+    "person": "Pilot",
+    "object": "Hammer",
+    "image": "Pilot + Hammer",
+    "is_buffer": false
+  },
+  "PI": {
+    "pair": "PI",
+    "person": "Pilot",
+    "object": "[Buffer-1]",
+    "image": "Pilot + [Buffer-1]",
+    "is_buffer": true
+  },
+  "PJ": {
+    "pair": "PJ",
+    "person": "Pilot",
+    "object": "Jetpack",
+    "image": "Pilot + Jetpack",
+    "is_buffer": false
+  },
+  "PK": {
+    "pair": "PK",
+    "person": "Pilot",
+    "object": "Key",
+    "image": "Pilot + Key",
+    "is_buffer": false
+  },
+  "PL": {
+    "pair": "PL",
+    "person": "Pilot",
+    "object": "Ladder",
+    "image": "Pilot + Ladder",
+    "is_buffer": false
+  },
+  "PM": {
+    "pair": "PM",
+    "person": "Pilot",
+    "object": "Mask",
+    "image": "Pilot + Mask",
+    "is_buffer": false
+  },
+  "PN": {
+    "pair": "PN",
+    "person": "Pilot",
+    "object": "Net",
+    "image": "Pilot + Net",
+    "is_buffer": false
+  },
+  "PO": {
+    "pair": "PO",
+    "person": "Pilot",
+    "object": "[Buffer-0]",
+    "image": "Pilot + [Buffer-0]",
+    "is_buffer": true
+  },
+  "PP": {
+    "pair": "PP",
+    "person": "Pilot",
+    "object": "Pan",
+    "image": "Pilot + Pan",
+    "is_buffer": false
+  },
+  "PQ": {
+    "pair": "PQ",
+    "person": "Pilot",
+    "object": "Quill",
+    "image": "Pilot + Quill",
+    "is_buffer": false
+  },
+  "PR": {
+    "pair": "PR",
+    "person": "Pilot",
+    "object": "Rope",
+    "image": "Pilot + Rope",
+    "is_buffer": false
+  },
+  "PS": {
+    "pair": "PS",
+    "person": "Pilot",
+    "object": "Sword",
+    "image": "Pilot + Sword",
+    "is_buffer": false
+  },
+  "PT": {
+    "pair": "PT",
+    "person": "Pilot",
+    "object": "Torch",
+    "image": "Pilot + Torch",
+    "is_buffer": false
+  },
+  "PU": {
+    "pair": "PU",
+    "person": "Pilot",
+    "object": "Umbrella",
+    "image": "Pilot + Umbrella",
+    "is_buffer": false
+  },
+  "PV": {
+    "pair": "PV",
+    "person": "Pilot",
+    "object": "Vase",
+    "image": "Pilot + Vase",
+    "is_buffer": false
+  },
+  "PW": {
+    "pair": "PW",
+    "person": "Pilot",
+    "object": "Wheel",
+    "image": "Pilot + Wheel",
+    "is_buffer": false
+  },
+  "PX": {
+    "pair": "PX",
+    "person": "Pilot",
+    "object": "Xylophone",
+    "image": "Pilot + Xylophone",
+    "is_buffer": false
+  },
+  "PY": {
+    "pair": "PY",
+    "person": "Pilot",
+    "object": "Yo-yo",
+    "image": "Pilot + Yo-yo",
+    "is_buffer": false
+  },
+  "PZ": {
+    "pair": "PZ",
+    "person": "Pilot",
+    "object": "Zipper",
+    "image": "Pilot + Zipper",
+    "is_buffer": false
+  },
+  "QA": {
+    "pair": "QA",
+    "person": "Queen",
+    "object": "Axe",
+    "image": "Queen + Axe",
+    "is_buffer": false
+  },
+  "QB": {
+    "pair": "QB",
+    "person": "Queen",
+    "object": "Ball",
+    "image": "Queen + Ball",
+    "is_buffer": false
+  },
+  "QC": {
+    "pair": "QC",
+    "person": "Queen",
+    "object": "Camera",
+    "image": "Queen + Camera",
+    "is_buffer": false
+  },
+  "QD": {
+    "pair": "QD",
+    "person": "Queen",
+    "object": "Drum",
+    "image": "Queen + Drum",
+    "is_buffer": false
+  },
+  "QE": {
+    "pair": "QE",
+    "person": "Queen",
+    "object": "Egg",
+    "image": "Queen + Egg",
+    "is_buffer": false
+  },
+  "QF": {
+    "pair": "QF",
+    "person": "Queen",
+    "object": "Flag",
+    "image": "Queen + Flag",
+    "is_buffer": false
+  },
+  "QG": {
+    "pair": "QG",
+    "person": "Queen",
+    "object": "Globe",
+    "image": "Queen + Globe",
+    "is_buffer": false
+  },
+  "QH": {
+    "pair": "QH",
+    "person": "Queen",
+    "object": "Hammer",
+    "image": "Queen + Hammer",
+    "is_buffer": false
+  },
+  "QI": {
+    "pair": "QI",
+    "person": "Queen",
+    "object": "[Buffer-1]",
+    "image": "Queen + [Buffer-1]",
+    "is_buffer": true
+  },
+  "QJ": {
+    "pair": "QJ",
+    "person": "Queen",
+    "object": "Jetpack",
+    "image": "Queen + Jetpack",
+    "is_buffer": false
+  },
+  "QK": {
+    "pair": "QK",
+    "person": "Queen",
+    "object": "Key",
+    "image": "Queen + Key",
+    "is_buffer": false
+  },
+  "QL": {
+    "pair": "QL",
+    "person": "Queen",
+    "object": "Ladder",
+    "image": "Queen + Ladder",
+    "is_buffer": false
+  },
+  "QM": {
+    "pair": "QM",
+    "person": "Queen",
+    "object": "Mask",
+    "image": "Queen + Mask",
+    "is_buffer": false
+  },
+  "QN": {
+    "pair": "QN",
+    "person": "Queen",
+    "object": "Net",
+    "image": "Queen + Net",
+    "is_buffer": false
+  },
+  "QO": {
+    "pair": "QO",
+    "person": "Queen",
+    "object": "[Buffer-0]",
+    "image": "Queen + [Buffer-0]",
+    "is_buffer": true
+  },
+  "QP": {
+    "pair": "QP",
+    "person": "Queen",
+    "object": "Pan",
+    "image": "Queen + Pan",
+    "is_buffer": false
+  },
+  "QQ": {
+    "pair": "QQ",
+    "person": "Queen",
+    "object": "Quill",
+    "image": "Queen + Quill",
+    "is_buffer": false
+  },
+  "QR": {
+    "pair": "QR",
+    "person": "Queen",
+    "object": "Rope",
+    "image": "Queen + Rope",
+    "is_buffer": false
+  },
+  "QS": {
+    "pair": "QS",
+    "person": "Queen",
+    "object": "Sword",
+    "image": "Queen + Sword",
+    "is_buffer": false
+  },
+  "QT": {
+    "pair": "QT",
+    "person": "Queen",
+    "object": "Torch",
+    "image": "Queen + Torch",
+    "is_buffer": false
+  },
+  "QU": {
+    "pair": "QU",
+    "person": "Queen",
+    "object": "Umbrella",
+    "image": "Queen + Umbrella",
+    "is_buffer": false
+  },
+  "QV": {
+    "pair": "QV",
+    "person": "Queen",
+    "object": "Vase",
+    "image": "Queen + Vase",
+    "is_buffer": false
+  },
+  "QW": {
+    "pair": "QW",
+    "person": "Queen",
+    "object": "Wheel",
+    "image": "Queen + Wheel",
+    "is_buffer": false
+  },
+  "QX": {
+    "pair": "QX",
+    "person": "Queen",
+    "object": "Xylophone",
+    "image": "Queen + Xylophone",
+    "is_buffer": false
+  },
+  "QY": {
+    "pair": "QY",
+    "person": "Queen",
+    "object": "Yo-yo",
+    "image": "Queen + Yo-yo",
+    "is_buffer": false
+  },
+  "QZ": {
+    "pair": "QZ",
+    "person": "Queen",
+    "object": "Zipper",
+    "image": "Queen + Zipper",
+    "is_buffer": false
+  },
+  "RA": {
+    "pair": "RA",
+    "person": "Racer",
+    "object": "Axe",
+    "image": "Racer + Axe",
+    "is_buffer": false
+  },
+  "RB": {
+    "pair": "RB",
+    "person": "Racer",
+    "object": "Ball",
+    "image": "Racer + Ball",
+    "is_buffer": false
+  },
+  "RC": {
+    "pair": "RC",
+    "person": "Racer",
+    "object": "Camera",
+    "image": "Racer + Camera",
+    "is_buffer": false
+  },
+  "RD": {
+    "pair": "RD",
+    "person": "Racer",
+    "object": "Drum",
+    "image": "Racer + Drum",
+    "is_buffer": false
+  },
+  "RE": {
+    "pair": "RE",
+    "person": "Racer",
+    "object": "Egg",
+    "image": "Racer + Egg",
+    "is_buffer": false
+  },
+  "RF": {
+    "pair": "RF",
+    "person": "Racer",
+    "object": "Flag",
+    "image": "Racer + Flag",
+    "is_buffer": false
+  },
+  "RG": {
+    "pair": "RG",
+    "person": "Racer",
+    "object": "Globe",
+    "image": "Racer + Globe",
+    "is_buffer": false
+  },
+  "RH": {
+    "pair": "RH",
+    "person": "Racer",
+    "object": "Hammer",
+    "image": "Racer + Hammer",
+    "is_buffer": false
+  },
+  "RI": {
+    "pair": "RI",
+    "person": "Racer",
+    "object": "[Buffer-1]",
+    "image": "Racer + [Buffer-1]",
+    "is_buffer": true
+  },
+  "RJ": {
+    "pair": "RJ",
+    "person": "Racer",
+    "object": "Jetpack",
+    "image": "Racer + Jetpack",
+    "is_buffer": false
+  },
+  "RK": {
+    "pair": "RK",
+    "person": "Racer",
+    "object": "Key",
+    "image": "Racer + Key",
+    "is_buffer": false
+  },
+  "RL": {
+    "pair": "RL",
+    "person": "Racer",
+    "object": "Ladder",
+    "image": "Racer + Ladder",
+    "is_buffer": false
+  },
+  "RM": {
+    "pair": "RM",
+    "person": "Racer",
+    "object": "Mask",
+    "image": "Racer + Mask",
+    "is_buffer": false
+  },
+  "RN": {
+    "pair": "RN",
+    "person": "Racer",
+    "object": "Net",
+    "image": "Racer + Net",
+    "is_buffer": false
+  },
+  "RO": {
+    "pair": "RO",
+    "person": "Racer",
+    "object": "[Buffer-0]",
+    "image": "Racer + [Buffer-0]",
+    "is_buffer": true
+  },
+  "RP": {
+    "pair": "RP",
+    "person": "Racer",
+    "object": "Pan",
+    "image": "Racer + Pan",
+    "is_buffer": false
+  },
+  "RQ": {
+    "pair": "RQ",
+    "person": "Racer",
+    "object": "Quill",
+    "image": "Racer + Quill",
+    "is_buffer": false
+  },
+  "RR": {
+    "pair": "RR",
+    "person": "Racer",
+    "object": "Rope",
+    "image": "Racer + Rope",
+    "is_buffer": false
+  },
+  "RS": {
+    "pair": "RS",
+    "person": "Racer",
+    "object": "Sword",
+    "image": "Racer + Sword",
+    "is_buffer": false
+  },
+  "RT": {
+    "pair": "RT",
+    "person": "Racer",
+    "object": "Torch",
+    "image": "Racer + Torch",
+    "is_buffer": false
+  },
+  "RU": {
+    "pair": "RU",
+    "person": "Racer",
+    "object": "Umbrella",
+    "image": "Racer + Umbrella",
+    "is_buffer": false
+  },
+  "RV": {
+    "pair": "RV",
+    "person": "Racer",
+    "object": "Vase",
+    "image": "Racer + Vase",
+    "is_buffer": false
+  },
+  "RW": {
+    "pair": "RW",
+    "person": "Racer",
+    "object": "Wheel",
+    "image": "Racer + Wheel",
+    "is_buffer": false
+  },
+  "RX": {
+    "pair": "RX",
+    "person": "Racer",
+    "object": "Xylophone",
+    "image": "Racer + Xylophone",
+    "is_buffer": false
+  },
+  "RY": {
+    "pair": "RY",
+    "person": "Racer",
+    "object": "Yo-yo",
+    "image": "Racer + Yo-yo",
+    "is_buffer": false
+  },
+  "RZ": {
+    "pair": "RZ",
+    "person": "Racer",
+    "object": "Zipper",
+    "image": "Racer + Zipper",
+    "is_buffer": false
+  },
+  "SA": {
+    "pair": "SA",
+    "person": "Samurai",
+    "object": "Axe",
+    "image": "Samurai + Axe",
+    "is_buffer": false
+  },
+  "SB": {
+    "pair": "SB",
+    "person": "Samurai",
+    "object": "Ball",
+    "image": "Samurai + Ball",
+    "is_buffer": false
+  },
+  "SC": {
+    "pair": "SC",
+    "person": "Samurai",
+    "object": "Camera",
+    "image": "Samurai + Camera",
+    "is_buffer": false
+  },
+  "SD": {
+    "pair": "SD",
+    "person": "Samurai",
+    "object": "Drum",
+    "image": "Samurai + Drum",
+    "is_buffer": false
+  },
+  "SE": {
+    "pair": "SE",
+    "person": "Samurai",
+    "object": "Egg",
+    "image": "Samurai + Egg",
+    "is_buffer": false
+  },
+  "SF": {
+    "pair": "SF",
+    "person": "Samurai",
+    "object": "Flag",
+    "image": "Samurai + Flag",
+    "is_buffer": false
+  },
+  "SG": {
+    "pair": "SG",
+    "person": "Samurai",
+    "object": "Globe",
+    "image": "Samurai + Globe",
+    "is_buffer": false
+  },
+  "SH": {
+    "pair": "SH",
+    "person": "Samurai",
+    "object": "Hammer",
+    "image": "Samurai + Hammer",
+    "is_buffer": false
+  },
+  "SI": {
+    "pair": "SI",
+    "person": "Samurai",
+    "object": "[Buffer-1]",
+    "image": "Samurai + [Buffer-1]",
+    "is_buffer": true
+  },
+  "SJ": {
+    "pair": "SJ",
+    "person": "Samurai",
+    "object": "Jetpack",
+    "image": "Samurai + Jetpack",
+    "is_buffer": false
+  },
+  "SK": {
+    "pair": "SK",
+    "person": "Samurai",
+    "object": "Key",
+    "image": "Samurai + Key",
+    "is_buffer": false
+  },
+  "SL": {
+    "pair": "SL",
+    "person": "Samurai",
+    "object": "Ladder",
+    "image": "Samurai + Ladder",
+    "is_buffer": false
+  },
+  "SM": {
+    "pair": "SM",
+    "person": "Samurai",
+    "object": "Mask",
+    "image": "Samurai + Mask",
+    "is_buffer": false
+  },
+  "SN": {
+    "pair": "SN",
+    "person": "Samurai",
+    "object": "Net",
+    "image": "Samurai + Net",
+    "is_buffer": false
+  },
+  "SO": {
+    "pair": "SO",
+    "person": "Samurai",
+    "object": "[Buffer-0]",
+    "image": "Samurai + [Buffer-0]",
+    "is_buffer": true
+  },
+  "SP": {
+    "pair": "SP",
+    "person": "Samurai",
+    "object": "Pan",
+    "image": "Samurai + Pan",
+    "is_buffer": false
+  },
+  "SQ": {
+    "pair": "SQ",
+    "person": "Samurai",
+    "object": "Quill",
+    "image": "Samurai + Quill",
+    "is_buffer": false
+  },
+  "SR": {
+    "pair": "SR",
+    "person": "Samurai",
+    "object": "Rope",
+    "image": "Samurai + Rope",
+    "is_buffer": false
+  },
+  "SS": {
+    "pair": "SS",
+    "person": "Samurai",
+    "object": "Sword",
+    "image": "Samurai + Sword",
+    "is_buffer": false
+  },
+  "ST": {
+    "pair": "ST",
+    "person": "Samurai",
+    "object": "Torch",
+    "image": "Samurai + Torch",
+    "is_buffer": false
+  },
+  "SU": {
+    "pair": "SU",
+    "person": "Samurai",
+    "object": "Umbrella",
+    "image": "Samurai + Umbrella",
+    "is_buffer": false
+  },
+  "SV": {
+    "pair": "SV",
+    "person": "Samurai",
+    "object": "Vase",
+    "image": "Samurai + Vase",
+    "is_buffer": false
+  },
+  "SW": {
+    "pair": "SW",
+    "person": "Samurai",
+    "object": "Wheel",
+    "image": "Samurai + Wheel",
+    "is_buffer": false
+  },
+  "SX": {
+    "pair": "SX",
+    "person": "Samurai",
+    "object": "Xylophone",
+    "image": "Samurai + Xylophone",
+    "is_buffer": false
+  },
+  "SY": {
+    "pair": "SY",
+    "person": "Samurai",
+    "object": "Yo-yo",
+    "image": "Samurai + Yo-yo",
+    "is_buffer": false
+  },
+  "SZ": {
+    "pair": "SZ",
+    "person": "Samurai",
+    "object": "Zipper",
+    "image": "Samurai + Zipper",
+    "is_buffer": false
+  },
+  "TA": {
+    "pair": "TA",
+    "person": "Teacher",
+    "object": "Axe",
+    "image": "Teacher + Axe",
+    "is_buffer": false
+  },
+  "TB": {
+    "pair": "TB",
+    "person": "Teacher",
+    "object": "Ball",
+    "image": "Teacher + Ball",
+    "is_buffer": false
+  },
+  "TC": {
+    "pair": "TC",
+    "person": "Teacher",
+    "object": "Camera",
+    "image": "Teacher + Camera",
+    "is_buffer": false
+  },
+  "TD": {
+    "pair": "TD",
+    "person": "Teacher",
+    "object": "Drum",
+    "image": "Teacher + Drum",
+    "is_buffer": false
+  },
+  "TE": {
+    "pair": "TE",
+    "person": "Teacher",
+    "object": "Egg",
+    "image": "Teacher + Egg",
+    "is_buffer": false
+  },
+  "TF": {
+    "pair": "TF",
+    "person": "Teacher",
+    "object": "Flag",
+    "image": "Teacher + Flag",
+    "is_buffer": false
+  },
+  "TG": {
+    "pair": "TG",
+    "person": "Teacher",
+    "object": "Globe",
+    "image": "Teacher + Globe",
+    "is_buffer": false
+  },
+  "TH": {
+    "pair": "TH",
+    "person": "Teacher",
+    "object": "Hammer",
+    "image": "Teacher + Hammer",
+    "is_buffer": false
+  },
+  "TI": {
+    "pair": "TI",
+    "person": "Teacher",
+    "object": "[Buffer-1]",
+    "image": "Teacher + [Buffer-1]",
+    "is_buffer": true
+  },
+  "TJ": {
+    "pair": "TJ",
+    "person": "Teacher",
+    "object": "Jetpack",
+    "image": "Teacher + Jetpack",
+    "is_buffer": false
+  },
+  "TK": {
+    "pair": "TK",
+    "person": "Teacher",
+    "object": "Key",
+    "image": "Teacher + Key",
+    "is_buffer": false
+  },
+  "TL": {
+    "pair": "TL",
+    "person": "Teacher",
+    "object": "Ladder",
+    "image": "Teacher + Ladder",
+    "is_buffer": false
+  },
+  "TM": {
+    "pair": "TM",
+    "person": "Teacher",
+    "object": "Mask",
+    "image": "Teacher + Mask",
+    "is_buffer": false
+  },
+  "TN": {
+    "pair": "TN",
+    "person": "Teacher",
+    "object": "Net",
+    "image": "Teacher + Net",
+    "is_buffer": false
+  },
+  "TO": {
+    "pair": "TO",
+    "person": "Teacher",
+    "object": "[Buffer-0]",
+    "image": "Teacher + [Buffer-0]",
+    "is_buffer": true
+  },
+  "TP": {
+    "pair": "TP",
+    "person": "Teacher",
+    "object": "Pan",
+    "image": "Teacher + Pan",
+    "is_buffer": false
+  },
+  "TQ": {
+    "pair": "TQ",
+    "person": "Teacher",
+    "object": "Quill",
+    "image": "Teacher + Quill",
+    "is_buffer": false
+  },
+  "TR": {
+    "pair": "TR",
+    "person": "Teacher",
+    "object": "Rope",
+    "image": "Teacher + Rope",
+    "is_buffer": false
+  },
+  "TS": {
+    "pair": "TS",
+    "person": "Teacher",
+    "object": "Sword",
+    "image": "Teacher + Sword",
+    "is_buffer": false
+  },
+  "TT": {
+    "pair": "TT",
+    "person": "Teacher",
+    "object": "Torch",
+    "image": "Teacher + Torch",
+    "is_buffer": false
+  },
+  "TU": {
+    "pair": "TU",
+    "person": "Teacher",
+    "object": "Umbrella",
+    "image": "Teacher + Umbrella",
+    "is_buffer": false
+  },
+  "TV": {
+    "pair": "TV",
+    "person": "Teacher",
+    "object": "Vase",
+    "image": "Teacher + Vase",
+    "is_buffer": false
+  },
+  "TW": {
+    "pair": "TW",
+    "person": "Teacher",
+    "object": "Wheel",
+    "image": "Teacher + Wheel",
+    "is_buffer": false
+  },
+  "TX": {
+    "pair": "TX",
+    "person": "Teacher",
+    "object": "Xylophone",
+    "image": "Teacher + Xylophone",
+    "is_buffer": false
+  },
+  "TY": {
+    "pair": "TY",
+    "person": "Teacher",
+    "object": "Yo-yo",
+    "image": "Teacher + Yo-yo",
+    "is_buffer": false
+  },
+  "TZ": {
+    "pair": "TZ",
+    "person": "Teacher",
+    "object": "Zipper",
+    "image": "Teacher + Zipper",
+    "is_buffer": false
+  },
+  "UA": {
+    "pair": "UA",
+    "person": "Umpire",
+    "object": "Axe",
+    "image": "Umpire + Axe",
+    "is_buffer": false
+  },
+  "UB": {
+    "pair": "UB",
+    "person": "Umpire",
+    "object": "Ball",
+    "image": "Umpire + Ball",
+    "is_buffer": false
+  },
+  "UC": {
+    "pair": "UC",
+    "person": "Umpire",
+    "object": "Camera",
+    "image": "Umpire + Camera",
+    "is_buffer": false
+  },
+  "UD": {
+    "pair": "UD",
+    "person": "Umpire",
+    "object": "Drum",
+    "image": "Umpire + Drum",
+    "is_buffer": false
+  },
+  "UE": {
+    "pair": "UE",
+    "person": "Umpire",
+    "object": "Egg",
+    "image": "Umpire + Egg",
+    "is_buffer": false
+  },
+  "UF": {
+    "pair": "UF",
+    "person": "Umpire",
+    "object": "Flag",
+    "image": "Umpire + Flag",
+    "is_buffer": false
+  },
+  "UG": {
+    "pair": "UG",
+    "person": "Umpire",
+    "object": "Globe",
+    "image": "Umpire + Globe",
+    "is_buffer": false
+  },
+  "UH": {
+    "pair": "UH",
+    "person": "Umpire",
+    "object": "Hammer",
+    "image": "Umpire + Hammer",
+    "is_buffer": false
+  },
+  "UI": {
+    "pair": "UI",
+    "person": "Umpire",
+    "object": "[Buffer-1]",
+    "image": "Umpire + [Buffer-1]",
+    "is_buffer": true
+  },
+  "UJ": {
+    "pair": "UJ",
+    "person": "Umpire",
+    "object": "Jetpack",
+    "image": "Umpire + Jetpack",
+    "is_buffer": false
+  },
+  "UK": {
+    "pair": "UK",
+    "person": "Umpire",
+    "object": "Key",
+    "image": "Umpire + Key",
+    "is_buffer": false
+  },
+  "UL": {
+    "pair": "UL",
+    "person": "Umpire",
+    "object": "Ladder",
+    "image": "Umpire + Ladder",
+    "is_buffer": false
+  },
+  "UM": {
+    "pair": "UM",
+    "person": "Umpire",
+    "object": "Mask",
+    "image": "Umpire + Mask",
+    "is_buffer": false
+  },
+  "UN": {
+    "pair": "UN",
+    "person": "Umpire",
+    "object": "Net",
+    "image": "Umpire + Net",
+    "is_buffer": false
+  },
+  "UO": {
+    "pair": "UO",
+    "person": "Umpire",
+    "object": "[Buffer-0]",
+    "image": "Umpire + [Buffer-0]",
+    "is_buffer": true
+  },
+  "UP": {
+    "pair": "UP",
+    "person": "Umpire",
+    "object": "Pan",
+    "image": "Umpire + Pan",
+    "is_buffer": false
+  },
+  "UQ": {
+    "pair": "UQ",
+    "person": "Umpire",
+    "object": "Quill",
+    "image": "Umpire + Quill",
+    "is_buffer": false
+  },
+  "UR": {
+    "pair": "UR",
+    "person": "Umpire",
+    "object": "Rope",
+    "image": "Umpire + Rope",
+    "is_buffer": false
+  },
+  "US": {
+    "pair": "US",
+    "person": "Umpire",
+    "object": "Sword",
+    "image": "Umpire + Sword",
+    "is_buffer": false
+  },
+  "UT": {
+    "pair": "UT",
+    "person": "Umpire",
+    "object": "Torch",
+    "image": "Umpire + Torch",
+    "is_buffer": false
+  },
+  "UU": {
+    "pair": "UU",
+    "person": "Umpire",
+    "object": "Umbrella",
+    "image": "Umpire + Umbrella",
+    "is_buffer": false
+  },
+  "UV": {
+    "pair": "UV",
+    "person": "Umpire",
+    "object": "Vase",
+    "image": "Umpire + Vase",
+    "is_buffer": false
+  },
+  "UW": {
+    "pair": "UW",
+    "person": "Umpire",
+    "object": "Wheel",
+    "image": "Umpire + Wheel",
+    "is_buffer": false
+  },
+  "UX": {
+    "pair": "UX",
+    "person": "Umpire",
+    "object": "Xylophone",
+    "image": "Umpire + Xylophone",
+    "is_buffer": false
+  },
+  "UY": {
+    "pair": "UY",
+    "person": "Umpire",
+    "object": "Yo-yo",
+    "image": "Umpire + Yo-yo",
+    "is_buffer": false
+  },
+  "UZ": {
+    "pair": "UZ",
+    "person": "Umpire",
+    "object": "Zipper",
+    "image": "Umpire + Zipper",
+    "is_buffer": false
+  },
+  "VA": {
+    "pair": "VA",
+    "person": "Violinist",
+    "object": "Axe",
+    "image": "Violinist + Axe",
+    "is_buffer": false
+  },
+  "VB": {
+    "pair": "VB",
+    "person": "Violinist",
+    "object": "Ball",
+    "image": "Violinist + Ball",
+    "is_buffer": false
+  },
+  "VC": {
+    "pair": "VC",
+    "person": "Violinist",
+    "object": "Camera",
+    "image": "Violinist + Camera",
+    "is_buffer": false
+  },
+  "VD": {
+    "pair": "VD",
+    "person": "Violinist",
+    "object": "Drum",
+    "image": "Violinist + Drum",
+    "is_buffer": false
+  },
+  "VE": {
+    "pair": "VE",
+    "person": "Violinist",
+    "object": "Egg",
+    "image": "Violinist + Egg",
+    "is_buffer": false
+  },
+  "VF": {
+    "pair": "VF",
+    "person": "Violinist",
+    "object": "Flag",
+    "image": "Violinist + Flag",
+    "is_buffer": false
+  },
+  "VG": {
+    "pair": "VG",
+    "person": "Violinist",
+    "object": "Globe",
+    "image": "Violinist + Globe",
+    "is_buffer": false
+  },
+  "VH": {
+    "pair": "VH",
+    "person": "Violinist",
+    "object": "Hammer",
+    "image": "Violinist + Hammer",
+    "is_buffer": false
+  },
+  "VI": {
+    "pair": "VI",
+    "person": "Violinist",
+    "object": "[Buffer-1]",
+    "image": "Violinist + [Buffer-1]",
+    "is_buffer": true
+  },
+  "VJ": {
+    "pair": "VJ",
+    "person": "Violinist",
+    "object": "Jetpack",
+    "image": "Violinist + Jetpack",
+    "is_buffer": false
+  },
+  "VK": {
+    "pair": "VK",
+    "person": "Violinist",
+    "object": "Key",
+    "image": "Violinist + Key",
+    "is_buffer": false
+  },
+  "VL": {
+    "pair": "VL",
+    "person": "Violinist",
+    "object": "Ladder",
+    "image": "Violinist + Ladder",
+    "is_buffer": false
+  },
+  "VM": {
+    "pair": "VM",
+    "person": "Violinist",
+    "object": "Mask",
+    "image": "Violinist + Mask",
+    "is_buffer": false
+  },
+  "VN": {
+    "pair": "VN",
+    "person": "Violinist",
+    "object": "Net",
+    "image": "Violinist + Net",
+    "is_buffer": false
+  },
+  "VO": {
+    "pair": "VO",
+    "person": "Violinist",
+    "object": "[Buffer-0]",
+    "image": "Violinist + [Buffer-0]",
+    "is_buffer": true
+  },
+  "VP": {
+    "pair": "VP",
+    "person": "Violinist",
+    "object": "Pan",
+    "image": "Violinist + Pan",
+    "is_buffer": false
+  },
+  "VQ": {
+    "pair": "VQ",
+    "person": "Violinist",
+    "object": "Quill",
+    "image": "Violinist + Quill",
+    "is_buffer": false
+  },
+  "VR": {
+    "pair": "VR",
+    "person": "Violinist",
+    "object": "Rope",
+    "image": "Violinist + Rope",
+    "is_buffer": false
+  },
+  "VS": {
+    "pair": "VS",
+    "person": "Violinist",
+    "object": "Sword",
+    "image": "Violinist + Sword",
+    "is_buffer": false
+  },
+  "VT": {
+    "pair": "VT",
+    "person": "Violinist",
+    "object": "Torch",
+    "image": "Violinist + Torch",
+    "is_buffer": false
+  },
+  "VU": {
+    "pair": "VU",
+    "person": "Violinist",
+    "object": "Umbrella",
+    "image": "Violinist + Umbrella",
+    "is_buffer": false
+  },
+  "VV": {
+    "pair": "VV",
+    "person": "Violinist",
+    "object": "Vase",
+    "image": "Violinist + Vase",
+    "is_buffer": false
+  },
+  "VW": {
+    "pair": "VW",
+    "person": "Violinist",
+    "object": "Wheel",
+    "image": "Violinist + Wheel",
+    "is_buffer": false
+  },
+  "VX": {
+    "pair": "VX",
+    "person": "Violinist",
+    "object": "Xylophone",
+    "image": "Violinist + Xylophone",
+    "is_buffer": false
+  },
+  "VY": {
+    "pair": "VY",
+    "person": "Violinist",
+    "object": "Yo-yo",
+    "image": "Violinist + Yo-yo",
+    "is_buffer": false
+  },
+  "VZ": {
+    "pair": "VZ",
+    "person": "Violinist",
+    "object": "Zipper",
+    "image": "Violinist + Zipper",
+    "is_buffer": false
+  },
+  "WA": {
+    "pair": "WA",
+    "person": "Wrestler",
+    "object": "Axe",
+    "image": "Wrestler + Axe",
+    "is_buffer": false
+  },
+  "WB": {
+    "pair": "WB",
+    "person": "Wrestler",
+    "object": "Ball",
+    "image": "Wrestler + Ball",
+    "is_buffer": false
+  },
+  "WC": {
+    "pair": "WC",
+    "person": "Wrestler",
+    "object": "Camera",
+    "image": "Wrestler + Camera",
+    "is_buffer": false
+  },
+  "WD": {
+    "pair": "WD",
+    "person": "Wrestler",
+    "object": "Drum",
+    "image": "Wrestler + Drum",
+    "is_buffer": false
+  },
+  "WE": {
+    "pair": "WE",
+    "person": "Wrestler",
+    "object": "Egg",
+    "image": "Wrestler + Egg",
+    "is_buffer": false
+  },
+  "WF": {
+    "pair": "WF",
+    "person": "Wrestler",
+    "object": "Flag",
+    "image": "Wrestler + Flag",
+    "is_buffer": false
+  },
+  "WG": {
+    "pair": "WG",
+    "person": "Wrestler",
+    "object": "Globe",
+    "image": "Wrestler + Globe",
+    "is_buffer": false
+  },
+  "WH": {
+    "pair": "WH",
+    "person": "Wrestler",
+    "object": "Hammer",
+    "image": "Wrestler + Hammer",
+    "is_buffer": false
+  },
+  "WI": {
+    "pair": "WI",
+    "person": "Wrestler",
+    "object": "[Buffer-1]",
+    "image": "Wrestler + [Buffer-1]",
+    "is_buffer": true
+  },
+  "WJ": {
+    "pair": "WJ",
+    "person": "Wrestler",
+    "object": "Jetpack",
+    "image": "Wrestler + Jetpack",
+    "is_buffer": false
+  },
+  "WK": {
+    "pair": "WK",
+    "person": "Wrestler",
+    "object": "Key",
+    "image": "Wrestler + Key",
+    "is_buffer": false
+  },
+  "WL": {
+    "pair": "WL",
+    "person": "Wrestler",
+    "object": "Ladder",
+    "image": "Wrestler + Ladder",
+    "is_buffer": false
+  },
+  "WM": {
+    "pair": "WM",
+    "person": "Wrestler",
+    "object": "Mask",
+    "image": "Wrestler + Mask",
+    "is_buffer": false
+  },
+  "WN": {
+    "pair": "WN",
+    "person": "Wrestler",
+    "object": "Net",
+    "image": "Wrestler + Net",
+    "is_buffer": false
+  },
+  "WO": {
+    "pair": "WO",
+    "person": "Wrestler",
+    "object": "[Buffer-0]",
+    "image": "Wrestler + [Buffer-0]",
+    "is_buffer": true
+  },
+  "WP": {
+    "pair": "WP",
+    "person": "Wrestler",
+    "object": "Pan",
+    "image": "Wrestler + Pan",
+    "is_buffer": false
+  },
+  "WQ": {
+    "pair": "WQ",
+    "person": "Wrestler",
+    "object": "Quill",
+    "image": "Wrestler + Quill",
+    "is_buffer": false
+  },
+  "WR": {
+    "pair": "WR",
+    "person": "Wrestler",
+    "object": "Rope",
+    "image": "Wrestler + Rope",
+    "is_buffer": false
+  },
+  "WS": {
+    "pair": "WS",
+    "person": "Wrestler",
+    "object": "Sword",
+    "image": "Wrestler + Sword",
+    "is_buffer": false
+  },
+  "WT": {
+    "pair": "WT",
+    "person": "Wrestler",
+    "object": "Torch",
+    "image": "Wrestler + Torch",
+    "is_buffer": false
+  },
+  "WU": {
+    "pair": "WU",
+    "person": "Wrestler",
+    "object": "Umbrella",
+    "image": "Wrestler + Umbrella",
+    "is_buffer": false
+  },
+  "WV": {
+    "pair": "WV",
+    "person": "Wrestler",
+    "object": "Vase",
+    "image": "Wrestler + Vase",
+    "is_buffer": false
+  },
+  "WW": {
+    "pair": "WW",
+    "person": "Wrestler",
+    "object": "Wheel",
+    "image": "Wrestler + Wheel",
+    "is_buffer": false
+  },
+  "WX": {
+    "pair": "WX",
+    "person": "Wrestler",
+    "object": "Xylophone",
+    "image": "Wrestler + Xylophone",
+    "is_buffer": false
+  },
+  "WY": {
+    "pair": "WY",
+    "person": "Wrestler",
+    "object": "Yo-yo",
+    "image": "Wrestler + Yo-yo",
+    "is_buffer": false
+  },
+  "WZ": {
+    "pair": "WZ",
+    "person": "Wrestler",
+    "object": "Zipper",
+    "image": "Wrestler + Zipper",
+    "is_buffer": false
+  },
+  "XA": {
+    "pair": "XA",
+    "person": "X-ray tech",
+    "object": "Axe",
+    "image": "X-ray tech + Axe",
+    "is_buffer": false
+  },
+  "XB": {
+    "pair": "XB",
+    "person": "X-ray tech",
+    "object": "Ball",
+    "image": "X-ray tech + Ball",
+    "is_buffer": false
+  },
+  "XC": {
+    "pair": "XC",
+    "person": "X-ray tech",
+    "object": "Camera",
+    "image": "X-ray tech + Camera",
+    "is_buffer": false
+  },
+  "XD": {
+    "pair": "XD",
+    "person": "X-ray tech",
+    "object": "Drum",
+    "image": "X-ray tech + Drum",
+    "is_buffer": false
+  },
+  "XE": {
+    "pair": "XE",
+    "person": "X-ray tech",
+    "object": "Egg",
+    "image": "X-ray tech + Egg",
+    "is_buffer": false
+  },
+  "XF": {
+    "pair": "XF",
+    "person": "X-ray tech",
+    "object": "Flag",
+    "image": "X-ray tech + Flag",
+    "is_buffer": false
+  },
+  "XG": {
+    "pair": "XG",
+    "person": "X-ray tech",
+    "object": "Globe",
+    "image": "X-ray tech + Globe",
+    "is_buffer": false
+  },
+  "XH": {
+    "pair": "XH",
+    "person": "X-ray tech",
+    "object": "Hammer",
+    "image": "X-ray tech + Hammer",
+    "is_buffer": false
+  },
+  "XI": {
+    "pair": "XI",
+    "person": "X-ray tech",
+    "object": "[Buffer-1]",
+    "image": "X-ray tech + [Buffer-1]",
+    "is_buffer": true
+  },
+  "XJ": {
+    "pair": "XJ",
+    "person": "X-ray tech",
+    "object": "Jetpack",
+    "image": "X-ray tech + Jetpack",
+    "is_buffer": false
+  },
+  "XK": {
+    "pair": "XK",
+    "person": "X-ray tech",
+    "object": "Key",
+    "image": "X-ray tech + Key",
+    "is_buffer": false
+  },
+  "XL": {
+    "pair": "XL",
+    "person": "X-ray tech",
+    "object": "Ladder",
+    "image": "X-ray tech + Ladder",
+    "is_buffer": false
+  },
+  "XM": {
+    "pair": "XM",
+    "person": "X-ray tech",
+    "object": "Mask",
+    "image": "X-ray tech + Mask",
+    "is_buffer": false
+  },
+  "XN": {
+    "pair": "XN",
+    "person": "X-ray tech",
+    "object": "Net",
+    "image": "X-ray tech + Net",
+    "is_buffer": false
+  },
+  "XO": {
+    "pair": "XO",
+    "person": "X-ray tech",
+    "object": "[Buffer-0]",
+    "image": "X-ray tech + [Buffer-0]",
+    "is_buffer": true
+  },
+  "XP": {
+    "pair": "XP",
+    "person": "X-ray tech",
+    "object": "Pan",
+    "image": "X-ray tech + Pan",
+    "is_buffer": false
+  },
+  "XQ": {
+    "pair": "XQ",
+    "person": "X-ray tech",
+    "object": "Quill",
+    "image": "X-ray tech + Quill",
+    "is_buffer": false
+  },
+  "XR": {
+    "pair": "XR",
+    "person": "X-ray tech",
+    "object": "Rope",
+    "image": "X-ray tech + Rope",
+    "is_buffer": false
+  },
+  "XS": {
+    "pair": "XS",
+    "person": "X-ray tech",
+    "object": "Sword",
+    "image": "X-ray tech + Sword",
+    "is_buffer": false
+  },
+  "XT": {
+    "pair": "XT",
+    "person": "X-ray tech",
+    "object": "Torch",
+    "image": "X-ray tech + Torch",
+    "is_buffer": false
+  },
+  "XU": {
+    "pair": "XU",
+    "person": "X-ray tech",
+    "object": "Umbrella",
+    "image": "X-ray tech + Umbrella",
+    "is_buffer": false
+  },
+  "XV": {
+    "pair": "XV",
+    "person": "X-ray tech",
+    "object": "Vase",
+    "image": "X-ray tech + Vase",
+    "is_buffer": false
+  },
+  "XW": {
+    "pair": "XW",
+    "person": "X-ray tech",
+    "object": "Wheel",
+    "image": "X-ray tech + Wheel",
+    "is_buffer": false
+  },
+  "XX": {
+    "pair": "XX",
+    "person": "X-ray tech",
+    "object": "Xylophone",
+    "image": "X-ray tech + Xylophone",
+    "is_buffer": false
+  },
+  "XY": {
+    "pair": "XY",
+    "person": "X-ray tech",
+    "object": "Yo-yo",
+    "image": "X-ray tech + Yo-yo",
+    "is_buffer": false
+  },
+  "XZ": {
+    "pair": "XZ",
+    "person": "X-ray tech",
+    "object": "Zipper",
+    "image": "X-ray tech + Zipper",
+    "is_buffer": false
+  },
+  "YA": {
+    "pair": "YA",
+    "person": "Yogi",
+    "object": "Axe",
+    "image": "Yogi + Axe",
+    "is_buffer": false
+  },
+  "YB": {
+    "pair": "YB",
+    "person": "Yogi",
+    "object": "Ball",
+    "image": "Yogi + Ball",
+    "is_buffer": false
+  },
+  "YC": {
+    "pair": "YC",
+    "person": "Yogi",
+    "object": "Camera",
+    "image": "Yogi + Camera",
+    "is_buffer": false
+  },
+  "YD": {
+    "pair": "YD",
+    "person": "Yogi",
+    "object": "Drum",
+    "image": "Yogi + Drum",
+    "is_buffer": false
+  },
+  "YE": {
+    "pair": "YE",
+    "person": "Yogi",
+    "object": "Egg",
+    "image": "Yogi + Egg",
+    "is_buffer": false
+  },
+  "YF": {
+    "pair": "YF",
+    "person": "Yogi",
+    "object": "Flag",
+    "image": "Yogi + Flag",
+    "is_buffer": false
+  },
+  "YG": {
+    "pair": "YG",
+    "person": "Yogi",
+    "object": "Globe",
+    "image": "Yogi + Globe",
+    "is_buffer": false
+  },
+  "YH": {
+    "pair": "YH",
+    "person": "Yogi",
+    "object": "Hammer",
+    "image": "Yogi + Hammer",
+    "is_buffer": false
+  },
+  "YI": {
+    "pair": "YI",
+    "person": "Yogi",
+    "object": "[Buffer-1]",
+    "image": "Yogi + [Buffer-1]",
+    "is_buffer": true
+  },
+  "YJ": {
+    "pair": "YJ",
+    "person": "Yogi",
+    "object": "Jetpack",
+    "image": "Yogi + Jetpack",
+    "is_buffer": false
+  },
+  "YK": {
+    "pair": "YK",
+    "person": "Yogi",
+    "object": "Key",
+    "image": "Yogi + Key",
+    "is_buffer": false
+  },
+  "YL": {
+    "pair": "YL",
+    "person": "Yogi",
+    "object": "Ladder",
+    "image": "Yogi + Ladder",
+    "is_buffer": false
+  },
+  "YM": {
+    "pair": "YM",
+    "person": "Yogi",
+    "object": "Mask",
+    "image": "Yogi + Mask",
+    "is_buffer": false
+  },
+  "YN": {
+    "pair": "YN",
+    "person": "Yogi",
+    "object": "Net",
+    "image": "Yogi + Net",
+    "is_buffer": false
+  },
+  "YO": {
+    "pair": "YO",
+    "person": "Yogi",
+    "object": "[Buffer-0]",
+    "image": "Yogi + [Buffer-0]",
+    "is_buffer": true
+  },
+  "YP": {
+    "pair": "YP",
+    "person": "Yogi",
+    "object": "Pan",
+    "image": "Yogi + Pan",
+    "is_buffer": false
+  },
+  "YQ": {
+    "pair": "YQ",
+    "person": "Yogi",
+    "object": "Quill",
+    "image": "Yogi + Quill",
+    "is_buffer": false
+  },
+  "YR": {
+    "pair": "YR",
+    "person": "Yogi",
+    "object": "Rope",
+    "image": "Yogi + Rope",
+    "is_buffer": false
+  },
+  "YS": {
+    "pair": "YS",
+    "person": "Yogi",
+    "object": "Sword",
+    "image": "Yogi + Sword",
+    "is_buffer": false
+  },
+  "YT": {
+    "pair": "YT",
+    "person": "Yogi",
+    "object": "Torch",
+    "image": "Yogi + Torch",
+    "is_buffer": false
+  },
+  "YU": {
+    "pair": "YU",
+    "person": "Yogi",
+    "object": "Umbrella",
+    "image": "Yogi + Umbrella",
+    "is_buffer": false
+  },
+  "YV": {
+    "pair": "YV",
+    "person": "Yogi",
+    "object": "Vase",
+    "image": "Yogi + Vase",
+    "is_buffer": false
+  },
+  "YW": {
+    "pair": "YW",
+    "person": "Yogi",
+    "object": "Wheel",
+    "image": "Yogi + Wheel",
+    "is_buffer": false
+  },
+  "YX": {
+    "pair": "YX",
+    "person": "Yogi",
+    "object": "Xylophone",
+    "image": "Yogi + Xylophone",
+    "is_buffer": false
+  },
+  "YY": {
+    "pair": "YY",
+    "person": "Yogi",
+    "object": "Yo-yo",
+    "image": "Yogi + Yo-yo",
+    "is_buffer": false
+  },
+  "YZ": {
+    "pair": "YZ",
+    "person": "Yogi",
+    "object": "Zipper",
+    "image": "Yogi + Zipper",
+    "is_buffer": false
+  },
+  "ZA": {
+    "pair": "ZA",
+    "person": "Zookeeper",
+    "object": "Axe",
+    "image": "Zookeeper + Axe",
+    "is_buffer": false
+  },
+  "ZB": {
+    "pair": "ZB",
+    "person": "Zookeeper",
+    "object": "Ball",
+    "image": "Zookeeper + Ball",
+    "is_buffer": false
+  },
+  "ZC": {
+    "pair": "ZC",
+    "person": "Zookeeper",
+    "object": "Camera",
+    "image": "Zookeeper + Camera",
+    "is_buffer": false
+  },
+  "ZD": {
+    "pair": "ZD",
+    "person": "Zookeeper",
+    "object": "Drum",
+    "image": "Zookeeper + Drum",
+    "is_buffer": false
+  },
+  "ZE": {
+    "pair": "ZE",
+    "person": "Zookeeper",
+    "object": "Egg",
+    "image": "Zookeeper + Egg",
+    "is_buffer": false
+  },
+  "ZF": {
+    "pair": "ZF",
+    "person": "Zookeeper",
+    "object": "Flag",
+    "image": "Zookeeper + Flag",
+    "is_buffer": false
+  },
+  "ZG": {
+    "pair": "ZG",
+    "person": "Zookeeper",
+    "object": "Globe",
+    "image": "Zookeeper + Globe",
+    "is_buffer": false
+  },
+  "ZH": {
+    "pair": "ZH",
+    "person": "Zookeeper",
+    "object": "Hammer",
+    "image": "Zookeeper + Hammer",
+    "is_buffer": false
+  },
+  "ZI": {
+    "pair": "ZI",
+    "person": "Zookeeper",
+    "object": "[Buffer-1]",
+    "image": "Zookeeper + [Buffer-1]",
+    "is_buffer": true
+  },
+  "ZJ": {
+    "pair": "ZJ",
+    "person": "Zookeeper",
+    "object": "Jetpack",
+    "image": "Zookeeper + Jetpack",
+    "is_buffer": false
+  },
+  "ZK": {
+    "pair": "ZK",
+    "person": "Zookeeper",
+    "object": "Key",
+    "image": "Zookeeper + Key",
+    "is_buffer": false
+  },
+  "ZL": {
+    "pair": "ZL",
+    "person": "Zookeeper",
+    "object": "Ladder",
+    "image": "Zookeeper + Ladder",
+    "is_buffer": false
+  },
+  "ZM": {
+    "pair": "ZM",
+    "person": "Zookeeper",
+    "object": "Mask",
+    "image": "Zookeeper + Mask",
+    "is_buffer": false
+  },
+  "ZN": {
+    "pair": "ZN",
+    "person": "Zookeeper",
+    "object": "Net",
+    "image": "Zookeeper + Net",
+    "is_buffer": false
+  },
+  "ZO": {
+    "pair": "ZO",
+    "person": "Zookeeper",
+    "object": "[Buffer-0]",
+    "image": "Zookeeper + [Buffer-0]",
+    "is_buffer": true
+  },
+  "ZP": {
+    "pair": "ZP",
+    "person": "Zookeeper",
+    "object": "Pan",
+    "image": "Zookeeper + Pan",
+    "is_buffer": false
+  },
+  "ZQ": {
+    "pair": "ZQ",
+    "person": "Zookeeper",
+    "object": "Quill",
+    "image": "Zookeeper + Quill",
+    "is_buffer": false
+  },
+  "ZR": {
+    "pair": "ZR",
+    "person": "Zookeeper",
+    "object": "Rope",
+    "image": "Zookeeper + Rope",
+    "is_buffer": false
+  },
+  "ZS": {
+    "pair": "ZS",
+    "person": "Zookeeper",
+    "object": "Sword",
+    "image": "Zookeeper + Sword",
+    "is_buffer": false
+  },
+  "ZT": {
+    "pair": "ZT",
+    "person": "Zookeeper",
+    "object": "Torch",
+    "image": "Zookeeper + Torch",
+    "is_buffer": false
+  },
+  "ZU": {
+    "pair": "ZU",
+    "person": "Zookeeper",
+    "object": "Umbrella",
+    "image": "Zookeeper + Umbrella",
+    "is_buffer": false
+  },
+  "ZV": {
+    "pair": "ZV",
+    "person": "Zookeeper",
+    "object": "Vase",
+    "image": "Zookeeper + Vase",
+    "is_buffer": false
+  },
+  "ZW": {
+    "pair": "ZW",
+    "person": "Zookeeper",
+    "object": "Wheel",
+    "image": "Zookeeper + Wheel",
+    "is_buffer": false
+  },
+  "ZX": {
+    "pair": "ZX",
+    "person": "Zookeeper",
+    "object": "Xylophone",
+    "image": "Zookeeper + Xylophone",
+    "is_buffer": false
+  },
+  "ZY": {
+    "pair": "ZY",
+    "person": "Zookeeper",
+    "object": "Yo-yo",
+    "image": "Zookeeper + Yo-yo",
+    "is_buffer": false
+  },
+  "ZZ": {
+    "pair": "ZZ",
+    "person": "Zookeeper",
+    "object": "Zipper",
+    "image": "Zookeeper + Zipper",
+    "is_buffer": false
+  }
+}
