@@ -8,7 +8,9 @@ export enum DrillType {
   THREE_PAIR_CHAIN = 'THREE_PAIR_CHAIN',
   EIGHT_PAIR_CHAIN = 'EIGHT_PAIR_CHAIN',
   JOURNEY_MODE = 'JOURNEY_MODE',
-  FULL_CUBE_SIMULATION = 'FULL_CUBE_SIMULATION'
+  FULL_CUBE_SIMULATION = 'FULL_CUBE_SIMULATION',
+  EDGE_NOTATION_DRILL = 'EDGE_NOTATION_DRILL',
+  CORNER_NOTATION_DRILL = 'CORNER_NOTATION_DRILL'
 }
 
 export enum QualityMetric {
@@ -43,4 +45,40 @@ export interface SessionData {
   notes?: string;
 }
 
+export interface CubeColor {
+  name: string;
+  hex: string;
+}
+
+export interface EdgePiece {
+  colors: [string, string];
+  notation: string;
+  displayOrder?: number;
+}
+
+export interface CornerPiece {
+  colors: [string, string, string];
+  notation: string;
+  displayOrder?: number;
+}
+
+export interface NotationAttempt {
+  pieceColors: string[];
+  correctAnswer: string;
+  userAnswer: string;
+  isCorrect: boolean;
+  timeSeconds: number;
+}
+
+export interface NotationSessionData {
+  id: string;
+  date: string;
+  drillType: DrillType.EDGE_NOTATION_DRILL | DrillType.CORNER_NOTATION_DRILL;
+  attempts: NotationAttempt[];
+  totalPieces: number;
+  correctCount: number;
+  accuracy: number;
+  averageTime: number;
+  notes?: string;
+}
 

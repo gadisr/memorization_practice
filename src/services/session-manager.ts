@@ -6,7 +6,7 @@ import { DrillType, SessionData } from '../types.js';
 import { getDrillConfig } from '../config/drill-config.js';
 import { generateRandomPairs } from './pair-generator.js';
 import { calculateAverage } from './timer.js';
-import { saveSession } from '../storage/session-storage.js';
+import { saveSession } from '../storage/storage-adapter.js';
 import { getQualityMetric } from './quality-adapter.js';
 
 let activeSession: SessionData | null = null;
@@ -49,11 +49,11 @@ export function recordPairTiming(timing: number): void {
   activeSession.timings.push(timing);
 }
 
-export function finalizeSession(
+export async function finalizeSession(
   recall: number,
   quality: number,
   notes?: string
-): SessionData {
+): Promise<SessionData> {
   if (!activeSession) {
     throw new Error('No active session to finalize');
   }
@@ -80,7 +80,7 @@ export function finalizeSession(
   }
   
   // Save to storage
-  saveSession(activeSession);
+  await saveSession(activeSession);
   
   const completedSession = { ...activeSession };
   activeSession = null;

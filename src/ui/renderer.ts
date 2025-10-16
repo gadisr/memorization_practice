@@ -42,6 +42,15 @@ export function updateDrillDescription(config: DrillConfig): void {
   
   if (pairCountInput) {
     pairCountInput.value = config.defaultPairCount.toString();
+    
+    // Disable pair count for notation drills (always 24 pieces)
+    if (config.type === DrillType.EDGE_NOTATION_DRILL || config.type === DrillType.CORNER_NOTATION_DRILL) {
+      pairCountInput.disabled = true;
+      pairCountInput.title = 'All 24 pieces must be practiced';
+    } else {
+      pairCountInput.disabled = false;
+      pairCountInput.title = '';
+    }
   }
 }
 
@@ -104,19 +113,29 @@ export function renderRatingScreen(metric: QualityMetric, pairCount: number): vo
   }
 }
 
-export function renderDashboard(sessions: SessionData[]): void {
-  renderDashboardStats(sessions);
-  renderSessionsTable(sessions);
+export function renderDashboard(sessions: SessionData[], notationSessions: any[] = []): void {
+  renderDashboardStats(sessions, notationSessions);
+  renderSessionsTable(sessions, notationSessions);
 }
 
-function renderDashboardStats(sessions: SessionData[]): void {
-  const totalSessions = sessions.length;
+function renderDashboardStats(sessions: SessionData[], notationSessions: any[] = []): void {
+  const totalSessions = sessions.length + notationSessions.length;
   const totalPairs = sessions.reduce((sum, s) => sum + s.pairCount, 0);
-  const avgAccuracy = totalSessions > 0
-    ? sessions.reduce((sum, s) => sum + s.recallAccuracy, 0) / totalSessions
+  
+  // Calculate average accuracy from both session types
+  const sessionAccuracy = sessions.length > 0
+    ? sessions.reduce((sum, s) => sum + s.recallAccuracy, 0) / sessions.length
     : 0;
-  const avgSpeed = totalSessions > 0
-    ? sessions.reduce((sum, s) => sum + s.averageTime, 0) / totalSessions
+  const notationAccuracy = notationSessions.length > 0
+    ? notationSessions.reduce((sum, s) => sum + s.accuracy, 0) / notationSessions.length
+    : 0;
+  
+  const avgAccuracy = totalSessions > 0
+    ? (sessionAccuracy * sessions.length + notationAccuracy * notationSessions.length) / totalSessions
+    : 0;
+    
+  const avgSpeed = sessions.length > 0
+    ? sessions.reduce((sum, s) => sum + s.averageTime, 0) / sessions.length
     : 0;
   
   const totalSessionsEl = document.getElementById('total-sessions');
@@ -130,7 +149,7 @@ function renderDashboardStats(sessions: SessionData[]): void {
   if (avgSpeedEl) avgSpeedEl.textContent = formatTime(avgSpeed);
 }
 
-function renderSessionsTable(sessions: SessionData[]): void {
+function renderSessionsTable(sessions: SessionData[], notationSessions: any[] = []): void {
   const tbody = document.getElementById('sessions-tbody');
   const noSessionsMsg = document.getElementById('no-sessions-message');
   const table = document.getElementById('sessions-table');
@@ -139,7 +158,13 @@ function renderSessionsTable(sessions: SessionData[]): void {
   
   tbody.innerHTML = '';
   
-  if (sessions.length === 0) {
+  // Combine all sessions and sort by date
+  const allSessions: any[] = [
+    ...sessions.map(s => ({ ...s, isNotation: false })),
+    ...notationSessions.map(s => ({ ...s, isNotation: true }))
+  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  
+  if (allSessions.length === 0) {
     if (noSessionsMsg) noSessionsMsg.classList.remove('hidden');
     if (table) table.classList.add('hidden');
     return;
@@ -149,7 +174,7 @@ function renderSessionsTable(sessions: SessionData[]): void {
   if (table) table.classList.remove('hidden');
   
   // Show most recent 10 sessions
-  const recentSessions = sessions.slice(0, 10);
+  const recentSessions = allSessions.slice(0, 10);
   
   recentSessions.forEach(session => {
     const row = document.createElement('tr');
@@ -161,17 +186,28 @@ function renderSessionsTable(sessions: SessionData[]): void {
     drillCell.textContent = formatDrillName(session.drillType);
     
     const pairsCell = document.createElement('td');
-    pairsCell.textContent = session.pairCount.toString();
+    if (session.isNotation) {
+      pairsCell.textContent = session.totalPieces.toString();
+    } else {
+      pairsCell.textContent = session.pairCount.toString();
+    }
     
     const timeCell = document.createElement('td');
     timeCell.textContent = formatTime(session.averageTime);
     
     const accuracyCell = document.createElement('td');
-    accuracyCell.textContent = `${session.recallAccuracy.toFixed(0)}%`;
-    accuracyCell.className = getAccuracyClass(session.recallAccuracy);
+    if (session.isNotation) {
+      accuracyCell.textContent = `${session.accuracy.toFixed(0)}%`;
+      accuracyCell.className = getAccuracyClass(session.accuracy);
+    } else {
+      accuracyCell.textContent = `${session.recallAccuracy.toFixed(0)}%`;
+      accuracyCell.className = getAccuracyClass(session.recallAccuracy);
+    }
     
     const qualityCell = document.createElement('td');
-    if (session.vividness !== undefined) {
+    if (session.isNotation) {
+      qualityCell.textContent = '-';
+    } else if (session.vividness !== undefined) {
       qualityCell.textContent = `V: ${session.vividness}`;
     } else if (session.flow !== undefined) {
       qualityCell.textContent = `F: ${session.flow}`;
@@ -223,7 +259,9 @@ function formatDrillName(type: DrillType): string {
     [DrillType.THREE_PAIR_CHAIN]: '3-Pair Chain',
     [DrillType.EIGHT_PAIR_CHAIN]: '8-Pair Chain',
     [DrillType.JOURNEY_MODE]: 'Journey Mode',
-    [DrillType.FULL_CUBE_SIMULATION]: 'Full Cube'
+    [DrillType.FULL_CUBE_SIMULATION]: 'Full Cube',
+    [DrillType.EDGE_NOTATION_DRILL]: 'Edge Notation',
+    [DrillType.CORNER_NOTATION_DRILL]: 'Corner Notation'
   };
   return names[type] || type;
 }

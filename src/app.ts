@@ -2,13 +2,16 @@
  * Main application controller for BLD Memory Trainer
  */
 
-import { DrillType, SessionData } from './types.js';
+import { DrillType, SessionData, NotationSessionData, NotationAttempt, EdgePiece, CornerPiece } from './types.js';
 import { getAllDrillConfigs, getDrillConfig } from './config/drill-config.js';
 import { createSession, getActiveSession, recordPairTiming, finalizeSession, cancelSession } from './services/session-manager.js';
 import { startTimer, stopTimer } from './services/timer.js';
 import { getQualityMetric } from './services/quality-adapter.js';
-import { getAllSessions, clearAllSessions } from './storage/session-storage.js';
+import { getAllSessions } from './storage/storage-adapter.js';
+import { getAllNotationSessions } from './storage/storage-adapter.js';
+import { clearAllSessions } from './storage/session-storage.js';
 import { generateCSV, downloadCSV } from './services/csv-exporter.js';
+import { initializeAuthUI } from './ui/auth-ui.js';
 import { validatePairCount, validateRecallCount, validateQualityRating } from './utils/validators.js';
 import {
   showScreen,
@@ -22,26 +25,36 @@ import {
   clearPairCountWarning
 } from './ui/renderer.js';
 import { initializeKeyboardHandler, setKeyboardCallbacks, clearKeyboardCallbacks } from './ui/keyboard-handler.js';
+import {
+  createNotationSession,
+  getActiveNotationSession,
+  getCurrentPiece,
+  recordAttempt,
+  finalizeNotationSession,
+  cancelNotationSession
+} from './services/notation-session-manager.js';
+import { validateEdgeAnswer, validateCornerAnswer } from './services/notation-validator.js';
+import { renderEdgeSquares, renderCornerSquares, renderNotationResults } from './ui/notation-renderer.js';
 
 // Application state
 let currentPairIndex = 0;
 let currentTimer = 0;
 
+// Notation training state
+let currentPieceIndex = 0;
+let currentNotationTimer = 0;
+let timerInterval: number | null = null;
+
 // Initialize the application
-export function initializeApp(): void {
+export async function initializeApp(): Promise<void> {
   const configs = getAllDrillConfigs();
   renderSetupScreen(configs);
   attachEventListeners();
+  initializeAuthUI();
   initializeKeyboardHandler();
   
-  // Check if there are existing sessions
-  const sessions = getAllSessions();
-  if (sessions.length > 0) {
-    showScreen('dashboard-screen');
-    renderDashboard(sessions);
-  } else {
-    showScreen('setup-screen');
-  }
+  // Always start with setup screen, let auth UI handle dashboard loading
+  showScreen('setup-screen');
 }
 
 function attachEventListeners(): void {
@@ -64,10 +77,19 @@ function attachEventListeners(): void {
   }
   
   if (viewDashboardBtn) {
-    viewDashboardBtn.addEventListener('click', () => {
-      const sessions = getAllSessions();
-      renderDashboard(sessions);
-      showScreen('dashboard-screen');
+    viewDashboardBtn.addEventListener('click', async () => {
+      try {
+        const sessions = await getAllSessions();
+        const notationSessions = await getAllNotationSessions();
+        console.log('Loaded sessions:', sessions.length, 'notation sessions:', notationSessions.length);
+        renderDashboard(sessions, notationSessions);
+        showScreen('dashboard-screen');
+      } catch (error) {
+        console.error('Error loading dashboard data:', error);
+        // Show empty dashboard if there's an error
+        renderDashboard([], []);
+        showScreen('dashboard-screen');
+      }
     });
   }
   
@@ -110,6 +132,39 @@ function attachEventListeners(): void {
   
   if (clearAllBtn) {
     clearAllBtn.addEventListener('click', handleClearAll);
+  }
+  
+  // Notation training screen
+  const notationSubmitBtn = document.getElementById('notation-submit');
+  const notationInput = document.getElementById('notation-input') as HTMLInputElement;
+  const cancelNotationBtn = document.getElementById('cancel-notation-btn');
+  
+  if (notationSubmitBtn) {
+    notationSubmitBtn.addEventListener('click', handleNotationSubmit);
+  }
+  
+  if (notationInput) {
+    notationInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        handleNotationSubmit();
+      }
+    });
+  }
+  
+  if (cancelNotationBtn) {
+    cancelNotationBtn.addEventListener('click', handleCancelNotation);
+  }
+  
+  // Notation results screen
+  const saveNotationBtn = document.getElementById('save-notation-btn');
+  const discardNotationBtn = document.getElementById('discard-notation-btn');
+  
+  if (saveNotationBtn) {
+    saveNotationBtn.addEventListener('click', handleSaveNotation);
+  }
+  
+  if (discardNotationBtn) {
+    discardNotationBtn.addEventListener('click', handleDiscardNotation);
   }
 }
 
@@ -159,6 +214,13 @@ async function handleStartSession(): Promise<void> {
   }
   
   const drillType = select.value as DrillType;
+  
+  // Check if it's a notation drill
+  if (drillType === DrillType.EDGE_NOTATION_DRILL || drillType === DrillType.CORNER_NOTATION_DRILL) {
+    await handleStartNotationSession(drillType);
+    return;
+  }
+  
   const pairCount = parseInt(input.value, 10);
   
   const validation = validatePairCount(pairCount, drillType);
@@ -241,7 +303,7 @@ function handleQuickRating(num: number): void {
   }
 }
 
-function handleSaveSession(): void {
+async function handleSaveSession(): Promise<void> {
   const session = getActiveSession();
   if (!session) return;
   
@@ -270,12 +332,13 @@ function handleSaveSession(): void {
   }
   
   try {
-    finalizeSession(recall, quality, notes || undefined);
+    await finalizeSession(recall, quality, notes || undefined);
     showNotification('Session saved successfully!', 'success');
     
     // Navigate to dashboard
-    const sessions = getAllSessions();
-    renderDashboard(sessions);
+    const sessions = await getAllSessions();
+    const notationSessions = await getAllNotationSessions();
+    renderDashboard(sessions, notationSessions);
     showScreen('dashboard-screen');
     
     // Clear keyboard callbacks
@@ -302,8 +365,8 @@ function handleCancelSession(): void {
   }
 }
 
-function handleExportCSV(): void {
-  const sessions = getAllSessions();
+async function handleExportCSV(): Promise<void> {
+  const sessions = await getAllSessions();
   
   if (sessions.length === 0) {
     showNotification('No sessions to export', 'error');
@@ -326,9 +389,212 @@ function handleClearAll(): void {
   if (confirm('Are you sure you want to clear all session data? This cannot be undone.')) {
     if (confirm('Really clear ALL data? This is permanent!')) {
       clearAllSessions();
-      renderDashboard([]);
+      renderDashboard([], []);
       showNotification('All data cleared', 'success');
     }
+  }
+}
+
+// Notation Training Handlers
+async function handleStartNotationSession(drillType: DrillType.EDGE_NOTATION_DRILL | DrillType.CORNER_NOTATION_DRILL): Promise<void> {
+  try {
+    await createNotationSession(drillType);
+    currentPieceIndex = 0;
+    
+    showScreen('notation-screen');
+    displayCurrentPiece();
+    
+    // Set keyboard callbacks
+    setKeyboardCallbacks({
+      escape: handleCancelNotation
+    });
+  } catch (error) {
+    console.error('Error creating notation session:', error);
+    showNotification('Error starting notation session', 'error');
+  }
+}
+
+function displayCurrentPiece(): void {
+  const session = getActiveNotationSession();
+  if (!session) return;
+  
+  const piece = getCurrentPiece(currentPieceIndex);
+  if (!piece) return;
+  
+  // Update counter
+  const counter = document.getElementById('notation-counter');
+  if (counter) {
+    counter.textContent = `Piece ${currentPieceIndex + 1} of ${session.totalPieces}`;
+  }
+  
+  // Render color squares
+  if (session.drillType === DrillType.EDGE_NOTATION_DRILL) {
+    renderEdgeSquares((piece as EdgePiece).colors);
+  } else {
+    renderCornerSquares((piece as CornerPiece).colors);
+  }
+  
+  // Clear input and focus
+  const input = document.getElementById('notation-input') as HTMLInputElement;
+  if (input) {
+    input.value = '';
+    input.focus();
+  }
+  
+  // Hide feedback
+  const feedback = document.getElementById('notation-feedback');
+  if (feedback) {
+    feedback.classList.add('hidden');
+  }
+  
+  // Start timer
+  currentNotationTimer = startTimer();
+  
+  // Start visual timer update
+  if (timerInterval) {
+    clearInterval(timerInterval);
+  }
+  timerInterval = window.setInterval(updateTimerDisplay, 100);
+}
+
+function updateTimerDisplay(): void {
+  const now = Date.now();
+  const elapsed = (now - currentNotationTimer) / 1000;
+  const timerEl = document.getElementById('notation-timer');
+  if (timerEl) {
+    timerEl.textContent = `${elapsed.toFixed(1)}s`;
+  }
+}
+
+async function handleNotationSubmit(): Promise<void> {
+  const session = getActiveNotationSession();
+  if (!session) return;
+  
+  const piece = getCurrentPiece(currentPieceIndex);
+  if (!piece) return;
+  
+  const input = document.getElementById('notation-input') as HTMLInputElement;
+  const userAnswer = input?.value.trim() || '';
+  
+  // Stop timer
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+  const elapsed = stopTimer(currentNotationTimer);
+  
+  // Validate answer
+  let validation;
+  try {
+    if (session.drillType === DrillType.EDGE_NOTATION_DRILL) {
+      validation = await validateEdgeAnswer((piece as EdgePiece).colors, userAnswer);
+    } else {
+      validation = await validateCornerAnswer((piece as CornerPiece).colors, userAnswer);
+    }
+  } catch (error) {
+    console.error('Error validating answer:', error);
+    showNotification('Error validating answer', 'error');
+    return;
+  }
+  
+  // Create attempt
+  const attempt: NotationAttempt = {
+    pieceColors: [...piece.colors],
+    correctAnswer: validation.correctAnswer,
+    userAnswer,
+    isCorrect: validation.isCorrect,
+    timeSeconds: elapsed
+  };
+  
+  // Record attempt
+  recordAttempt(attempt);
+  
+  // Show feedback
+  const feedback = document.getElementById('notation-feedback');
+  if (feedback) {
+    feedback.classList.remove('hidden', 'correct', 'incorrect');
+    feedback.classList.add(validation.isCorrect ? 'correct' : 'incorrect');
+    
+    if (validation.isCorrect) {
+      feedback.innerHTML = `✓ Correct! (${elapsed.toFixed(2)}s)`;
+    } else {
+      feedback.innerHTML = `✗ Incorrect<br>Correct: <strong>${validation.correctAnswer}</strong> (${elapsed.toFixed(2)}s)`;
+    }
+  }
+  
+  // Wait 1 second, then show next piece or results
+  setTimeout(() => {
+    currentPieceIndex++;
+    
+    if (currentPieceIndex < session.totalPieces) {
+      displayCurrentPiece();
+    } else {
+      showNotationResults();
+    }
+  }, 1000);
+}
+
+function showNotationResults(): void {
+  const session = getActiveNotationSession();
+  if (!session) return;
+  
+  // Stop any running timer
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+  
+  // Calculate metrics before showing results (without saving yet)
+  const totalAttempts = session.attempts.length;
+  if (totalAttempts > 0) {
+    session.accuracy = (session.correctCount / session.totalPieces) * 100;
+    const totalTime = session.attempts.reduce((sum, attempt) => sum + attempt.timeSeconds, 0);
+    session.averageTime = totalTime / totalAttempts;
+  }
+  
+  renderNotationResults(session);
+  showScreen('notation-results-screen');
+  
+  // Clear keyboard callbacks
+  clearKeyboardCallbacks();
+}
+
+async function handleSaveNotation(): Promise<void> {
+  const notesInput = document.getElementById('notation-notes-input') as HTMLTextAreaElement;
+  const notes = notesInput?.value.trim() || undefined;
+  
+  try {
+    await finalizeNotationSession(notes);
+    showNotification('Notation training saved successfully!', 'success');
+    
+    // Navigate to dashboard
+    const sessions = await getAllSessions();
+    const notationSessions = await getAllNotationSessions();
+    renderDashboard(sessions, notationSessions);
+    showScreen('dashboard-screen');
+  } catch (error) {
+    console.error('Error saving notation session:', error);
+    showNotification('Error saving notation session', 'error');
+  }
+}
+
+function handleDiscardNotation(): void {
+  if (confirm('Are you sure you want to discard this notation training session?')) {
+    cancelNotationSession();
+    showScreen('setup-screen');
+    clearKeyboardCallbacks();
+  }
+}
+
+function handleCancelNotation(): void {
+  if (confirm('Are you sure you want to cancel this notation training?')) {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+    cancelNotationSession();
+    showScreen('setup-screen');
+    clearKeyboardCallbacks();
   }
 }
 

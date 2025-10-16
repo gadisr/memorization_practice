@@ -11,4 +11,7 @@ src/**/*.js
 src/**/*.js.map
 # Keep the data folder
 !src/data/**
+# Keep the firebase credentials
+backend/firebase-credentials.json
+*.pyc
 

@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BLD Memory Trainer</title>
   <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
+      }
+    }
+  </script>
 </head>
 <body>
   <div id="app">
@@ -13,6 +21,20 @@
       <header>
         <h1>🧠 BLD Memory Trainer</h1>
         <p class="subtitle">Improve your blindfold cubing visualization</p>
+        
+        <!-- Auth Container -->
+        <div id="auth-container" class="auth-container">
+          <button id="login-button" class="btn btn-auth">
+            <img src="https://www.google.com/favicon.ico" alt="Google" width="20" />
+            Sign in with Google
+          </button>
+          
+          <div id="user-profile" class="user-profile hidden">
+            <img id="user-avatar" src="" alt="User" class="avatar" />
+            <span id="user-email" class="user-email"></span>
+            <button id="logout-button" class="btn btn-text">Sign Out</button>
+          </div>
+        </div>
       </header>
 
       <div class="card">
@@ -85,11 +107,75 @@
       </div>
     </div>
 
+    <!-- Notation Training Screen -->
+    <div id="notation-screen" class="screen hidden">
+      <div class="session-header">
+        <span id="notation-counter" class="counter">Piece 1 of 24</span>
+        <span id="notation-timer" class="timer">0.0s</span>
+        <button id="cancel-notation-btn" class="btn btn-text">Cancel</button>
+      </div>
+
+      <div class="notation-content">
+        <div id="color-squares-container"></div>
+        <p class="instruction">Type the Speffz letter for this piece</p>
+        
+        <input 
+          type="text" 
+          id="notation-input" 
+          class="notation-input" 
+          maxlength="1" 
+          placeholder="?"
+          autocomplete="off"
+          autocapitalize="off"
+        >
+        
+        <div id="notation-feedback" class="notation-feedback hidden"></div>
+      </div>
+
+      <div class="session-controls">
+        <button id="notation-submit" class="btn btn-large btn-primary">Submit (Enter)</button>
+      </div>
+    </div>
+
+    <!-- Notation Results Screen -->
+    <div id="notation-results-screen" class="screen hidden">
+      <header>
+        <h2>Training Complete!</h2>
+      </header>
+
+      <div id="notation-results-container" class="card">
+        <!-- Results will be dynamically rendered -->
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label for="notation-notes-input">Notes (optional)</label>
+          <textarea id="notation-notes-input" class="input-field" rows="3" placeholder="Any observations about this session..."></textarea>
+        </div>
+
+        <button id="save-notation-btn" class="btn btn-primary">Save & Continue</button>
+        <button id="discard-notation-btn" class="btn btn-text">Discard</button>
+      </div>
+    </div>
+
     <!-- Dashboard Screen -->
     <div id="dashboard-screen" class="screen hidden">
       <header>
         <h1>📊 Training Dashboard</h1>
         <div class="header-actions">
+          <!-- Auth Container -->
+          <div id="auth-container-dashboard" class="auth-container">
+            <button id="login-button-dashboard" class="btn btn-auth">
+              <img src="https://www.google.com/favicon.ico" alt="Google" width="20" />
+              Sign in
+            </button>
+            
+            <div id="user-profile-dashboard" class="user-profile hidden">
+              <img id="user-avatar-dashboard" src="" alt="User" class="avatar" />
+              <span id="user-email-dashboard" class="user-email"></span>
+              <button id="logout-button-dashboard" class="btn btn-text">Sign Out</button>
+            </div>
+          </div>
           <button id="new-session-btn" class="btn btn-primary">New Session</button>
           <button id="export-btn" class="btn btn-secondary">Export CSV</button>
         </div>

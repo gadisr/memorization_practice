@@ -1,0 +1,32 @@
+[
+  { "colors": ["white", "orange", "blue"], "notation": "A" },
+  { "colors": ["white", "blue", "red"], "notation": "B" },
+  { "colors": ["white", "red", "green"], "notation": "C" },
+  { "colors": ["white", "green", "orange"], "notation": "D" },
+
+  { "colors": ["orange", "blue", "white"], "notation": "E" },
+  { "colors": ["orange", "white", "green"], "notation": "F" },
+  { "colors": ["orange", "green", "yellow"], "notation": "G" },
+  { "colors": ["orange", "yellow", "blue"], "notation": "H" },
+
+  { "colors": ["green", "orange", "white"], "notation": "I" },
+  { "colors": ["green", "white", "red"], "notation": "J" },
+  { "colors": ["green", "red", "yellow"], "notation": "K" },
+  { "colors": ["green", "yellow", "orange"], "notation": "L" },
+
+  { "colors": ["red", "green", "white"], "notation": "M" },
+  { "colors": ["red", "white", "blue"], "notation": "N" },
+  { "colors": ["red", "blue", "yellow"], "notation": "O" },
+  { "colors": ["red", "yellow", "green"], "notation": "P" },
+
+  { "colors": ["blue", "red", "white"], "notation": "Q" },
+  { "colors": ["blue", "white", "orange"], "notation": "R" },
+  { "colors": ["blue", "orange", "yellow"], "notation": "S" },
+  { "colors": ["blue", "yellow", "red"], "notation": "T" },
+
+  { "colors": ["yellow", "orange", "green"], "notation": "U" },
+  { "colors": ["yellow", "green", "red"], "notation": "V" },
+  { "colors": ["yellow", "red", "blue"], "notation": "W" },
+  { "colors": ["yellow", "blue", "orange"], "notation": "X" }
+]
+

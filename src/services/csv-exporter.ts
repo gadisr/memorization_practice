@@ -2,7 +2,7 @@
  * CSV export service for session data
  */
 
-import { SessionData, DrillType } from '../types.js';
+import { SessionData, NotationSessionData, DrillType } from '../types.js';
 
 const CSV_HEADERS = [
   'Date',
@@ -67,7 +67,9 @@ function formatDrillType(type: DrillType): string {
     [DrillType.THREE_PAIR_CHAIN]: '3-Pair Chain',
     [DrillType.EIGHT_PAIR_CHAIN]: '8-Pair Chain',
     [DrillType.JOURNEY_MODE]: 'Journey Mode',
-    [DrillType.FULL_CUBE_SIMULATION]: 'Full Cube Simulation'
+    [DrillType.FULL_CUBE_SIMULATION]: 'Full Cube Simulation',
+    [DrillType.EDGE_NOTATION_DRILL]: 'Edge Notation',
+    [DrillType.CORNER_NOTATION_DRILL]: 'Corner Notation'
   };
   return names[type] || type;
 }
@@ -77,5 +79,84 @@ function escapeCsvField(field: string): string {
     return `"${field.replace(/"/g, '""')}"`;
   }
   return field;
+}
+
+export function generateNotationCSV(sessions: NotationSessionData[]): string {
+  const headers = [
+    'Date',
+    'Drill Type',
+    'Total Pieces',
+    'Correct',
+    'Accuracy (%)',
+    'Avg Time (sec)',
+    'Notes'
+  ];
+  
+  const rows: string[] = [headers.join(',')];
+  
+  for (const session of sessions) {
+    const row = [
+      formatDate(session.date),
+      formatDrillType(session.drillType),
+      session.totalPieces.toString(),
+      session.correctCount.toString(),
+      session.accuracy.toFixed(1),
+      session.averageTime.toFixed(2),
+      escapeCsvField(session.notes || '')
+    ];
+    rows.push(row.join(','));
+  }
+  
+  return rows.join('\n');
+}
+
+export function generateCombinedCSV(pairSessions: SessionData[], notationSessions: NotationSessionData[]): string {
+  const headers = [
+    'Date',
+    'Drill Type',
+    'Count',
+    'Avg Time (sec)',
+    'Accuracy/Recall (%)',
+    'Quality',
+    'Notes'
+  ];
+  
+  const rows: string[] = [headers.join(',')];
+  
+  // Add pair sessions
+  for (const session of pairSessions) {
+    const quality = session.vividness 
+      ? `Vividness: ${session.vividness}`
+      : session.flow 
+        ? `Flow: ${session.flow}`
+        : '-';
+    
+    const row = [
+      formatDate(session.date),
+      formatDrillType(session.drillType),
+      session.pairCount.toString(),
+      session.averageTime.toFixed(2),
+      session.recallAccuracy.toFixed(1),
+      quality,
+      escapeCsvField(session.notes || '')
+    ];
+    rows.push(row.join(','));
+  }
+  
+  // Add notation sessions
+  for (const session of notationSessions) {
+    const row = [
+      formatDate(session.date),
+      formatDrillType(session.drillType),
+      session.totalPieces.toString(),
+      session.averageTime.toFixed(2),
+      session.accuracy.toFixed(1),
+      '-',
+      escapeCsvField(session.notes || '')
+    ];
+    rows.push(row.join(','));
+  }
+  
+  return rows.join('\n');
 }
 

@@ -40,6 +40,18 @@ export const DRILL_CONFIGS: Map<DrillType, DrillConfig> = new Map([
     defaultPairCount: 20,
     qualityMetric: QualityMetric.FLOW,
     description: 'Edge + Corner sequence simulation - Realistic BLD memo practice'
+  }],
+  [DrillType.EDGE_NOTATION_DRILL, {
+    type: DrillType.EDGE_NOTATION_DRILL,
+    defaultPairCount: 24,
+    qualityMetric: QualityMetric.VIVIDNESS,
+    description: 'Recognize Speffz notation from 2-color edge pieces - Accuracy & Speed'
+  }],
+  [DrillType.CORNER_NOTATION_DRILL, {
+    type: DrillType.CORNER_NOTATION_DRILL,
+    defaultPairCount: 24,
+    qualityMetric: QualityMetric.VIVIDNESS,
+    description: 'Recognize Speffz notation from 3-color corner pieces - Accuracy & Speed'
   }]
 ]);
 
