@@ -3,7 +3,7 @@
  */
 
 import { DrillType, SessionData, NotationSessionData, NotationAttempt, EdgePiece, CornerPiece } from './types.js';
-import { getAllDrillConfigs, getDrillConfig } from './config/drill-config.js';
+import { getAllDrillConfigs, getDrillConfig, BLD_TECHNIQUE_INTRO } from './config/drill-config.js';
 import { createSession, getActiveSession, recordPairTiming, finalizeSession, cancelSession } from './services/session-manager.js';
 import { startTimer, stopTimer } from './services/timer.js';
 import { getQualityMetric } from './services/quality-adapter.js';
@@ -23,7 +23,10 @@ import {
   renderDashboard,
   showNotification,
   showPairCountWarning,
-  clearPairCountWarning
+  clearPairCountWarning,
+  showTechniqueIntro,
+  showDrillInfo,
+  hideModal
 } from './ui/renderer.js';
 import { initializeKeyboardHandler, setKeyboardCallbacks, clearKeyboardCallbacks } from './ui/keyboard-handler.js';
 import {
@@ -64,6 +67,8 @@ function attachEventListeners(): void {
   const pairCountInput = document.getElementById('pair-count') as HTMLInputElement;
   const startBtn = document.getElementById('start-btn');
   const viewDashboardBtn = document.getElementById('view-dashboard-btn');
+  const showTechniqueIntroBtn = document.getElementById('show-technique-intro-btn');
+  const showDrillInfoBtn = document.getElementById('show-drill-info-btn');
   
   if (drillSelect) {
     drillSelect.addEventListener('change', handleDrillChange);
@@ -90,6 +95,47 @@ function attachEventListeners(): void {
         // Show empty dashboard if there's an error
         renderDashboard([], []);
         showScreen('dashboard-screen');
+      }
+    });
+  }
+  
+  if (showTechniqueIntroBtn) {
+    showTechniqueIntroBtn.addEventListener('click', () => {
+      showTechniqueIntro(BLD_TECHNIQUE_INTRO);
+    });
+  }
+  
+  if (showDrillInfoBtn) {
+    showDrillInfoBtn.addEventListener('click', () => {
+      const select = document.getElementById('drill-select') as HTMLSelectElement;
+      if (select?.value) {
+        const drillType = select.value as DrillType;
+        const config = getDrillConfig(drillType);
+        if (config) {
+          showDrillInfo(config);
+        }
+      }
+    });
+  }
+  
+  // Modal close buttons
+  const closeModalBtn = document.getElementById('close-modal-btn');
+  const modalCloseFooterBtn = document.getElementById('modal-close-footer-btn');
+  const infoModal = document.getElementById('info-modal');
+  
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', hideModal);
+  }
+  
+  if (modalCloseFooterBtn) {
+    modalCloseFooterBtn.addEventListener('click', hideModal);
+  }
+  
+  // Close modal when clicking outside
+  if (infoModal) {
+    infoModal.addEventListener('click', (e) => {
+      if (e.target === infoModal) {
+        hideModal();
       }
     });
   }

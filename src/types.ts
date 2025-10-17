@@ -29,6 +29,8 @@ export interface DrillConfig {
   defaultPairCount: number;
   qualityMetric: QualityMetric;
   description: string;
+  introduction?: string;
+  howItHelps?: string;
 }
 
 export interface RecallValidation {

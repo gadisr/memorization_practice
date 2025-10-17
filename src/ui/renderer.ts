@@ -36,9 +36,19 @@ export function renderSetupScreen(configs: DrillConfig[]): void {
 export function updateDrillDescription(config: DrillConfig): void {
   const desc = document.getElementById('drill-description');
   const pairCountInput = document.getElementById('pair-count') as HTMLInputElement;
+  const drillInfoBtn = document.getElementById('show-drill-info-btn');
   
   if (desc) {
     desc.textContent = config.description;
+  }
+  
+  // Show/hide drill info button based on whether we have intro text
+  if (drillInfoBtn) {
+    if (config.introduction && config.howItHelps) {
+      drillInfoBtn.classList.remove('hidden');
+    } else {
+      drillInfoBtn.classList.add('hidden');
+    }
   }
   
   if (pairCountInput) {
@@ -408,6 +418,50 @@ export function clearPairCountWarning(): void {
   if (warningEl) {
     warningEl.textContent = '';
   }
+}
+
+export function showModal(title: string, content: string): void {
+  const modal = document.getElementById('info-modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalBody = document.getElementById('modal-body');
+  
+  if (!modal || !modalTitle || !modalBody) return;
+  
+  modalTitle.textContent = title;
+  modalBody.innerHTML = content;
+  modal.classList.remove('hidden');
+}
+
+export function hideModal(): void {
+  const modal = document.getElementById('info-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+export function showTechniqueIntro(introHtml: string): void {
+  showModal('About BLD Memorization Technique', introHtml);
+}
+
+export function showDrillInfo(config: DrillConfig): void {
+  const drillName = formatDrillName(config.type);
+  const content = `
+    <div class="info-section">
+      <div class="info-section-title">What is ${drillName}?</div>
+      <div class="info-section-content">
+        <p>${config.introduction || config.description}</p>
+      </div>
+    </div>
+    
+    <div class="info-section">
+      <div class="info-section-title">How It Helps Your BLD Solving</div>
+      <div class="info-section-content">
+        <p>${config.howItHelps || 'This drill helps improve your memorization skills for blindfold cubing.'}</p>
+      </div>
+    </div>
+  `;
+  
+  showModal(`${drillName} - Drill Information`, content);
 }
 
 

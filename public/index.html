@@ -38,7 +38,10 @@
       </header>
 
       <div class="card">
-        <h2>Start Training Session</h2>
+        <div class="card-header-with-action">
+          <h2>Start Training Session</h2>
+          <button id="show-technique-intro-btn" class="btn btn-info-icon" title="About BLD Memorization">ℹ️</button>
+        </div>
         
         <div class="form-group">
           <label for="drill-select">Drill Type</label>
@@ -46,6 +49,7 @@
             <option value="">Select a drill...</option>
           </select>
           <p id="drill-description" class="help-text"></p>
+          <button id="show-drill-info-btn" class="btn btn-secondary btn-small hidden">📖 Learn More About This Drill</button>
         </div>
 
         <div class="form-group">
@@ -56,6 +60,22 @@
 
         <button id="start-btn" class="btn btn-primary">Start Session</button>
         <button id="view-dashboard-btn" class="btn btn-secondary">View Dashboard</button>
+      </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modal-title">Information</h2>
+          <button id="close-modal-btn" class="btn-close">&times;</button>
+        </div>
+        <div id="modal-body" class="modal-body">
+          <!-- Content will be dynamically inserted -->
+        </div>
+        <div class="modal-footer">
+          <button id="modal-close-footer-btn" class="btn btn-primary">Got it!</button>
+        </div>
       </div>
     </div>
 
