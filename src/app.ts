@@ -19,6 +19,7 @@ import {
   updateDrillDescription,
   renderSessionScreen,
   renderRatingScreen,
+  renderRecallFeedback,
   renderDashboard,
   showNotification,
   showPairCountWarning,
@@ -274,7 +275,7 @@ function handleNextPair(): void {
   } else {
     // Session complete, show rating screen
     const metric = getQualityMetric(session.drillType);
-    renderRatingScreen(metric, session.pairCount);
+    renderRatingScreen(metric, session.pairCount, session.drillType);
     showScreen('rating-screen');
     
     // Set keyboard callbacks for rating screen
@@ -307,7 +308,7 @@ async function handleSaveSession(): Promise<void> {
   const session = getActiveSession();
   if (!session) return;
   
-  const recallInput = document.getElementById('recall-input') as HTMLInputElement;
+  const recallTextInput = document.getElementById('recall-text-input') as HTMLTextAreaElement;
   const notesInput = document.getElementById('notes-input') as HTMLTextAreaElement;
   const qualityRadios = document.querySelectorAll('input[name="quality"]:checked');
   
@@ -316,14 +317,15 @@ async function handleSaveSession(): Promise<void> {
     return;
   }
   
-  const recall = parseInt(recallInput.value, 10);
-  const quality = parseInt((qualityRadios[0] as HTMLInputElement).value, 10);
-  const notes = notesInput.value.trim();
+  const userRecall = recallTextInput.value.trim();
   
-  if (!validateRecallCount(recall, session.pairCount)) {
-    showNotification('Invalid recall count', 'error');
+  if (!userRecall) {
+    showNotification('Please enter your recalled pairs', 'error');
     return;
   }
+  
+  const quality = parseInt((qualityRadios[0] as HTMLInputElement).value, 10);
+  const notes = notesInput.value.trim();
   
   const metric = getQualityMetric(session.drillType);
   if (!validateQualityRating(quality, metric)) {
@@ -332,17 +334,30 @@ async function handleSaveSession(): Promise<void> {
   }
   
   try {
-    await finalizeSession(recall, quality, notes || undefined);
-    showNotification('Session saved successfully!', 'success');
+    const completedSession = await finalizeSession(userRecall, quality, notes || undefined);
     
-    // Navigate to dashboard
-    const sessions = await getAllSessions();
-    const notationSessions = await getAllNotationSessions();
-    renderDashboard(sessions, notationSessions);
-    showScreen('dashboard-screen');
-    
-    // Clear keyboard callbacks
-    clearKeyboardCallbacks();
+    // Show validation feedback
+    if (completedSession.recallValidation) {
+      renderRecallFeedback(completedSession.recallValidation);
+      
+      // Delay navigation to let user see results
+      setTimeout(async () => {
+        showNotification('Session saved successfully!', 'success');
+        const sessions = await getAllSessions();
+        const notationSessions = await getAllNotationSessions();
+        renderDashboard(sessions, notationSessions);
+        showScreen('dashboard-screen');
+        clearKeyboardCallbacks();
+      }, 3000);
+    } else {
+      // Fallback if validation not available
+      showNotification('Session saved successfully!', 'success');
+      const sessions = await getAllSessions();
+      const notationSessions = await getAllNotationSessions();
+      renderDashboard(sessions, notationSessions);
+      showScreen('dashboard-screen');
+      clearKeyboardCallbacks();
+    }
   } catch (error) {
     console.error('Error saving session:', error);
     showNotification('Error saving session', 'error');

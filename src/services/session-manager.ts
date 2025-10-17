@@ -8,6 +8,7 @@ import { generateRandomPairs } from './pair-generator.js';
 import { calculateAverage } from './timer.js';
 import { saveSession } from '../storage/storage-adapter.js';
 import { getQualityMetric } from './quality-adapter.js';
+import { validateRecall } from './recall-validator.js';
 
 let activeSession: SessionData | null = null;
 let sessionStartTime: number | null = null;
@@ -52,7 +53,7 @@ export function recordPairTiming(timing: number): void {
 }
 
 export async function finalizeSession(
-  recall: number,
+  userRecall: string,
   quality: number,
   notes?: string
 ): Promise<SessionData> {
@@ -67,7 +68,17 @@ export async function finalizeSession(
   
   // Calculate metrics
   activeSession.averageTime = calculateAverage(activeSession.timings);
-  activeSession.recallAccuracy = (recall / activeSession.pairCount) * 100;
+  
+  // Validate recall input
+  const recallValidation = validateRecall(
+    userRecall,
+    activeSession.pairs,
+    activeSession.drillType
+  );
+  
+  activeSession.userRecall = userRecall;
+  activeSession.recallValidation = recallValidation;
+  activeSession.recallAccuracy = recallValidation.accuracy;
   
   // Calculate total session time
   if (sessionStartTime) {

@@ -92,9 +92,21 @@
         </div>
 
         <div class="form-group">
-          <label for="recall-input">Pairs Recalled Correctly</label>
-          <input type="number" id="recall-input" class="input-field" min="0" value="0">
-          <p id="recall-total" class="help-text">out of 0</p>
+          <label for="recall-text-input">Enter Recalled Letter Pairs</label>
+          <textarea 
+            id="recall-text-input" 
+            class="input-field recall-textarea" 
+            rows="4" 
+            placeholder="Type the letter pairs you remember (e.g., AB CD EF or ABCDEF)"
+          ></textarea>
+          <p id="recall-hint" class="help-text"></p>
+        </div>
+
+        <!-- Validation feedback (hidden initially) -->
+        <div id="recall-feedback" class="recall-feedback hidden">
+          <h3>Recall Results</h3>
+          <div id="recall-stats" class="recall-stats"></div>
+          <div id="recall-details" class="recall-details"></div>
         </div>
 
         <div class="form-group">

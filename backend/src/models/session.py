@@ -23,6 +23,8 @@ class Session(Base):
     average_time = Column(DECIMAL(10, 3), nullable=False)
     total_time = Column(DECIMAL(10, 3))
     recall_accuracy = Column(DECIMAL(5, 2), nullable=False)
+    user_recall = Column(Text)
+    recall_validation = Column(JSONB)
     vividness = Column(Integer)
     flow = Column(Integer)
     notes = Column(Text)

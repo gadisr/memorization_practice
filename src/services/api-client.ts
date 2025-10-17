@@ -37,6 +37,8 @@ export async function createSession(sessionData: SessionData): Promise<SessionDa
     average_time: sessionData.averageTime,
     total_time: sessionData.totalTime,
     recall_accuracy: sessionData.recallAccuracy,
+    user_recall: sessionData.userRecall,
+    recall_validation: sessionData.recallValidation,
     vividness: sessionData.vividness,
     flow: sessionData.flow,
     notes: sessionData.notes
@@ -63,6 +65,8 @@ export async function createSession(sessionData: SessionData): Promise<SessionDa
     averageTime: Number(backendResponse.average_time),
     totalTime: backendResponse.total_time ? Number(backendResponse.total_time) : undefined,
     recallAccuracy: Number(backendResponse.recall_accuracy),
+    userRecall: backendResponse.user_recall,
+    recallValidation: backendResponse.recall_validation,
     vividness: backendResponse.vividness,
     flow: backendResponse.flow,
     notes: backendResponse.notes
@@ -98,6 +102,8 @@ export async function getUserSessions(
     averageTime: Number(session.average_time),
     totalTime: session.total_time ? Number(session.total_time) : undefined,
     recallAccuracy: Number(session.recall_accuracy),
+    userRecall: session.user_recall,
+    recallValidation: session.recall_validation,
     vividness: session.vividness,
     flow: session.flow,
     notes: session.notes

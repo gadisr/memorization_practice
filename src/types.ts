@@ -31,6 +31,15 @@ export interface DrillConfig {
   description: string;
 }
 
+export interface RecallValidation {
+  isOrderRequired: boolean;
+  correctPairs: string[];
+  incorrectPairs: string[];
+  missedPairs: string[];
+  extraPairs: string[];
+  accuracy: number;
+}
+
 export interface SessionData {
   id: string;
   date: string;
@@ -41,6 +50,8 @@ export interface SessionData {
   averageTime: number;
   totalTime?: number;
   recallAccuracy: number;
+  userRecall?: string;
+  recallValidation?: RecallValidation;
   vividness?: number;
   flow?: number;
   notes?: string;

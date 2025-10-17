@@ -2,9 +2,10 @@
  * UI rendering functions
  */
 
-import { DrillConfig, QualityMetric, SessionData, DrillType } from '../types.js';
+import { DrillConfig, QualityMetric, SessionData, DrillType, RecallValidation } from '../types.js';
 import { getQualityScaleLabel, getQualityScaleMax } from '../services/quality-adapter.js';
 import { formatTime } from '../services/timer.js';
+import { isOrderRequired } from '../services/recall-validator.js';
 
 export function showScreen(screenId: string): void {
   const screens = document.querySelectorAll('.screen');
@@ -67,11 +68,11 @@ export function renderSessionScreen(pair: string, currentIndex: number, total: n
   }
 }
 
-export function renderRatingScreen(metric: QualityMetric, pairCount: number): void {
+export function renderRatingScreen(metric: QualityMetric, pairCount: number, drillType: DrillType): void {
   const qualityLabel = document.getElementById('quality-label');
   const qualityRating = document.getElementById('quality-rating');
-  const recallTotal = document.getElementById('recall-total');
-  const recallInput = document.getElementById('recall-input') as HTMLInputElement;
+  const recallHint = document.getElementById('recall-hint');
+  const recallTextInput = document.getElementById('recall-text-input') as HTMLTextAreaElement;
   
   if (qualityLabel) {
     const labelText = metric === QualityMetric.VIVIDNESS 
@@ -103,14 +104,111 @@ export function renderRatingScreen(metric: QualityMetric, pairCount: number): vo
     }
   }
   
-  if (recallTotal) {
-    recallTotal.textContent = `out of ${pairCount}`;
+  // Set hint text based on drill type
+  if (recallHint) {
+    const orderRequired = isOrderRequired(drillType);
+    recallHint.textContent = orderRequired
+      ? "⚠️ Enter pairs in the exact order they were shown"
+      : "✓ Order doesn't matter - just recall all pairs";
   }
   
-  if (recallInput) {
-    recallInput.max = pairCount.toString();
-    recallInput.value = pairCount.toString(); // Default to perfect recall
+  // Focus on textarea
+  if (recallTextInput) {
+    recallTextInput.value = '';
+    recallTextInput.focus();
   }
+}
+
+export function renderRecallFeedback(validation: RecallValidation): void {
+  const feedbackContainer = document.getElementById('recall-feedback');
+  const statsContainer = document.getElementById('recall-stats');
+  const detailsContainer = document.getElementById('recall-details');
+  
+  if (!feedbackContainer || !statsContainer || !detailsContainer) return;
+  
+  // Show feedback container
+  feedbackContainer.classList.remove('hidden');
+  
+  // Render stats
+  statsContainer.innerHTML = '';
+  
+  const accuracyDiv = document.createElement('div');
+  accuracyDiv.className = 'recall-stat';
+  accuracyDiv.innerHTML = `
+    <div class="stat-value" style="color: ${validation.accuracy >= 90 ? '#4CAF50' : validation.accuracy >= 70 ? '#FF9800' : '#F44336'}">
+      ${validation.accuracy.toFixed(0)}%
+    </div>
+    <div class="stat-label">Accuracy</div>
+  `;
+  
+  const correctDiv = document.createElement('div');
+  correctDiv.className = 'recall-stat';
+  correctDiv.innerHTML = `
+    <div class="stat-value" style="color: #4CAF50">${validation.correctPairs.length}</div>
+    <div class="stat-label">Correct</div>
+  `;
+  
+  const missedDiv = document.createElement('div');
+  missedDiv.className = 'recall-stat';
+  missedDiv.innerHTML = `
+    <div class="stat-value" style="color: #F44336">${validation.missedPairs.length}</div>
+    <div class="stat-label">Missed</div>
+  `;
+  
+  statsContainer.appendChild(accuracyDiv);
+  statsContainer.appendChild(correctDiv);
+  statsContainer.appendChild(missedDiv);
+  
+  // Render details
+  detailsContainer.innerHTML = '';
+  
+  // Correct pairs
+  validation.correctPairs.forEach(pair => {
+    const item = document.createElement('div');
+    item.className = 'recall-item correct';
+    item.innerHTML = `
+      <span class="recall-icon">✓</span>
+      <span>${pair}</span>
+      <span style="margin-left: auto; opacity: 0.7;">Correct</span>
+    `;
+    detailsContainer.appendChild(item);
+  });
+  
+  // Incorrect pairs (for ordered validation)
+  validation.incorrectPairs.forEach(pair => {
+    const item = document.createElement('div');
+    item.className = 'recall-item incorrect';
+    item.innerHTML = `
+      <span class="recall-icon">✗</span>
+      <span>${pair}</span>
+      <span style="margin-left: auto; opacity: 0.7;">Wrong position</span>
+    `;
+    detailsContainer.appendChild(item);
+  });
+  
+  // Missed pairs
+  validation.missedPairs.forEach(pair => {
+    const item = document.createElement('div');
+    item.className = 'recall-item missed';
+    item.innerHTML = `
+      <span class="recall-icon">⚠</span>
+      <span>${pair}</span>
+      <span style="margin-left: auto; opacity: 0.7;">Not recalled</span>
+    `;
+    detailsContainer.appendChild(item);
+  });
+  
+  // Extra pairs
+  validation.extraPairs.forEach(pair => {
+    const item = document.createElement('div');
+    item.className = 'recall-item extra';
+    item.innerHTML = `
+      <span class="recall-icon">ℹ</span>
+      <span>${pair}</span>
+      <span style="margin-left: auto; opacity: 0.7;">Not in session</span>
+    `;
+    detailsContainer.appendChild(item);
+  });
 }
 
 export function renderDashboard(sessions: SessionData[], notationSessions: any[] = []): void {

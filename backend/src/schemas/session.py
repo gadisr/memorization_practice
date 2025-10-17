@@ -18,6 +18,8 @@ class SessionCreate(BaseModel):
     average_time: Decimal
     total_time: Optional[Decimal] = None
     recall_accuracy: Decimal
+    user_recall: Optional[str] = None
+    recall_validation: Optional[Dict[str, Any]] = None
     vividness: Optional[int] = None
     flow: Optional[int] = None
     notes: Optional[str] = None
@@ -36,6 +38,8 @@ class SessionResponse(BaseModel):
     average_time: Decimal
     total_time: Optional[Decimal]
     recall_accuracy: Decimal
+    user_recall: Optional[str]
+    recall_validation: Optional[Dict[str, Any]]
     vividness: Optional[int]
     flow: Optional[int]
     notes: Optional[str]
