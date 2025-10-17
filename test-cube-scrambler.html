@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cube Scrambler Test</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 20px;
+            line-height: 1.4;
+        }
+        .output {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-size: 12px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .clear-btn {
+            background-color: #f44336;
+        }
+        .clear-btn:hover {
+            background-color: #da190b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cube Scrambler Test</h1>
+    <button onclick="runTest()">Run Test</button>
+    <button onclick="runExample()">Run Example</button>
+    <button onclick="clearOutput()" class="clear-btn">Clear Output</button>
+    
+    <div id="output" class="output">Click "Run Test" to see the cube scrambler in action...</div>
+
+    <script type="module">
+        // Override console.log to display in the page
+        const originalLog = console.log;
+        const outputDiv = document.getElementById('output');
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            outputDiv.textContent += args.join(' ') + '\n';
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        };
+        
+        // Try to import the functions
+        let test_cube_scrambler, example_usage;
+        
+        try {
+            const module = await import('./src/services/cube-scrambler-test.js');
+            test_cube_scrambler = module.test_cube_scrambler;
+            example_usage = module.example_usage;
+            console.log('✅ Module loaded successfully!');
+        } catch (error) {
+            console.log('❌ Error loading module:', error.message);
+            console.log('Trying alternative import...');
+            
+            try {
+                const scramblerModule = await import('./src/services/cube-scrambler.js');
+                // Create a simple test function
+                test_cube_scrambler = function() {
+                    console.log('=== CUBE SCRAMBLER TEST ===\n');
+                    
+                    // Test 1: Generate scramble sequence
+                    console.log('=== Test 1: Generate Scramble Sequence ===');
+                    const scramble1 = scramblerModule.generate_scramble_sequence(10);
+                    console.log(`10-move scramble: ${scramble1}`);
+                    
+                    const scramble2 = scramblerModule.generate_scramble_sequence(25);
+                    console.log(`25-move scramble: ${scramble2}\n`);
+                    
+                    // Test 2: Apply scramble to cube
+                    console.log('=== Test 2: Apply Scramble to Cube ===');
+                    const testScramble = "R U R' F' R U R' U' R' F R2 U' R'";
+                    console.log(`Test scramble: ${testScramble}`);
+                    
+                    const scrambledCube = scramblerModule.scramble_cube(testScramble);
+                    console.log('Scramble applied successfully!\n');
+                    
+                    // Test 3: Print cube
+                    console.log('=== Test 3: Print Cube ===');
+                    scramblerModule.print_cube(scrambledCube);
+                };
+                
+                example_usage = scramblerModule.example_usage;
+                console.log('✅ Alternative import successful!');
+            } catch (altError) {
+                console.log('❌ Alternative import also failed:', altError.message);
+                console.log('Please make sure the TypeScript files are compiled to JavaScript.');
+            }
+        }
+        
+        // Make functions available globally
+        window.runTest = function() {
+            if (test_cube_scrambler) {
+                test_cube_scrambler();
+            } else {
+                console.log('❌ Test function not available. Check console for import errors.');
+            }
+        };
+        
+        window.runExample = function() {
+            if (example_usage) {
+                example_usage();
+            } else {
+                console.log('❌ Example function not available. Check console for import errors.');
+            }
+        };
+        
+        window.clearOutput = function() {
+            outputDiv.textContent = '';
+        };
+        
+        console.log('🚀 Cube Scrambler Test Page Ready!');
+        console.log('Click "Run Test" to test the scrambling functions.');
+    </script>
+</body>
+</html>

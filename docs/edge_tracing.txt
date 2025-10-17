@@ -1,0 +1,27 @@
+How tracing works: 
+Given letters from  edge-notation.json and corner-notation.json, on solved cube, all the colors should be on their spots. cube positions notation are in cube-positions.json.
+Given an edge position and a cube state, each edge has 2 colors, one on the position letter, and one on its correlate position. 
+For example, in solved cube, position b, colors are white, and its corelate is red, see edge-notation.json
+
+After scrambling, edges and corners are usually not in their original position. 
+tracing edges works as the following: White center is always the Up dace and green is always Front face.
+
+1. First cycle: 
+Buffer spot is b poistion (top right edge, when white is Up) starting with the piece on b (and its secondary m), 
+find the place it should be in a solved cube, for exampe, if its green (on b) and yellow (on m), it should be in k position.
+now, go to k position, (front boddom edge) and find the place of the piece that is there on a solved cube.
+Continue with this flow, until you get back to buffer piece, either to b position or m position.  This ends the cycle.
+Writing down this tracking, you dont include the last b or m letter. A cycle can be written for example as: t u c n r g
+
+2. If first cycle was ended and not all edges (or their secondary) participated in the tracking, move to the next untracked letter (alphabetically) for the next cycle.
+
+3. Next cycle:
+Start with the letter found, for example d, find where the piece there should be on a solved cube, and so on.
+Once tracked back to d or its correlate e, this ends the cycle. 
+Wirting down the tracking in cycles that are not the first, we do write the final back to the starting piece, for example: d t x d
+
+4. If still not all letters covered, continue with 2.
+
+5. If there are flipped edges, for example on a-q there is blue-white, and blue is on the a side, make a cycle of a q
+
+

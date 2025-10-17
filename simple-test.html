@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Cube Scrambler Test</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 20px;
+            line-height: 1.4;
+        }
+        .output {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-size: 12px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid #444;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .clear-btn {
+            background-color: #f44336;
+        }
+        .clear-btn:hover {
+            background-color: #da190b;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background-color: #2e7d32; }
+        .error { background-color: #c62828; }
+    </style>
+</head>
+<body>
+    <h1>🧊 Simple Cube Scrambler Test</h1>
+    
+    <div id="status" class="status">Loading...</div>
+    
+    <button onclick="runTest()">🧪 Run Test</button>
+    <button onclick="runExample()">📋 Run Example</button>
+    <button onclick="testMoves()">🔄 Test Individual Moves</button>
+    <button onclick="testRotations()">🔄 Test Rotation Variants</button>
+    <button onclick="testSpecific()">🔍 Test Specific Moves</button>
+    <button onclick="clearOutput()" class="clear-btn">🗑️ Clear</button>
+    
+    <div id="output" class="output">Click "Run Test" to see the cube scrambler in action...</div>
+
+    <script type="module">
+        const outputDiv = document.getElementById('output');
+        const statusDiv = document.getElementById('status');
+        
+        // Override console.log to display in the page
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            outputDiv.textContent += args.join(' ') + '\n';
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        };
+        
+        let scramblerModule = null;
+        
+        // Load the module
+        async function loadModule() {
+            try {
+                statusDiv.textContent = 'Loading cube scrambler module...';
+                statusDiv.className = 'status';
+                
+                scramblerModule = await import('./src/services/cube-scrambler.js');
+                
+                statusDiv.textContent = '✅ Module loaded successfully!';
+                statusDiv.className = 'status success';
+                console.log('🚀 Cube Scrambler loaded and ready!');
+                
+            } catch (error) {
+                statusDiv.textContent = `❌ Error loading module: ${error.message}`;
+                statusDiv.className = 'status error';
+                console.log('❌ Failed to load module:', error);
+            }
+        }
+        
+        // Test function
+        function runTest() {
+            if (!scramblerModule) {
+                console.log('❌ Module not loaded yet. Please wait...');
+                return;
+            }
+            
+            console.log('=== 🧪 CUBE SCRAMBLER TEST ===\n');
+            
+            try {
+                // Test 1: Generate scramble sequence
+                console.log('=== Test 1: Generate Scramble Sequence ===');
+                const scramble1 = scramblerModule.generate_scramble_sequence(10);
+                console.log(`10-move scramble: ${scramble1}`);
+                
+                const scramble2 = scramblerModule.generate_scramble_sequence(25);
+                console.log(`25-move scramble: ${scramble2}\n`);
+                
+                // Test 2: Apply scramble to cube
+                console.log('=== Test 2: Apply Scramble to Cube ===');
+                const testScramble = "R U R' F' R U R' U' R' F R2 U' R'";
+                console.log(`Test scramble: ${testScramble}`);
+                
+                const scrambledCube = scramblerModule.scramble_cube(testScramble);
+                console.log('Scramble applied successfully!\n');
+                
+                // Test 3: Print cube
+                console.log('=== Test 3: Print Cube ===');
+                scramblerModule.print_cube(scrambledCube);
+                
+                console.log('\n✅ All tests completed successfully!');
+                
+            } catch (error) {
+                console.log('❌ Test failed:', error);
+            }
+        }
+        
+        // Example function
+        function runExample() {
+            if (!scramblerModule) {
+                console.log('❌ Module not loaded yet. Please wait...');
+                return;
+            }
+            
+            try {
+                scramblerModule.example_usage();
+            } catch (error) {
+                console.log('❌ Example failed:', error);
+            }
+        }
+        
+        // Test individual moves function
+        function testMoves() {
+            if (!scramblerModule) {
+                console.log('❌ Module not loaded yet. Please wait...');
+                return;
+            }
+            
+            try {
+                scramblerModule.test_individual_moves();
+            } catch (error) {
+                console.log('❌ Individual moves test failed:', error);
+            }
+        }
+        
+        // Test rotation variants function
+        function testRotations() {
+            if (!scramblerModule) {
+                console.log('❌ Module not loaded yet. Please wait...');
+                return;
+            }
+            
+            try {
+                scramblerModule.test_rotation_variants();
+            } catch (error) {
+                console.log('❌ Rotation variants test failed:', error);
+            }
+        }
+        
+        // Test specific moves function
+        function testSpecific() {
+            if (!scramblerModule) {
+                console.log('❌ Module not loaded yet. Please wait...');
+                return;
+            }
+            
+            try {
+                scramblerModule.test_specific_moves();
+            } catch (error) {
+                console.log('❌ Specific moves test failed:', error);
+            }
+        }
+        
+        // Clear output
+        function clearOutput() {
+            outputDiv.textContent = '';
+        }
+        
+        // Make functions available globally
+        window.runTest = runTest;
+        window.runExample = runExample;
+        window.testMoves = testMoves;
+        window.testRotations = testRotations;
+        window.testSpecific = testSpecific;
+        window.clearOutput = clearOutput;
+        
+        // Load the module when page loads
+        loadModule();
+    </script>
+</body>
+</html>
