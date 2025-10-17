@@ -16,6 +16,7 @@ class SessionCreate(BaseModel):
     pairs: List[Dict[str, Any]]
     timings: List[float]
     average_time: Decimal
+    total_time: Optional[Decimal] = None
     recall_accuracy: Decimal
     vividness: Optional[int] = None
     flow: Optional[int] = None
@@ -33,6 +34,7 @@ class SessionResponse(BaseModel):
     pairs: List[Dict[str, Any]]
     timings: List[float]
     average_time: Decimal
+    total_time: Optional[Decimal]
     recall_accuracy: Decimal
     vividness: Optional[int]
     flow: Optional[int]
@@ -53,6 +55,7 @@ class NotationSessionCreate(BaseModel):
     correct_count: int
     accuracy: Decimal
     average_time: Decimal
+    total_time: Optional[Decimal] = None
     notes: Optional[str] = None
 
 
@@ -68,6 +71,7 @@ class NotationSessionResponse(BaseModel):
     correct_count: int
     accuracy: Decimal
     average_time: Decimal
+    total_time: Optional[Decimal]
     notes: Optional[str]
     created_at: datetime
     

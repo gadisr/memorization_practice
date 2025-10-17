@@ -39,6 +39,7 @@ export interface SessionData {
   pairs: LetterPair[];
   timings: number[];
   averageTime: number;
+  totalTime?: number;
   recallAccuracy: number;
   vividness?: number;
   flow?: number;
@@ -79,6 +80,7 @@ export interface NotationSessionData {
   correctCount: number;
   accuracy: number;
   averageTime: number;
+  totalTime?: number;
   notes?: string;
 }
 

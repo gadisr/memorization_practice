@@ -192,8 +192,26 @@ function renderSessionsTable(sessions: SessionData[], notationSessions: any[] = 
       pairsCell.textContent = session.pairCount.toString();
     }
     
-    const timeCell = document.createElement('td');
-    timeCell.textContent = formatTime(session.averageTime);
+    const avgTimeCell = document.createElement('td');
+    avgTimeCell.textContent = formatTime(session.averageTime);
+    
+    const totalTimeCell = document.createElement('td');
+    let totalTime = session.totalTime;
+    
+    // Fallback: calculate from timings/attempts if totalTime not available
+    if (totalTime === undefined || totalTime === null) {
+      if (session.isNotation && session.attempts) {
+        totalTime = session.attempts.reduce((sum: number, attempt: any) => sum + attempt.timeSeconds, 0);
+      } else if (!session.isNotation && session.timings) {
+        totalTime = session.timings.reduce((sum: number, time: number) => sum + time, 0);
+      }
+    }
+    
+    if (totalTime !== undefined && totalTime !== null) {
+      totalTimeCell.textContent = formatTime(totalTime);
+    } else {
+      totalTimeCell.textContent = '-';
+    }
     
     const accuracyCell = document.createElement('td');
     if (session.isNotation) {
@@ -218,7 +236,8 @@ function renderSessionsTable(sessions: SessionData[], notationSessions: any[] = 
     row.appendChild(dateCell);
     row.appendChild(drillCell);
     row.appendChild(pairsCell);
-    row.appendChild(timeCell);
+    row.appendChild(avgTimeCell);
+    row.appendChild(totalTimeCell);
     row.appendChild(accuracyCell);
     row.appendChild(qualityCell);
     
@@ -248,8 +267,15 @@ function formatSessionDate(isoDate: string): string {
   
   if (diffDays === 0) return 'Today';
   if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays} days ago`;
   
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  // Include year if different from current year
+  const isSameYear = date.getFullYear() === now.getFullYear();
+  if (isSameYear) {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+  
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function formatDrillName(type: DrillType): string {

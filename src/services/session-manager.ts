@@ -10,6 +10,7 @@ import { saveSession } from '../storage/storage-adapter.js';
 import { getQualityMetric } from './quality-adapter.js';
 
 let activeSession: SessionData | null = null;
+let sessionStartTime: number | null = null;
 
 export async function createSession(
   drillType: DrillType,
@@ -35,6 +36,7 @@ export async function createSession(
   };
   
   activeSession = session;
+  sessionStartTime = Date.now();
   return session;
 }
 
@@ -67,6 +69,12 @@ export async function finalizeSession(
   activeSession.averageTime = calculateAverage(activeSession.timings);
   activeSession.recallAccuracy = (recall / activeSession.pairCount) * 100;
   
+  // Calculate total session time
+  if (sessionStartTime) {
+    const totalTimeMs = Date.now() - sessionStartTime;
+    activeSession.totalTime = totalTimeMs / 1000; // Convert to seconds
+  }
+  
   // Set quality metric based on drill type
   const metric = getQualityMetric(activeSession.drillType);
   if (metric === 'VIVIDNESS') {
@@ -84,12 +92,14 @@ export async function finalizeSession(
   
   const completedSession = { ...activeSession };
   activeSession = null;
+  sessionStartTime = null;
   
   return completedSession;
 }
 
 export function cancelSession(): void {
   activeSession = null;
+  sessionStartTime = null;
 }
 
 

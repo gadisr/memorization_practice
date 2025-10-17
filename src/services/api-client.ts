@@ -35,6 +35,7 @@ export async function createSession(sessionData: SessionData): Promise<SessionDa
     pairs: sessionData.pairs,
     timings: sessionData.timings,
     average_time: sessionData.averageTime,
+    total_time: sessionData.totalTime,
     recall_accuracy: sessionData.recallAccuracy,
     vividness: sessionData.vividness,
     flow: sessionData.flow,
@@ -60,6 +61,7 @@ export async function createSession(sessionData: SessionData): Promise<SessionDa
     pairs: backendResponse.pairs,
     timings: backendResponse.timings,
     averageTime: Number(backendResponse.average_time),
+    totalTime: backendResponse.total_time ? Number(backendResponse.total_time) : undefined,
     recallAccuracy: Number(backendResponse.recall_accuracy),
     vividness: backendResponse.vividness,
     flow: backendResponse.flow,
@@ -94,6 +96,7 @@ export async function getUserSessions(
     pairs: session.pairs,
     timings: session.timings,
     averageTime: Number(session.average_time),
+    totalTime: session.total_time ? Number(session.total_time) : undefined,
     recallAccuracy: Number(session.recall_accuracy),
     vividness: session.vividness,
     flow: session.flow,
@@ -115,6 +118,7 @@ export async function createNotationSession(
     correct_count: sessionData.correctCount,
     accuracy: sessionData.accuracy,
     average_time: sessionData.averageTime,
+    total_time: sessionData.totalTime,
     notes: sessionData.notes
   };
   
@@ -138,6 +142,7 @@ export async function createNotationSession(
     correctCount: Number(backendResponse.correct_count),
     accuracy: Number(backendResponse.accuracy),
     averageTime: Number(backendResponse.average_time),
+    totalTime: backendResponse.total_time ? Number(backendResponse.total_time) : undefined,
     notes: backendResponse.notes
   };
 }
@@ -170,6 +175,7 @@ export async function getUserNotationSessions(
     correctCount: Number(session.correct_count),
     accuracy: Number(session.accuracy),
     averageTime: Number(session.average_time),
+    totalTime: session.total_time ? Number(session.total_time) : undefined,
     notes: session.notes
   }));
 }

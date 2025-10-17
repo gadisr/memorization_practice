@@ -68,6 +68,11 @@ h2 {
   display: none;
 }
 
+/* Utility class for hiding elements */
+.hidden {
+  display: none !important;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

@@ -113,25 +113,31 @@ function updateAuthUI(isAuthenticated: boolean, user: any, elements: {
   const { loginButton, logoutButton, userProfile, userEmail, userAvatar } = elements;
   
   if (isAuthenticated && user) {
-    // User is logged in
+    // User is logged in - show profile, hide login button
     loginButton?.classList.add('hidden');
-    logoutButton?.classList.remove('hidden');
     userProfile?.classList.remove('hidden');
     
+    // Update user information
     if (userEmail) userEmail.textContent = user.email || '';
     if (userAvatar && user.photoURL) {
       (userAvatar as HTMLImageElement).src = user.photoURL;
+      (userAvatar as HTMLImageElement).alt = user.displayName || 'User avatar';
       userAvatar.classList.remove('hidden');
     } else if (userAvatar) {
       userAvatar.classList.add('hidden');
     }
   } else {
-    // User is logged out
+    // User is logged out - show login button, hide profile
     loginButton?.classList.remove('hidden');
-    logoutButton?.classList.add('hidden');
     userProfile?.classList.add('hidden');
+    
+    // Clear user information
     if (userEmail) userEmail.textContent = '';
-    if (userAvatar) (userAvatar as HTMLImageElement).src = '';
+    if (userAvatar) {
+      (userAvatar as HTMLImageElement).src = '';
+      (userAvatar as HTMLImageElement).alt = '';
+      userAvatar.classList.add('hidden');
+    }
   }
 }
 

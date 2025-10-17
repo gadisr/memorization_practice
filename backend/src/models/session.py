@@ -21,6 +21,7 @@ class Session(Base):
     pairs = Column(JSONB, nullable=False)
     timings = Column(JSONB, nullable=False)
     average_time = Column(DECIMAL(10, 3), nullable=False)
+    total_time = Column(DECIMAL(10, 3))
     recall_accuracy = Column(DECIMAL(5, 2), nullable=False)
     vividness = Column(Integer)
     flow = Column(Integer)
@@ -42,6 +43,7 @@ class NotationSession(Base):
     correct_count = Column(Integer, nullable=False)
     accuracy = Column(DECIMAL(5, 2), nullable=False)
     average_time = Column(DECIMAL(10, 3), nullable=False)
+    total_time = Column(DECIMAL(10, 3))
     notes = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

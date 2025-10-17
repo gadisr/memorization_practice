@@ -8,6 +8,7 @@ import { saveNotationSession } from '../storage/storage-adapter.js';
 
 let activeSession: NotationSessionData | null = null;
 let activePieces: (EdgePiece | CornerPiece)[] = [];
+let sessionStartTime: number | null = null;
 
 export async function createNotationSession(drillType: DrillType.EDGE_NOTATION_DRILL | DrillType.CORNER_NOTATION_DRILL): Promise<NotationSessionData> {
   const id = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -30,6 +31,7 @@ export async function createNotationSession(drillType: DrillType.EDGE_NOTATION_D
   };
   
   activeSession = session;
+  sessionStartTime = Date.now();
   return session;
 }
 
@@ -74,6 +76,12 @@ export async function finalizeNotationSession(notes?: string): Promise<NotationS
     activeSession.averageTime = totalTime / totalAttempts;
   }
   
+  // Calculate total session time
+  if (sessionStartTime) {
+    const totalTimeMs = Date.now() - sessionStartTime;
+    activeSession.totalTime = totalTimeMs / 1000; // Convert to seconds
+  }
+  
   if (notes) {
     activeSession.notes = notes;
   }
@@ -83,6 +91,7 @@ export async function finalizeNotationSession(notes?: string): Promise<NotationS
   const completedSession = { ...activeSession };
   activeSession = null;
   activePieces = [];
+  sessionStartTime = null;
   
   return completedSession;
 }
@@ -90,5 +99,6 @@ export async function finalizeNotationSession(notes?: string): Promise<NotationS
 export function cancelNotationSession(): void {
   activeSession = null;
   activePieces = [];
+  sessionStartTime = null;
 }
 
