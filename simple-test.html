@@ -60,6 +60,7 @@
     <button onclick="testMoves()">🔄 Test Individual Moves</button>
     <button onclick="testRotations()">🔄 Test Rotation Variants</button>
     <button onclick="testSpecific()">🔍 Test Specific Moves</button>
+    <button onclick="testEdgeTracing()">🔗 Test Edge Tracing</button>
     <button onclick="clearOutput()" class="clear-btn">🗑️ Clear</button>
     
     <div id="output" class="output">Click "Run Test" to see the cube scrambler in action...</div>
@@ -84,7 +85,7 @@
                 statusDiv.textContent = 'Loading cube scrambler module...';
                 statusDiv.className = 'status';
                 
-                scramblerModule = await import('./src/services/cube-scrambler.js');
+                scramblerModule = await import('./dist/cube-scrambler.js');
                 
                 statusDiv.textContent = '✅ Module loaded successfully!';
                 statusDiv.className = 'status success';
@@ -97,96 +98,157 @@
             }
         }
         
-        // Test function
-        function runTest() {
-            if (!scramblerModule) {
-                console.log('❌ Module not loaded yet. Please wait...');
-                return;
-            }
-            
-            console.log('=== 🧪 CUBE SCRAMBLER TEST ===\n');
-            
+        // Test basic functionality
+        async function runTest() {
             try {
-                // Test 1: Generate scramble sequence
-                console.log('=== Test 1: Generate Scramble Sequence ===');
-                const scramble1 = scramblerModule.generate_scramble_sequence(10);
-                console.log(`10-move scramble: ${scramble1}`);
+                console.log('\n=== 🧪 BASIC FUNCTIONALITY TEST ===');
                 
-                const scramble2 = scramblerModule.generate_scramble_sequence(25);
-                console.log(`25-move scramble: ${scramble2}\n`);
+                if (!scramblerModule) {
+                    throw new Error('Module not loaded');
+                }
                 
-                // Test 2: Apply scramble to cube
-                console.log('=== Test 2: Apply Scramble to Cube ===');
-                const testScramble = "R U R' F' R U R' U' R' F R2 U' R'";
-                console.log(`Test scramble: ${testScramble}`);
+                // Test scramble generation
+                const scramble = scramblerModule.generate_scramble_sequence(10);
+                console.log(`📝 Generated scramble: ${scramble.join(' ')}`);
+                console.log(`🔢 Total moves: ${scramble.length}`);
                 
-                const scrambledCube = scramblerModule.scramble_cube(testScramble);
-                console.log('Scramble applied successfully!\n');
+                // Test cube scrambling
+                const scrambledCube = scramblerModule.scramble_cube(scramble);
+                console.log('✅ Cube scrambled successfully!');
                 
-                // Test 3: Print cube
-                console.log('=== Test 3: Print Cube ===');
+                // Test cube printing
+                console.log('\n🎲 Scrambled cube:');
                 scramblerModule.print_cube(scrambledCube);
                 
-                console.log('\n✅ All tests completed successfully!');
+                console.log('\n✅ Basic functionality test completed!');
                 
             } catch (error) {
                 console.log('❌ Test failed:', error);
             }
         }
         
-        // Example function
-        function runExample() {
-            if (!scramblerModule) {
-                console.log('❌ Module not loaded yet. Please wait...');
-                return;
-            }
-            
+        // Run example
+        async function runExample() {
             try {
+                console.log('\n=== 📋 EXAMPLE USAGE ===');
+                
+                if (!scramblerModule) {
+                    throw new Error('Module not loaded');
+                }
+                
                 scramblerModule.example_usage();
+                
             } catch (error) {
                 console.log('❌ Example failed:', error);
             }
         }
         
-        // Test individual moves function
-        function testMoves() {
-            if (!scramblerModule) {
-                console.log('❌ Module not loaded yet. Please wait...');
-                return;
-            }
-            
+        // Test individual moves
+        async function testMoves() {
             try {
+                console.log('\n=== 🔄 INDIVIDUAL MOVES TEST ===');
+                
+                if (!scramblerModule) {
+                    throw new Error('Module not loaded');
+                }
+                
                 scramblerModule.test_individual_moves();
+                
             } catch (error) {
                 console.log('❌ Individual moves test failed:', error);
             }
         }
         
-        // Test rotation variants function
-        function testRotations() {
-            if (!scramblerModule) {
-                console.log('❌ Module not loaded yet. Please wait...');
-                return;
-            }
-            
+        // Test rotation variants
+        async function testRotations() {
             try {
+                console.log('\n=== 🔄 ROTATION VARIANTS TEST ===');
+                
+                if (!scramblerModule) {
+                    throw new Error('Module not loaded');
+                }
+                
                 scramblerModule.test_rotation_variants();
+                
             } catch (error) {
                 console.log('❌ Rotation variants test failed:', error);
             }
         }
         
-        // Test specific moves function
-        function testSpecific() {
-            if (!scramblerModule) {
-                console.log('❌ Module not loaded yet. Please wait...');
-                return;
-            }
-            
+        // Test specific moves
+        async function testSpecific() {
             try {
+                console.log('\n=== 🔍 SPECIFIC MOVES TEST ===');
+                
+                if (!scramblerModule) {
+                    throw new Error('Module not loaded');
+                }
+                
                 scramblerModule.test_specific_moves();
+                
             } catch (error) {
                 console.log('❌ Specific moves test failed:', error);
+            }
+        }
+        
+        // Test edge tracing functionality
+        async function testEdgeTracing() {
+            try {
+                console.log('\n=== 🔗 EDGE TRACING TEST ===');
+                
+                if (!scramblerModule) {
+                    throw new Error('Scrambler module not loaded');
+                }
+                
+                // Generate a scramble
+                const scramble = scramblerModule.generate_scramble_sequence(15);
+                console.log(`📝 Scramble sequence: ${scramble}`);
+                console.log(`🔢 Total moves: ${scramble.split(' ').length}`);
+                
+                // Apply scramble to cube
+                const scrambledCube = scramblerModule.scramble_cube(scramble);
+                
+                // Print the actual scrambled cube faces
+                console.log('\n🎲 Scrambled cube faces:');
+                scramblerModule.print_cube(scrambledCube);
+                
+                // Load the edge tracer module
+                console.log('\n🎲 Extracting edge pieces from scrambled cube...');
+                const edgeTracerModule = await import('./dist/services/edge-tracer.js');
+                const edgeTracer = new edgeTracerModule.EdgeTracer();
+                
+                // Use the EdgeTracer method to extract edge colors
+                const scrambledCubeState = edgeTracer.extractEdgeColorsFromCube(scrambledCube);
+                
+                // Print cube colors before tracing
+                console.log('\n📊 Cube state before tracing:');
+                const allPositions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 
+                                     'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'];
+                allPositions.forEach(pos => {
+                    if (scrambledCubeState[pos]) {
+                        console.log(`  ${pos}: ${scrambledCubeState[pos].colors[0]}-${scrambledCubeState[pos].colors[1]}`);
+                    }
+                });
+                
+                // Use the EdgeTracer's built-in full trace method
+                console.log('\n🔄 Running full edge tracing algorithm...');
+                const tracingString = edgeTracer.do_full_trace(scrambledCubeState);
+                
+                // Display final results
+                console.log('\n🎯 FINAL EDGE TRACING RESULTS:');
+                console.log(`📝 Complete tracing string: "${tracingString}"`);
+                console.log(`📊 Total cycles found: ${tracingString.trim().split(' ').filter(s => s).length} pieces`);
+                
+                if (tracingString.trim() === "") {
+                    console.log('✅ No cycles needed - cube is solved!');
+                } else {
+                    console.log('🔄 Cycles found - cube needs solving');
+                }
+                
+                console.log('\n✅ Edge tracing completed successfully!');
+                
+            } catch (error) {
+                console.log('❌ Edge tracing test failed:', error);
             }
         }
         
@@ -201,6 +263,7 @@
         window.testMoves = testMoves;
         window.testRotations = testRotations;
         window.testSpecific = testSpecific;
+        window.testEdgeTracing = testEdgeTracing;
         window.clearOutput = clearOutput;
         
         // Load the module when page loads

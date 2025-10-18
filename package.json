@@ -8,6 +8,10 @@
     "serve": "python3 serve.py",
     "dev": "python3 serve.py",
     "watch": "tsc --watch",
+    "test": "npm run build && node dist/tests/consolidated-test-runner.js",
+    "test:edge": "npm run build && node dist/tests/edge-tracer.test.js",
+    "test:scrambler": "npm run build && node dist/services/cube-scrambler-test.js",
+    "test:watch": "npm run watch & npm run test",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f"

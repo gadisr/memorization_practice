@@ -7,7 +7,7 @@ After scrambling, edges and corners are usually not in their original position.
 tracing edges works as the following: White center is always the Up dace and green is always Front face.
 
 1. First cycle: 
-Buffer spot is b poistion (top right edge, when white is Up) starting with the piece on b (and its secondary m), 
+Buffer spot is b poistion (see b position in cube-positions.json) starting with the piece on b (and its secondary m), 
 find the place it should be in a solved cube, for exampe, if its green (on b) and yellow (on m), it should be in k position.
 now, go to k position, (front boddom edge) and find the place of the piece that is there on a solved cube.
 Continue with this flow, until you get back to buffer piece, either to b position or m position.  This ends the cycle.
@@ -25,3 +25,47 @@ Wirting down the tracking in cycles that are not the first, we do write the fina
 5. If there are flipped edges, for example on a-q there is blue-white, and blue is on the a side, make a cycle of a q
 
 
+Here is a pseudo code:
+
+
+function get_edge_solved_position_by_colors(main color, secondary color):
+    get notation by colors from edge-notation.json - use lower case
+
+function get_secondary_edge_letter(position_letter):
+    By using edge-notation.json, get colors by position_letter, return the letter that has the same colors inversed
+
+function get_colors_by_letter(position_letters, scrambled_cube):
+    according to cube-positions.json get main color.
+    use get_secondary_edge_letter to return the color on secondary letter.
+
+function is_position_included(position_letter, letters_list):
+    if letter or get_secondary_edge_letter(position_letter) in letters list, return true
+
+function is_edge_flipped(position_letter, cube):
+    main, seconday = get_colors_by_letter(position_letter, cube)
+    secondary_edge_letter =  get_secondary_edge_letter(position_letter)
+    return get_edge_solved_position_by_colors(main, secondary) == secondary_edge_letter
+
+function do_cycle(position_letter, cube, include_last_letter=false):
+    letters_in_this_cycle = []
+    cycle_string = ""
+    white not is_position_included(position_letter, letters_in_this_cycle):
+        main, secondary = get_colors_by_letter(position_letter, cube)
+        next_letter = get_edge_solved_position_by_colors(main, secondary)
+        cycle_string += next letter + " "
+        position_letter = next_letter
+    if not include_last_letter:
+        remove last letter written
+    return cycle_string, letters_in_this_cycle
+
+function do_full_trace(cube)
+    starting_position = "b"
+    letters_not_traced = [] "a"-"x" without "b"
+    tracing_string = ""
+    include_last_letter = true; Only for the first cycle
+
+    while letters_not_traced is not empty:
+        cycle_string, letters_in_this_cycle = do_cycle(starting_position, cube, include_last_letter)
+        include_last_letter = false
+        remove letters_in_this_cycle and get_secondary_edge_letter of these letters from  letters_not_traced
+        tracing_string += cycle_string

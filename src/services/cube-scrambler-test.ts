@@ -1,4 +1,4 @@
-import { generate_scramble_sequence, scramble_cube, print_cube, example_usage, explain_move, test_individual_moves, test_rotation_variants, test_specific_moves } from './cube-scrambler';
+import { generate_scramble_sequence, scramble_cube, print_cube, example_usage, explain_move, test_individual_moves, test_rotation_variants, test_specific_moves } from './cube-scrambler.js';
 
 // Test the cube scrambling functions
 function test_cube_scrambler(): void {

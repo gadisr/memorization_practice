@@ -1,8 +1,8 @@
-[
-    { "colors": ["white", "blue"], "notation": "a" },
-    { "colors": ["white", "red"], "notation": "b" },
-    { "colors": ["white", "green"], "notation": "c" },
-    { "colors": ["white", "orange"], "notation": "d" },
+export const edgeNotationData = [
+  { "colors": ["white", "blue"], "notation": "a" },
+  { "colors": ["white", "red"], "notation": "b" },
+  { "colors": ["white", "green"], "notation": "c" },
+  { "colors": ["white", "orange"], "notation": "d" },
   { "colors": ["orange", "white"], "notation": "e" },
   { "colors": ["orange", "green"], "notation": "f" },
   { "colors": ["orange", "yellow"], "notation": "g" },
@@ -23,5 +23,4 @@
   { "colors": ["yellow", "red"], "notation": "v" },
   { "colors": ["yellow", "blue"], "notation": "w" },
   { "colors": ["yellow", "orange"], "notation": "x" }
-]
-
+];
