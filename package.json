@@ -10,6 +10,7 @@
     "watch": "tsc --watch",
     "test": "npm run build && node dist/tests/consolidated-test-runner.js",
     "test:edge": "npm run build && node dist/tests/edge-tracer.test.js",
+    "test:corner": "npm run build && node dist/tests/corner-tracer.test.js",
     "test:scrambler": "npm run build && node dist/services/cube-scrambler-test.js",
     "test:watch": "npm run watch & npm run test",
     "docker:up": "docker-compose up -d",

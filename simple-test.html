@@ -61,6 +61,7 @@
     <button onclick="testRotations()">🔄 Test Rotation Variants</button>
     <button onclick="testSpecific()">🔍 Test Specific Moves</button>
     <button onclick="testEdgeTracing()">🔗 Test Edge Tracing</button>
+    <button onclick="testCornerTracing()">🔲 Test Corner Tracing</button>
     <button onclick="clearOutput()" class="clear-btn">🗑️ Clear</button>
     
     <div id="output" class="output">Click "Run Test" to see the cube scrambler in action...</div>
@@ -85,7 +86,7 @@
                 statusDiv.textContent = 'Loading cube scrambler module...';
                 statusDiv.className = 'status';
                 
-                scramblerModule = await import('./dist/cube-scrambler.js');
+                scramblerModule = await import('./dist/services/cube-scrambler.js');
                 
                 statusDiv.textContent = '✅ Module loaded successfully!';
                 statusDiv.className = 'status success';
@@ -252,6 +253,66 @@
             }
         }
         
+        // Test corner tracing functionality
+        async function testCornerTracing() {
+            try {
+                console.log('\n=== 🔲 CORNER TRACING TEST ===');
+                
+                if (!scramblerModule) {
+                    throw new Error('Scrambler module not loaded');
+                }
+                
+                // Generate a scramble
+                const scramble = scramblerModule.generate_scramble_sequence(15);
+                console.log(`📝 Scramble sequence: ${scramble}`);
+                console.log(`🔢 Total moves: ${scramble.split(' ').length}`);
+                
+                // Apply scramble to cube
+                const scrambledCube = scramblerModule.scramble_cube(scramble);
+                
+                // Print the actual scrambled cube faces
+                console.log('\n🎲 Scrambled cube faces:');
+                scramblerModule.print_cube(scrambledCube);
+                
+                // Load the corner tracer module
+                console.log('\n🎲 Extracting corner pieces from scrambled cube...');
+                const cornerTracerModule = await import('./dist/services/corner-tracer.js');
+                const cornerTracer = new cornerTracerModule.CornerTracer();
+                
+                // Use the CornerTracer method to extract corner colors
+                const scrambledCubeState = cornerTracer.extractCornerColorsFromCube(scrambledCube);
+                
+                // Print cube colors before tracing
+                console.log('\n📊 Cube state before tracing:');
+                const allPositions = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+                allPositions.forEach(pos => {
+                    if (scrambledCubeState[pos]) {
+                        console.log(`  ${pos}: ${scrambledCubeState[pos].colors[0]}-${scrambledCubeState[pos].colors[1]}-${scrambledCubeState[pos].colors[2]}`);
+                    }
+                });
+                
+                // Use the CornerTracer's built-in full trace method
+                console.log('\n🔄 Running full corner tracing algorithm...');
+                const tracingString = cornerTracer.do_full_trace(scrambledCubeState);
+                
+                // Display final results
+                console.log('\n🎯 FINAL CORNER TRACING RESULTS:');
+                console.log(`📝 Complete tracing string: "${tracingString}"`);
+                console.log(`📊 Total cycles found: ${tracingString.trim().split(' ').filter(s => s).length} pieces`);
+                
+                if (tracingString.trim() === "") {
+                    console.log('✅ No cycles needed - cube is solved!');
+                } else {
+                    console.log('🔄 Cycles found - cube needs solving');
+                }
+                
+                console.log('\n✅ Corner tracing completed successfully!');
+                
+            } catch (error) {
+                console.log('❌ Corner tracing test failed:', error);
+            }
+        }
+        
         // Clear output
         function clearOutput() {
             outputDiv.textContent = '';
@@ -264,6 +325,7 @@
         window.testRotations = testRotations;
         window.testSpecific = testSpecific;
         window.testEdgeTracing = testEdgeTracing;
+        window.testCornerTracing = testCornerTracing;
         window.clearOutput = clearOutput;
         
         // Load the module when page loads

@@ -1,0 +1,77 @@
+How corner tracing works:
+Given letters from corner notation (uppercase A-X), on solved cube, all the colors should be on their spots. Corner positions notation are embedded in the CornerTracer class.
+Given a corner position and a cube state, each corner has 3 colors, one on the position letter, and two on its correlate positions.
+For example, in solved cube, position A, colors are white, blue, red, and its correlates are the other two positions that share the same corner.
+
+After scrambling, corners are usually not in their original position.
+Corner tracing works as the following: White center is always the Up face and green is always Front face.
+
+1. First cycle: 
+Buffer spot is B position starting with the piece on B (and its secondary positions), 
+find the place it should be in a solved cube, for example, if its white (on B) and red and green (on correlates), it should be in B position.
+now, go to the next position and find the place of the piece that is there on a solved cube.
+Continue with this flow, until you get back to buffer piece, either to B position or its correlate positions. This ends the cycle.
+Writing down this tracking, you dont include the last B letter. A cycle can be written for example as: T U C N R G
+
+2. If first cycle was ended and not all corners (or their secondary) participated in the tracking, move to the next untracked letter (alphabetically) for the next cycle.
+
+3. Next cycle:
+Start with the letter found, for example D, find where the piece there should be on a solved cube, and so on.
+Once tracked back to D or its correlates, this ends the cycle. 
+Writing down the tracking in cycles that are not the first, we do write the final back to the starting piece, for example: D T X D
+
+4. If still not all letters covered, continue with 2.
+
+5. If there are twisted corners, for example on A-Q there is blue-white-red, and blue is on the A side, make a cycle of A Q
+
+Here is a pseudo code:
+
+function get_corner_solved_position_by_colors(main color, secondary color, tertiary color):
+    get notation by colors from corner notation - use uppercase
+
+function get_secondary_corner_letters(position_letter):
+    By using corner notation, get colors by position_letter, return the 2 letters that have the same colors in different rotations
+
+function get_colors_by_letter(position_letter, scrambled_cube):
+    according to corner positions get main color.
+    use get_secondary_corner_letters to return the colors on secondary letters.
+
+function is_position_included(position_letter, letters_list):
+    if letter or get_secondary_corner_letters(position_letter) in letters list, return true
+
+function is_corner_twisted(position_letter, cube):
+    main, secondary, tertiary = get_colors_by_letter(position_letter, cube)
+    secondary_corner_letters = get_secondary_corner_letters(position_letter)
+    return get_corner_solved_position_by_colors(main, secondary, tertiary) in secondary_corner_letters
+
+function do_cycle(position_letter, cube, include_last_letter=false):
+    letters_in_this_cycle = []
+    cycle_string = ""
+    while not is_position_included(position_letter, letters_in_this_cycle):
+        main, secondary, tertiary = get_colors_by_letter(position_letter, cube)
+        next_letter = get_corner_solved_position_by_colors(main, secondary, tertiary)
+        cycle_string += next_letter + " "
+        position_letter = next_letter
+    if not include_last_letter:
+        remove last letter written
+    return cycle_string, letters_in_this_cycle
+
+function do_full_trace(cube)
+    starting_position = "B"
+    letters_not_traced = [] "A"-"X" without "B"
+    tracing_string = ""
+    include_last_letter = false; Only for the first cycle
+
+    while letters_not_traced is not empty:
+        cycle_string, letters_in_this_cycle = do_cycle(starting_position, cube, include_last_letter)
+        include_last_letter = true
+        remove letters_in_this_cycle and get_secondary_corner_letters of these letters from letters_not_traced
+        tracing_string += cycle_string
+
+Key differences from edge tracing:
+- Corners have 3 colors instead of 2
+- Uses uppercase notation (A-X) instead of lowercase (a-x)
+- Each corner has 3 possible orientations instead of 2
+- Buffer position is "B" instead of "b"
+- More complex orientation handling due to 3-color nature
+- get_secondary_corner_letters returns 2 additional letters (total 3 orientations)
