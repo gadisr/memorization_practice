@@ -1,3 +1,5 @@
+import { CubeState as ScramblerCubeState, EdgePiece, EDGE_PIECES, POSITION_LETTERS } from '../models/cube-models.js';
+
 // Types
 export interface Position3D {
   face: string;
@@ -5,7 +7,7 @@ export interface Position3D {
   col: number;
 }
 
-export interface CubeState {
+export interface EdgeTracerCubeState {
   [position: string]: {
     colors: [string, string];
     orientation: 'correct' | 'flipped';
@@ -28,85 +30,36 @@ export class EdgeTracer {
     this.loadCorrelateMap();
   }
 
-  // Load edge notation data (embedded in class)
+  // Load edge notation data from shared models
   private loadEdgeNotation(): void {
-    const edgeNotationData = [
-      { "colors": ["white", "blue"], "notation": "a" },
-      { "colors": ["white", "red"], "notation": "b" },
-      { "colors": ["white", "green"], "notation": "c" },
-      { "colors": ["white", "orange"], "notation": "d" },
-      { "colors": ["orange", "white"], "notation": "e" },
-      { "colors": ["orange", "green"], "notation": "f" },
-      { "colors": ["orange", "yellow"], "notation": "g" },
-      { "colors": ["orange", "blue"], "notation": "h" },
-      { "colors": ["green", "white"], "notation": "i" },
-      { "colors": ["green", "red"], "notation": "j" },
-      { "colors": ["green", "yellow"], "notation": "k" },
-      { "colors": ["green", "orange"], "notation": "l" },
-      { "colors": ["red", "white"], "notation": "m" },
-      { "colors": ["red", "blue"], "notation": "n" },
-      { "colors": ["red", "yellow"], "notation": "o" },
-      { "colors": ["red", "green"], "notation": "p" },
-      { "colors": ["blue", "white"], "notation": "q" },
-      { "colors": ["blue", "orange"], "notation": "r" },
-      { "colors": ["blue", "yellow"], "notation": "s" },
-      { "colors": ["blue", "red"], "notation": "t" },
-      { "colors": ["yellow", "green"], "notation": "u" },
-      { "colors": ["yellow", "red"], "notation": "v" },
-      { "colors": ["yellow", "blue"], "notation": "w" },
-      { "colors": ["yellow", "orange"], "notation": "x" }
-    ];
-    
-    edgeNotationData.forEach(edge => {
-      this.edgeNotation.set(edge.notation.toLowerCase(), edge.colors as [string, string]);
-    });
+    for (const [notation, colors] of Object.entries(EDGE_PIECES)) {
+      this.edgeNotation.set(notation.toLowerCase(), colors);
+    }
   }
 
-  // Load cube positions data (embedded in class)
+  // Load cube positions data from shared POSITION_LETTERS
   private loadCubePositions(): void {
-    // Direct mapping of each letter to its correct position
-    const positionMapping = {
-      // U face - top face
-      'a': { face: 'U', row: 0, col: 1 },
-      'b': { face: 'U', row: 1, col: 2 }, 
-      'c': { face: 'U', row: 2, col: 1 },   // CORRECTED: was U[2][2]
-      'd': { face: 'U', row: 1, col: 0 },
-      
-      // L face - left face  
-      'e': { face: 'L', row: 0, col: 1 },
-      'f': { face: 'L', row: 1, col: 2 },
-      'g': { face: 'L', row: 2, col: 1 },
-      'h': { face: 'L', row: 1, col: 0 },
-      
-      // F face - front face
-      'i': { face: 'F', row: 0, col: 1 },
-      'j': { face: 'F', row: 1, col: 2 },
-      'k': { face: 'F', row: 2, col: 1 },
-      'l': { face: 'F', row: 1, col: 0 },
-      
-      // R face - right face
-      'm': { face: 'R', row: 0, col: 1 },
-      'n': { face: 'R', row: 1, col: 2 },
-      'o': { face: 'R', row: 2, col: 1 },
-      'p': { face: 'R', row: 1, col: 0 },
-      
-      // B face - back face
-      'q': { face: 'B', row: 0, col: 1 },
-      'r': { face: 'B', row: 1, col: 2 },
-      's': { face: 'B', row: 2, col: 1 },
-      't': { face: 'B', row: 1, col: 0 },
-      
-      // D face - down face
-      'u': { face: 'D', row: 0, col: 1 },
-      'v': { face: 'D', row: 1, col: 2 },
-      'w': { face: 'D', row: 2, col: 1 },
-      'x': { face: 'D', row: 1, col: 0 }
-    };
+    // Extract edge positions from POSITION_LETTERS (lowercase letters a-x)
+    const edgeLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 
+                        'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'];
     
-    // Store the mappings
-    for (const [letter, position] of Object.entries(positionMapping)) {
-      this.cubePositions.set(letter, position);
-    }
+    edgeLetters.forEach(letter => {
+      // Find the position of this letter in POSITION_LETTERS
+      let found = false;
+      for (const [faceKey, faceLetters] of Object.entries(POSITION_LETTERS)) {
+        for (let row = 0; row < 3; row++) {
+          for (let col = 0; col < 3; col++) {
+            if (faceLetters[row][col] === letter) {
+              this.cubePositions.set(letter, { face: faceKey, row, col });
+              found = true;
+              break;
+            }
+          }
+          if (found) break;
+        }
+        if (found) break;
+      }
+    });
   }
 
   // Load correlate map using the new get_secondary_edge_letter function
@@ -147,7 +100,7 @@ export class EdgeTracer {
   }
 
   // Get colors at a position in the scrambled cube
-  public get_colors_by_letter(positionLetter: string, scrambledCube: CubeState): [string, string] {
+  public get_colors_by_letter(positionLetter: string, scrambledCube: EdgeTracerCubeState): [string, string] {
     const position = this.cubePositions.get(positionLetter);
     if (!position) {
       throw new Error(`Position ${positionLetter} not found in cube positions`);
@@ -168,14 +121,14 @@ export class EdgeTracer {
   }
 
   // Check if an edge is flipped (correct position, wrong orientation)
-  public is_edge_flipped(positionLetter: string, cube: CubeState): boolean {
+  public is_edge_flipped(positionLetter: string, cube: EdgeTracerCubeState): boolean {
     const [main, secondary] = this.get_colors_by_letter(positionLetter, cube);
     const secondaryEdgeLetter = this.get_secondary_edge_letter(positionLetter);
     return this.get_edge_solved_position_by_colors([main, secondary]) === secondaryEdgeLetter;
   }
 
   // Check if an edge is in its correct position (either primary or secondary)
-  public is_in_position(notationLetter: string, cube: CubeState): boolean {
+  public is_in_position(notationLetter: string, cube: EdgeTracerCubeState): boolean {
     const [main, secondary] = this.get_colors_by_letter(notationLetter, cube);
     const solvedPosition = this.get_edge_solved_position_by_colors([main, secondary]);
     const secondaryEdgeLetter = this.get_secondary_edge_letter(notationLetter);
@@ -185,7 +138,7 @@ export class EdgeTracer {
   }
 
   // Perform a single cycle starting from a position
-  public do_cycle(positionLetter: string, cube: CubeState, includeLastLetter: boolean = false): [string, string[]] {
+  public do_cycle(positionLetter: string, cube: EdgeTracerCubeState, includeLastLetter: boolean = false): [string, string[]] {
     const lettersInThisCycle: string[] = [];
     let cycleString = "";
     let currentPosition = positionLetter;
@@ -219,7 +172,7 @@ export class EdgeTracer {
   }
 
   // Main function to perform full edge tracing
-  public do_full_trace(cube: CubeState): string {
+  public do_full_trace(cube: EdgeTracerCubeState): string {
     let startingPosition = "b";
     let lettersNotTraced = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", 
                            "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x"];
@@ -258,8 +211,8 @@ export class EdgeTracer {
   }
 
   // Helper method to create a solved cube state for testing
-  public createSolvedCubeState(): CubeState {
-    const cubeState: CubeState = {};
+  public createSolvedCubeState(): EdgeTracerCubeState {
+    const cubeState: EdgeTracerCubeState = {};
     
     // Create solved state where each piece is in its correct position
     for (const [notation, colors] of this.edgeNotation.entries()) {
@@ -278,9 +231,39 @@ export class EdgeTracer {
   }
 
 
-  // Extract edge piece colors from a scrambled cube state
-  public extractEdgeColorsFromCube(cubeState: any): CubeState {
-    const edgeCubeState: CubeState = {};
+  // Convert scrambler cube state to edge tracer format
+  public convertFromScramblerCube(scramblerCube: ScramblerCubeState): EdgeTracerCubeState {
+    const edgeCubeState: EdgeTracerCubeState = {};
+    
+    // Extract edge piece colors using the embedded position mapping
+    const allEdgePositions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 
+                              'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'];
+    
+    for (const position of allEdgePositions) {
+      const mainPos = this.cubePositions.get(position);
+      const secondaryPosition = this.get_secondary_edge_letter(position);
+      const secondaryPos = this.cubePositions.get(secondaryPosition);
+      
+      if (mainPos && secondaryPos) {
+        // Get the main color from the main position
+        const mainColor = scramblerCube.faces[mainPos.face as keyof typeof scramblerCube.faces].colors[mainPos.row][mainPos.col];
+        
+        // Get the secondary color from the secondary position
+        const secondaryColor = scramblerCube.faces[secondaryPos.face as keyof typeof scramblerCube.faces].colors[secondaryPos.row][secondaryPos.col];
+        
+        edgeCubeState[position] = {
+          colors: [mainColor, secondaryColor],
+          orientation: 'correct'
+        };
+      }
+    }
+    
+    return edgeCubeState;
+  }
+
+  // Extract edge piece colors from a scrambled cube state (legacy method)
+  public extractEdgeColorsFromCube(cubeState: any): EdgeTracerCubeState {
+    const edgeCubeState: EdgeTracerCubeState = {};
     
     // Extract edge piece colors using the embedded position mapping
     const allEdgePositions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 
@@ -354,7 +337,14 @@ export class EdgeTracer {
 }
 
 // Export the main function for easy use
-export function traceEdges(cubeState: CubeState): string {
+export function traceEdges(cubeState: EdgeTracerCubeState): string {
   const tracer = new EdgeTracer();
   return tracer.do_full_trace(cubeState);
+}
+
+// New function to trace edges from scrambler cube state
+export function traceEdgesFromScrambler(scramblerCube: ScramblerCubeState): string {
+  const tracer = new EdgeTracer();
+  const edgeCubeState = tracer.convertFromScramblerCube(scramblerCube);
+  return tracer.do_full_trace(edgeCubeState);
 }

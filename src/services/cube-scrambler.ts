@@ -1,86 +1,18 @@
+import { 
+  CubeState, 
+  CubeFace, 
+  FullMove, 
+  Move, 
+  MoveVariant, 
+  COLORS, 
+  FACE_COLORS, 
+  POSITION_LETTERS 
+} from '../models/cube-models.js';
+
 // Simple random function to replace lodash
 function random<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)];
 }
-
-// Types for cube representation
-export interface CubeFace {
-  center: string;
-  colors: string[][]; // 3x3 grid of colors
-}
-
-export interface CubeState {
-  faces: {
-    U: CubeFace;
-    L: CubeFace;
-    F: CubeFace;
-    R: CubeFace;
-    B: CubeFace;
-    D: CubeFace;
-  };
-}
-
-// EdgePiece interface moved to later in file for edge tracing functionality
-
-export interface CornerPiece {
-  position: string;
-  colors: [string, string, string];
-}
-
-// Move types
-type Move = 'U' | 'R' | 'F' | 'B' | 'D' | 'L';
-type MoveVariant = '' | "'" | '2';
-type FullMove = `${Move}${MoveVariant}`;
-
-// Color mapping
-const COLORS = {
-  white: '#FFFFFF',
-  yellow: '#FFD700',
-  red: '#E53935',
-  orange: '#FF6F00',
-  green: '#43A047',
-  blue: '#1E88E5'
-} as const;
-
-// Face to color mapping
-const FACE_COLORS = {
-  U: 'white',
-  D: 'yellow',
-  R: 'red',
-  L: 'orange',
-  F: 'green',
-  B: 'blue'
-} as const;
-
-// Position to letter mapping for reference
-const POSITION_LETTERS = {
-  U: [['A', 'a', 'B'], ['d', '*', 'b'], ['D', 'c', 'C']],
-  L: [['E', 'e', 'F'], ['h', '*', 'f'], ['H', 'g', 'G']],
-  F: [['I', 'i', 'J'], ['l', '*', 'j'], ['L', 'k', 'K']],
-  R: [['M', 'm', 'N'], ['o', 'Q', 'n'], ['O', 'p', 'P']],
-  B: [['Q', 'q', 'R'], ['s', 'T', 'r'], ['S', 't', 'T']],
-  D: [['U', 'u', 'V'], ['w', 'X', 'v'], ['W', 'x', 'X']]
-} as const;
-
-// Edge piece definitions (position -> colors)
-const EDGE_PIECES: Record<string, [string, string]> = {
-  'A': ['white', 'blue'], 'B': ['white', 'red'], 'C': ['white', 'green'], 'D': ['white', 'orange'],
-  'E': ['orange', 'white'], 'F': ['orange', 'green'], 'G': ['orange', 'yellow'], 'H': ['orange', 'blue'],
-  'I': ['green', 'white'], 'J': ['green', 'red'], 'K': ['green', 'yellow'], 'L': ['green', 'orange'],
-  'M': ['red', 'white'], 'N': ['red', 'blue'], 'O': ['red', 'yellow'], 'P': ['red', 'green'],
-  'Q': ['blue', 'white'], 'R': ['blue', 'orange'], 'S': ['blue', 'yellow'], 'T': ['blue', 'red'],
-  'U': ['yellow', 'green'], 'V': ['yellow', 'red'], 'W': ['yellow', 'blue'], 'X': ['yellow', 'orange']
-};
-
-// Corner piece definitions (position -> colors)
-const CORNER_PIECES: Record<string, [string, string, string]> = {
-  'A': ['white', 'orange', 'blue'], 'B': ['white', 'blue', 'red'], 'C': ['white', 'red', 'green'], 'D': ['white', 'green', 'orange'],
-  'E': ['orange', 'blue', 'white'], 'F': ['orange', 'white', 'green'], 'G': ['orange', 'green', 'yellow'], 'H': ['orange', 'yellow', 'blue'],
-  'I': ['green', 'orange', 'white'], 'J': ['green', 'white', 'red'], 'K': ['green', 'red', 'yellow'], 'L': ['green', 'yellow', 'orange'],
-  'M': ['red', 'green', 'white'], 'N': ['red', 'white', 'blue'], 'O': ['red', 'blue', 'yellow'], 'P': ['red', 'yellow', 'green'],
-  'Q': ['blue', 'red', 'white'], 'R': ['blue', 'white', 'orange'], 'S': ['blue', 'orange', 'yellow'], 'T': ['blue', 'yellow', 'red'],
-  'U': ['yellow', 'orange', 'green'], 'V': ['yellow', 'green', 'red'], 'W': ['yellow', 'red', 'blue'], 'X': ['yellow', 'blue', 'orange']
-};
 
 /**
  * Generate a random scramble sequence
@@ -88,7 +20,7 @@ const CORNER_PIECES: Record<string, [string, string, string]> = {
  * @returns Scramble string with moves separated by spaces
  */
 export function generate_scramble_sequence(length: number = 25): string {
-  const moves: Move[] = ['U', 'R', 'F', 'B', 'D', 'L'];
+  const moves: Move[] = ['U', 'R', 'F', 'B', 'D', 'L', 'Lw', 'Dw'];
   const variants: MoveVariant[] = ['', "'", '2'];
   const scramble: FullMove[] = [];
   
@@ -130,6 +62,24 @@ function create_solved_cube(): CubeState {
  * Apply a single move to the cube
  */
 function apply_move(cube: CubeState, move: FullMove): void {
+  // Handle wide moves (Lw, Dw) - they have 2 characters + variant
+  if (move.startsWith('Lw')) {
+    const variant = move.slice(2) as MoveVariant;
+    if (variant === "'") move_Lw_prime(cube);
+    else if (variant === '2') { move_Lw(cube); move_Lw(cube); }
+    else move_Lw(cube);
+    return;
+  }
+  
+  if (move.startsWith('Dw')) {
+    const variant = move.slice(2) as MoveVariant;
+    if (variant === "'") move_Dw_prime(cube);
+    else if (variant === '2') { move_Dw(cube); move_Dw(cube); }
+    else move_Dw(cube);
+    return;
+  }
+  
+  // Handle basic moves (U, R, F, B, D, L) - they have 1 character + variant
   const face = move[0] as keyof typeof cube.faces;
   const variant = move.slice(1) as MoveVariant;
   
@@ -489,124 +439,216 @@ function rotate_face_counter_clockwise(face: CubeFace): void {
 }
 
 /**
- * Edge piece mapping for tracing
+ * M slice move (Middle slice between R and L) - clockwise
+ * Affects: middle column of U, F, D, B faces AND their centers
  */
-export interface EdgePiece {
-  id: string;
-  colors: [string, string];
-  position: [string, number, number]; // [face, row, col]
-  originalPosition: [string, number, number];
-}
-
-/**
- * Create edge piece mapping for a solved cube
- */
-function create_edge_mapping(): EdgePiece[] {
-  const edges: EdgePiece[] = [];
-  
-  // Edge pieces and their original positions (using lowercase letters as per edge-notation.json)
-  const edgePositions = [
-    // U face edges
-    { id: 'a', colors: ['white', 'blue'], position: ['U', 0, 0] },
-    { id: 'b', colors: ['white', 'red'], position: ['U', 0, 2] },
-    { id: 'c', colors: ['white', 'green'], position: ['U', 2, 2] },
-    { id: 'd', colors: ['white', 'orange'], position: ['U', 2, 0] },
-    
-    // Middle layer edges (e-l)
-    { id: 'e', colors: ['orange', 'white'], position: ['L', 0, 1] },
-    { id: 'f', colors: ['orange', 'green'], position: ['L', 1, 2] },
-    { id: 'g', colors: ['orange', 'yellow'], position: ['L', 2, 1] },
-    { id: 'h', colors: ['orange', 'blue'], position: ['L', 1, 0] },
-    { id: 'i', colors: ['green', 'white'], position: ['B', 0, 1] },
-    { id: 'j', colors: ['green', 'red'], position: ['B', 1, 2] },
-    { id: 'k', colors: ['green', 'yellow'], position: ['B', 2, 1] },
-    { id: 'l', colors: ['green', 'orange'], position: ['B', 1, 0] },
-    
-    // Additional middle layer edges (m-t)
-    { id: 'm', colors: ['red', 'white'], position: ['R', 0, 1] },
-    { id: 'n', colors: ['red', 'blue'], position: ['R', 1, 0] },
-    { id: 'o', colors: ['red', 'yellow'], position: ['R', 2, 1] },
-    { id: 'p', colors: ['red', 'green'], position: ['R', 1, 2] },
-    { id: 'q', colors: ['blue', 'white'], position: ['F', 0, 1] },
-    { id: 'r', colors: ['blue', 'orange'], position: ['F', 1, 0] },
-    { id: 's', colors: ['blue', 'yellow'], position: ['F', 2, 1] },
-    { id: 't', colors: ['blue', 'red'], position: ['F', 1, 2] },
-    
-    // D face edges (u-x)
-    { id: 'u', colors: ['yellow', 'green'], position: ['D', 2, 2] },
-    { id: 'v', colors: ['yellow', 'red'], position: ['D', 0, 2] },
-    { id: 'w', colors: ['yellow', 'blue'], position: ['D', 0, 0] },
-    { id: 'x', colors: ['yellow', 'orange'], position: ['D', 2, 0] }
+function move_M_slice(cube: CubeState): void {
+  // M slice clockwise: U[1] → F[1] → D[1] → B[1] → U[1]
+  const temp = [
+    cube.faces.U.colors[0][1],
+    cube.faces.U.colors[1][1], 
+    cube.faces.U.colors[2][1]
   ];
   
-  edgePositions.forEach(edge => {
-    edges.push({
-      id: edge.id,
-      colors: edge.colors as [string, string],
-      position: edge.position as [string, number, number],
-      originalPosition: edge.position as [string, number, number]
-    });
-  });
+  // U[1] gets B[1] (reversed order for B face)
+  cube.faces.U.colors[0][1] = cube.faces.B.colors[2][1];
+  cube.faces.U.colors[1][1] = cube.faces.B.colors[1][1];
+  cube.faces.U.colors[2][1] = cube.faces.B.colors[0][1];
   
-  return edges;
+  // B[1] gets D[1] (reversed order for B face)
+  cube.faces.B.colors[0][1] = cube.faces.D.colors[2][1];
+  cube.faces.B.colors[1][1] = cube.faces.D.colors[1][1];
+  cube.faces.B.colors[2][1] = cube.faces.D.colors[0][1];
+  
+  // D[1] gets F[1] (reversed order for D face)
+  cube.faces.D.colors[0][1] = cube.faces.F.colors[0][1];
+  cube.faces.D.colors[1][1] = cube.faces.F.colors[1][1];
+  cube.faces.D.colors[2][1] = cube.faces.F.colors[2][1];
+  
+  // F[1] gets temp (original U[1])
+  cube.faces.F.colors[0][1] = temp[0];
+  cube.faces.F.colors[1][1] = temp[1];
+  cube.faces.F.colors[2][1] = temp[2];
+  
+  // Rotate centers of affected faces (U, D, F, B)
+  // U center rotates clockwise (white -> green)
+  const uCenter = cube.faces.U.center;
+  cube.faces.U.center = cube.faces.F.center;
+  cube.faces.F.center = cube.faces.D.center;
+  cube.faces.D.center = cube.faces.B.center;
+  cube.faces.B.center = uCenter;
+  
+  console.log('🔄 M slice move completed');
 }
 
 /**
- * Find edge piece by colors at a position
+ * M' slice move (Middle slice between R and L) - counter-clockwise
+ * Affects: middle column of U, F, D, B faces AND their centers
  */
-function find_edge_by_colors(cube: CubeState, face: string, row: number, col: number): EdgePiece | null {
-  const color1 = cube.faces[face as keyof typeof cube.faces].colors[row][col];
-  const color2 = get_adjacent_color(cube, face, row, col);
+function move_M_slice_prime(cube: CubeState): void {
+  // M' slice counter-clockwise: U[1] → F[1] → D[1] → B[1] → U[1] (reverse of M)
+  const temp = [
+    cube.faces.U.colors[0][1],
+    cube.faces.U.colors[1][1], 
+    cube.faces.U.colors[2][1]
+  ];
   
-  if (!color2) return null;
+  // U[1] gets F[1]
+  cube.faces.U.colors[0][1] = cube.faces.F.colors[0][1];
+  cube.faces.U.colors[1][1] = cube.faces.F.colors[1][1];
+  cube.faces.U.colors[2][1] = cube.faces.F.colors[2][1];
   
-  // Find matching edge in our mapping
-  const edges = create_edge_mapping();
-  return edges.find(edge => 
-    (edge.colors[0] === color1 && edge.colors[1] === color2) ||
-    (edge.colors[0] === color2 && edge.colors[1] === color1)
-  ) || null;
+  // F[1] gets D[1] (reversed order for F face)
+  cube.faces.F.colors[0][1] = cube.faces.D.colors[0][1];
+  cube.faces.F.colors[1][1] = cube.faces.D.colors[1][1];
+  cube.faces.F.colors[2][1] = cube.faces.D.colors[2][1];
+  
+  // D[1] gets B[1] (reversed order for D face)
+  cube.faces.D.colors[0][1] = cube.faces.B.colors[2][1];
+  cube.faces.D.colors[1][1] = cube.faces.B.colors[1][1];
+  cube.faces.D.colors[2][1] = cube.faces.B.colors[0][1];
+  
+  // B[1] gets temp (original U[1], reversed order for B face)
+  cube.faces.B.colors[0][1] = temp[2];
+  cube.faces.B.colors[1][1] = temp[1];
+  cube.faces.B.colors[2][1] = temp[0];
+  
+  // Rotate centers of affected faces (U, D, F, B) - counter-clockwise
+  // U center rotates counter-clockwise (white -> blue)
+  const uCenter = cube.faces.U.center;
+  cube.faces.U.center = cube.faces.B.center;
+  cube.faces.B.center = cube.faces.D.center;
+  cube.faces.D.center = cube.faces.F.center;
+  cube.faces.F.center = uCenter;
+  
+  console.log('🔄 M\' slice move completed');
 }
 
 /**
- * Get adjacent color for edge piece
+ * E slice move (Equatorial slice between U and D) - clockwise
+ * Affects: middle row of F, R, B, L faces AND their centers
  */
-function get_adjacent_color(cube: CubeState, face: string, row: number, col: number): string | null {
-  const faceMap: { [key: string]: string } = {
-    'U': 'white', 'L': 'orange', 'F': 'green', 
-    'R': 'red', 'B': 'blue', 'D': 'yellow'
-  };
+function move_E_slice(cube: CubeState): void {
+  // E slice clockwise: F[1] → R[1] → B[1] → L[1] → F[1]
+  const temp = [...cube.faces.F.colors[1]];
   
-  // For edge pieces, we need to find the adjacent face color
-  if (face === 'U' && row === 0 && col === 0) return cube.faces.L.colors[0][0]; // A
-  if (face === 'U' && row === 0 && col === 2) return cube.faces.R.colors[0][2]; // B
-  if (face === 'U' && row === 2 && col === 2) return cube.faces.F.colors[0][2]; // C
-  if (face === 'U' && row === 2 && col === 0) return cube.faces.L.colors[0][2]; // D
+  // F[1] gets L[1]
+  cube.faces.F.colors[1] = [...cube.faces.L.colors[1]];
   
-  if (face === 'L' && row === 1 && col === 0) return cube.faces.B.colors[1][2]; // E
-  if (face === 'L' && row === 1 && col === 2) return cube.faces.F.colors[1][0]; // F
-  if (face === 'R' && row === 1 && col === 0) return cube.faces.F.colors[1][2]; // G
-  if (face === 'R' && row === 1 && col === 2) return cube.faces.B.colors[1][0]; // H
+  // L[1] gets B[1] (reversed order for L face)
+  cube.faces.L.colors[1] = [...cube.faces.B.colors[1]]
   
-  if (face === 'D' && row === 0 && col === 0) return cube.faces.L.colors[2][0]; // I
-  if (face === 'D' && row === 0 && col === 2) return cube.faces.R.colors[2][2]; // J
-  if (face === 'D' && row === 2 && col === 2) return cube.faces.F.colors[2][2]; // K
-  if (face === 'D' && row === 2 && col === 0) return cube.faces.L.colors[2][2]; // L
+  // B[1] gets R[1] (reversed order for B face)
+  cube.faces.B.colors[1] = [...cube.faces.R.colors[1]]
   
-  return null;
+  // R[1] gets temp (original F[1])
+  cube.faces.R.colors[1] = temp;
+  
+  // Rotate centers of affected faces (F, R, B, L)
+  // F center rotates clockwise (green -> orange)
+  const fCenter = cube.faces.F.center;
+  cube.faces.F.center = cube.faces.L.center;
+  cube.faces.L.center = cube.faces.B.center;
+  cube.faces.B.center = cube.faces.R.center;
+  cube.faces.R.center = fCenter;
+  
+  console.log('🔄 E slice move completed');
 }
 
 /**
- * Apply a scramble sequence to a cube with edge tracing
+ * E' slice move (Equatorial slice between U and D) - counter-clockwise
+ * Affects: middle row of F, R, B, L faces AND their centers
+ */
+function move_E_slice_prime(cube: CubeState): void {
+  // E' slice counter-clockwise: F[1] → L[1] → B[1] → R[1] → F[1] (reverse of E)
+  const temp = [...cube.faces.F.colors[1]];
+  
+  // F[1] gets R[1]
+  cube.faces.F.colors[1] = [...cube.faces.R.colors[1]];
+  
+  // R[1] gets B[1] (reversed order for R face)
+  cube.faces.R.colors[1] = [...cube.faces.B.colors[1]];
+  
+  // B[1] gets L[1] (reversed order for B face)
+  cube.faces.B.colors[1] = [...cube.faces.L.colors[1]];
+  
+  // L[1] gets temp (original F[1])
+  cube.faces.L.colors[1] = temp;
+  
+  // Rotate centers of affected faces (F, R, B, L) - counter-clockwise
+  // F center rotates counter-clockwise (green -> red)
+  const fCenter = cube.faces.F.center;
+  cube.faces.F.center = cube.faces.R.center;
+  cube.faces.R.center = cube.faces.B.center;
+  cube.faces.B.center = cube.faces.L.center;
+  cube.faces.L.center = fCenter;
+  
+  console.log('🔄 E\' slice move completed');
+}
+
+/**
+ * Move Lw (Left wide - L face + M slice) - clockwise
+ * Combines L move + M slice move
+ */
+function move_Lw(cube: CubeState): void {
+  // Apply L move
+  move_L(cube);
+  // Apply M slice move
+  move_M_slice(cube);
+  
+  console.log('🔄 Lw move completed (L + M slice)');
+}
+
+/**
+ * Move Lw' (Left wide - L face + M slice) - counter-clockwise
+ * Combines L' move + M' slice move
+ */
+function move_Lw_prime(cube: CubeState): void {
+  // Apply L' move
+  move_L_prime(cube);
+  // Apply M' slice move
+  move_M_slice_prime(cube);
+  
+  console.log('🔄 Lw\' move completed (L\' + M\' slice)');
+}
+
+/**
+ * Move Dw (Down wide - D face + E slice) - clockwise
+ * Combines D move + E slice move
+ */
+function move_Dw(cube: CubeState): void {
+  // Apply D move
+  move_D(cube);
+  // Apply E slice move
+  move_E_slice(cube);
+  
+  console.log('🔄 Dw move completed (D + E slice)');
+}
+
+/**
+ * Move Dw' (Down wide - D face + E slice) - counter-clockwise
+ * Combines D' move + E' slice move
+ */
+function move_Dw_prime(cube: CubeState): void {
+  // Apply D' move
+  move_D_prime(cube);
+  // Apply E' slice move
+  move_E_slice_prime(cube);
+  
+  console.log('🔄 Dw\' move completed (D\' + E\' slice)');
+}
+
+
+/**
+ * Apply a scramble sequence to a cube
  * @param scramble Scramble string with moves separated by spaces
- * @returns Scrambled cube state and edge tracing information
+ * @returns Scrambled cube state
  */
-export function scramble_cube_with_tracing(scramble: string): { cube: CubeState; edgeTracing: EdgePiece[] } {
+export function scramble_cube(scramble: string): CubeState {
   const cube = create_solved_cube();
   const moves = scramble.trim().split(/\s+/);
-  const edgeTracing = create_edge_mapping();
   
-  console.log('🎲 === CUBE SCRAMBLING WITH EDGE TRACING ===');
+  console.log('🎲 === CUBE SCRAMBLING ===');
   console.log('📝 Scramble sequence:', scramble);
   console.log('🔢 Total moves:', moves.length);
   console.log('');
@@ -616,55 +658,13 @@ export function scramble_cube_with_tracing(scramble: string): { cube: CubeState;
     if (move) {
       console.log(`🔄 Move ${i + 1}/${moves.length}: ${move}`);
       apply_move(cube, move as FullMove);
-      
-      // Update edge positions after each move
-      update_edge_positions(cube, edgeTracing);
-      
-      console.log('📊 Edge tracing after move:');
-      edgeTracing.forEach(edge => {
-        const [face, row, col] = edge.position;
-        const [origFace, origRow, origCol] = edge.originalPosition;
-        console.log(`  ${edge.id}: ${edge.colors[0]}-${edge.colors[1]} at ${face}[${row}][${col}] (was at ${origFace}[${origRow}][${origCol}])`);
-      });
-      console.log('');
     }
   }
   
-  console.log('✅ Scrambling with edge tracing completed!');
-  return { cube, edgeTracing };
-}
-
-/**
- * Update edge positions after a move
- */
-function update_edge_positions(cube: CubeState, edges: EdgePiece[]): void {
-  // Check all edge positions and update their current locations
-  const edgePositions = [
-    ['U', 0, 0], ['U', 0, 2], ['U', 2, 2], ['U', 2, 0],
-    ['L', 1, 0], ['L', 1, 2], ['R', 1, 0], ['R', 1, 2],
-    ['D', 0, 0], ['D', 0, 2], ['D', 2, 2], ['D', 2, 0]
-  ];
+  print_color_analysis(cube);
+  console.log('✅ Scrambling completed!');
   
-  edgePositions.forEach(([face, row, col]) => {
-    const foundEdge = find_edge_by_colors(cube, face as string, row as number, col as number);
-    if (foundEdge) {
-      // Update the position of this edge
-      const edgeIndex = edges.findIndex(e => e.id === foundEdge.id);
-      if (edgeIndex !== -1) {
-        edges[edgeIndex].position = [face as string, row as number, col as number];
-      }
-    }
-  });
-}
-
-/**
- * Apply a scramble sequence to a cube
- * @param scramble Scramble string with moves separated by spaces
- * @returns Scrambled cube state
- */
-export function scramble_cube(scramble: string): CubeState {
-  const result = scramble_cube_with_tracing(scramble);
-  return result.cube;
+  return cube;
 }
 
 /**
@@ -742,6 +742,40 @@ function get_color_code(color: string): string {
  * Explain how a move affects the cube
  */
 export function explain_move(move: FullMove): string {
+  // Handle wide moves first
+  if (move.startsWith('Lw')) {
+    const variant = move.slice(2);
+    let explanation = `Move ${move} (Left wide `;
+    
+    if (variant === "'") explanation += "counter-clockwise";
+    else if (variant === '2') explanation += "180 degrees";
+    else explanation += "clockwise";
+    
+    explanation += "):\n";
+    explanation += "• Rotates the LEFT face (orange center)\n";
+    explanation += "• Rotates the M slice (middle slice between R and L)\n";
+    explanation += "• Combines L move + M slice move\n";
+    explanation += "• Affected pieces: L face + middle column of U, F, D, B faces\n";
+    return explanation;
+  }
+  
+  if (move.startsWith('Dw')) {
+    const variant = move.slice(2);
+    let explanation = `Move ${move} (Down wide `;
+    
+    if (variant === "'") explanation += "counter-clockwise";
+    else if (variant === '2') explanation += "180 degrees";
+    else explanation += "clockwise";
+    
+    explanation += "):\n";
+    explanation += "• Rotates the DOWN face (yellow center)\n";
+    explanation += "• Rotates the E slice (equatorial slice between U and D)\n";
+    explanation += "• Combines D move + E slice move\n";
+    explanation += "• Affected pieces: D face + middle row of F, R, B, L faces\n";
+    return explanation;
+  }
+  
+  // Handle basic moves
   const face = move[0];
   const variant = move.slice(1);
   
@@ -795,7 +829,7 @@ export function explain_move(move: FullMove): string {
 export function test_individual_moves(): void {
   console.log('=== TESTING INDIVIDUAL MOVES ===\n');
   
-  const moves: FullMove[] = ['U', 'U\'', 'U2', 'R', 'R\'', 'R2', 'F', 'F\'', 'F2', 'B', 'B\'', 'B2', 'D', 'D\'', 'D2', 'L', 'L\'', 'L2'];
+  const moves: FullMove[] = ['U', 'U\'', 'U2', 'R', 'R\'', 'R2', 'F', 'F\'', 'F2', 'B', 'B\'', 'B2', 'D', 'D\'', 'D2', 'L', 'L\'', 'L2', 'Lw', 'Lw\'', 'Lw2', 'Dw', 'Dw\'', 'Dw2'];
   
   for (const move of moves) {
     console.log(explain_move(move));

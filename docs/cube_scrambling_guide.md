@@ -37,6 +37,12 @@ The six basic moves correspond to rotating each face 90° clockwise:
 5. **D** - Down face (Yellow) clockwise
 6. **L** - Left face (Orange) clockwise
 
+### Wide Moves
+Wide moves rotate both a face and an adjacent center slice simultaneously:
+
+1. **Lw** - Left face + M slice (center between R and L) clockwise
+2. **Dw** - Down face + E slice (center between U and D) clockwise
+
 ### Move Variants
 
 #### Prime Notation (')
@@ -47,6 +53,8 @@ A prime (') after a move indicates a 90° counter-clockwise rotation:
 - **B'** - Back face counter-clockwise
 - **D'** - Down face counter-clockwise
 - **L'** - Left face counter-clockwise
+- **Lw'** - Left wide counter-clockwise (L' + M' slice)
+- **Dw'** - Down wide counter-clockwise (D' + E' slice)
 
 #### Double Notation (2)
 A "2" after a move indicates a 180° rotation (same as doing the move twice):
@@ -56,6 +64,30 @@ A "2" after a move indicates a 180° rotation (same as doing the move twice):
 - **B2** - Back face 180°
 - **D2** - Down face 180°
 - **L2** - Left face 180°
+- **Lw2** - Left wide 180° (L2 + M2 slice)
+- **Dw2** - Down wide 180° (D2 + E2 slice)
+
+## Wide Move Behavior
+
+### Lw Moves (Left Wide)
+**Lw** combines the L face rotation with the M slice rotation (center slice between R and L faces):
+- **Affected pieces**: L face + middle column of U, F, D, B faces
+- **Movement pattern**: L face rotates + M slice rotates in same direction
+- **Variants**: Lw (clockwise), Lw' (counter-clockwise), Lw2 (180°)
+
+### Dw Moves (Down Wide)  
+**Dw** combines the D face rotation with the E slice rotation (center slice between U and D faces):
+- **Affected pieces**: D face + middle row of F, R, B, L faces
+- **Movement pattern**: D face rotates + E slice rotates in same direction
+- **Variants**: Dw (clockwise), Dw' (counter-clockwise), Dw2 (180°)
+
+### Slice Move Components
+- **M slice**: Middle slice between R and L faces
+  - Clockwise: U[1] → F[1] → D[1] → B[1] → U[1]
+  - Counter-clockwise: U[1] → B[1] → D[1] → F[1] → U[1]
+- **E slice**: Middle slice between U and D faces
+  - Clockwise: F[1] → R[1] → B[1] → L[1] → F[1]
+  - Counter-clockwise: F[1] → L[1] → B[1] → R[1] → F[1]
 
 ## Color Movement Patterns
 

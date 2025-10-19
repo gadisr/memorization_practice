@@ -1,5 +1,5 @@
 import { EdgeTracer, traceEdges } from '../services/edge-tracer';
-import { CubeState } from '../services/edge-tracer';
+import { CubeState } from '../models/cube-models';
 
 /**
  * Demo script showing how to use the Edge Tracer

@@ -1,5 +1,5 @@
 import { EdgeTracer, traceEdges } from '../services/edge-tracer.js';
-import { CubeState } from '../services/edge-tracer.js';
+import { CubeState } from '../models/cube-models.js';
 
 // Simple test runner for edge tracer
 function runEdgeTracerTests() {

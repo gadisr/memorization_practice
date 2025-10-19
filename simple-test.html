@@ -60,6 +60,8 @@
     <button onclick="testMoves()">🔄 Test Individual Moves</button>
     <button onclick="testRotations()">🔄 Test Rotation Variants</button>
     <button onclick="testSpecific()">🔍 Test Specific Moves</button>
+    <button onclick="testWideMoves()">🔲 Test Wide Moves</button>
+    <button onclick="testWideEdgeTracing()">🔲🔗 Test Wide + Edge Tracing</button>
     <button onclick="testEdgeTracing()">🔗 Test Edge Tracing</button>
     <button onclick="testCornerTracing()">🔲 Test Corner Tracing</button>
     <button onclick="clearOutput()" class="clear-btn">🗑️ Clear</button>
@@ -192,19 +194,165 @@
             }
         }
         
-        // Test edge tracing functionality
-        async function testEdgeTracing() {
+        // Test wide moves functionality
+        async function testWideMoves() {
             try {
-                console.log('\n=== 🔗 EDGE TRACING TEST ===');
+                console.log('\n=== 🔲 WIDE MOVES TEST ===');
+                
+                if (!scramblerModule) {
+                    throw new Error('Module not loaded');
+                }
+                
+                // Test wide move explanations
+                console.log('\n📝 Wide Move Explanations:');
+                console.log('\nLw (Left Wide):');
+                console.log(scramblerModule.explain_move('Lw'));
+                console.log('\nLw\' (Left Wide Prime):');
+                console.log(scramblerModule.explain_move('Lw\''));
+                console.log('\nLw2 (Left Wide Double):');
+                console.log(scramblerModule.explain_move('Lw2'));
+                console.log('\nDw (Down Wide):');
+                console.log(scramblerModule.explain_move('Dw'));
+                console.log('\nDw\' (Down Wide Prime):');
+                console.log(scramblerModule.explain_move('Dw\''));
+                console.log('\nDw2 (Down Wide Double):');
+                console.log(scramblerModule.explain_move('Dw2'));
+                
+                // Test wide move application
+                console.log('\n🔄 Testing Wide Move Application:');
+                
+                // Test Lw moves
+                console.log('\n--- Testing Lw moves ---');
+                const cube1 = scramblerModule.scramble_cube('Lw');
+                console.log('✅ Lw applied successfully');
+                
+                const cube2 = scramblerModule.scramble_cube('Lw Lw\'');
+                console.log('✅ Lw + Lw\' applied successfully (should return to solved state)');
+                
+                const cube3 = scramblerModule.scramble_cube('Lw2');
+                console.log('✅ Lw2 applied successfully');
+                
+                // Test Dw moves
+                console.log('\n--- Testing Dw moves ---');
+                const cube4 = scramblerModule.scramble_cube('Dw');
+                console.log('✅ Dw applied successfully');
+                
+                const cube5 = scramblerModule.scramble_cube('Dw Dw\'');
+                console.log('✅ Dw + Dw\' applied successfully (should return to solved state)');
+                
+                const cube6 = scramblerModule.scramble_cube('Dw2');
+                console.log('✅ Dw2 applied successfully');
+                
+                // Test mixed wide and basic moves
+                console.log('\n--- Testing Mixed Moves ---');
+                const cube7 = scramblerModule.scramble_cube('R Lw U Dw\' F2');
+                console.log('✅ Mixed wide and basic moves applied successfully');
+                
+                // Test wide moves in scramble generation
+                console.log('\n--- Testing Wide Moves in Scrambles ---');
+                for (let i = 0; i < 5; i++) {
+                    const scramble = scramblerModule.generate_scramble_sequence(20);
+                    const hasWideMoves = scramble.split(' ').some(move => move.startsWith('Lw') || move.startsWith('Dw'));
+                    console.log(`Scramble ${i + 1}: ${scramble} ${hasWideMoves ? '(contains wide moves)' : '(basic moves only)'}`);
+                }
+                
+                console.log('\n✅ Wide moves test completed successfully!');
+                
+            } catch (error) {
+                console.log('❌ Wide moves test failed:', error);
+            }
+        }
+        
+        // Test wide moves with edge tracing functionality
+        async function testWideEdgeTracing() {
+            try {
+                console.log('\n=== 🔲🔗 WIDE MOVES + EDGE TRACING TEST ===');
                 
                 if (!scramblerModule) {
                     throw new Error('Scrambler module not loaded');
                 }
                 
-                // Generate a scramble
-                const scramble = scramblerModule.generate_scramble_sequence(15);
+                // Test specific wide move sequences
+                const wideMoveSequences = [
+                    'Lw Dw Lw\' Dw\'',  // Wide moves that should return to solved
+                    'R Lw U Dw\' F2',   // Mixed wide and basic moves
+                    'Lw2 Dw2',          // Wide double moves
+                    'Lw Dw Lw\' Dw\' Lw2 Dw2'  // Complex wide sequence
+                ];
+                
+                for (let i = 0; i < wideMoveSequences.length; i++) {
+                    const sequence = wideMoveSequences[i];
+                    console.log(`\n--- Test ${i + 1}: "${sequence}" ---`);
+                    
+                    // Apply wide move sequence
+                    const cube = scramblerModule.scramble_cube(sequence);
+                    console.log(`✅ Applied sequence: ${sequence}`);
+                    
+                    // Load edge tracer
+                    const edgeTracerModule = await import('./dist/services/edge-tracer.js');
+                    const edgeTracer = new edgeTracerModule.EdgeTracer();
+                    
+                    // Extract edge colors
+                    const cubeState = edgeTracer.extractEdgeColorsFromCube(cube);
+                    
+                    // Run edge tracing
+                    const tracingString = edgeTracer.do_full_trace(cubeState);
+                    
+                    console.log(`📝 Edge tracing result: "${tracingString}"`);
+                    if (tracingString.trim() === "") {
+                        console.log('✅ No cycles needed - wide moves returned to solved state!');
+                    } else {
+                        console.log('🔄 Cycles found - wide moves created scrambled state');
+                    }
+                }
+                
+                // Test wide moves in random scrambles
+                console.log('\n--- Testing Wide Moves in Random Scrambles ---');
+                for (let i = 0; i < 3; i++) {
+                    const scramble = scramblerModule.generate_scramble_sequence(25);
+                    const wideMoves = scramble.split(' ').filter(move => move.startsWith('Lw') || move.startsWith('Dw'));
+                    
+                    console.log(`\nScramble ${i + 1}: ${scramble}`);
+                    console.log(`Wide moves: ${wideMoves.length > 0 ? wideMoves.join(', ') : 'None'}`);
+                    
+                    // Apply scramble and trace
+                    const cube = scramblerModule.scramble_cube(scramble);
+                    const edgeTracerModule = await import('./dist/services/edge-tracer.js');
+                    const edgeTracer = new edgeTracerModule.EdgeTracer();
+                    const cubeState = edgeTracer.extractEdgeColorsFromCube(cube);
+                    const tracingString = edgeTracer.do_full_trace(cubeState);
+                    
+                    console.log(`Edge tracing: "${tracingString}"`);
+                }
+                
+                console.log('\n✅ Wide moves + edge tracing test completed successfully!');
+                
+            } catch (error) {
+                console.log('❌ Wide moves + edge tracing test failed:', error);
+            }
+        }
+        
+        // Test edge tracing functionality
+        async function testEdgeTracing() {
+            try {
+                console.log('\n=== 🔗 EDGE TRACING TEST (WITH WIDE MOVES) ===');
+                
+                if (!scramblerModule) {
+                    throw new Error('Scrambler module not loaded');
+                }
+                
+                // Generate a scramble (will include wide moves)
+                const scramble = scramblerModule.generate_scramble_sequence(20);
                 console.log(`📝 Scramble sequence: ${scramble}`);
                 console.log(`🔢 Total moves: ${scramble.split(' ').length}`);
+                
+                // Check if scramble contains wide moves
+                const wideMoves = scramble.split(' ').filter(move => move.startsWith('Lw') || move.startsWith('Dw'));
+                if (wideMoves.length > 0) {
+                    console.log(`🔲 Wide moves found: ${wideMoves.join(', ')}`);
+                } else {
+                    console.log('📝 No wide moves in this scramble (basic moves only)');
+                }
                 
                 // Apply scramble to cube
                 const scrambledCube = scramblerModule.scramble_cube(scramble);
@@ -324,6 +472,8 @@
         window.testMoves = testMoves;
         window.testRotations = testRotations;
         window.testSpecific = testSpecific;
+        window.testWideMoves = testWideMoves;
+        window.testWideEdgeTracing = testWideEdgeTracing;
         window.testEdgeTracing = testEdgeTracing;
         window.testCornerTracing = testCornerTracing;
         window.clearOutput = clearOutput;

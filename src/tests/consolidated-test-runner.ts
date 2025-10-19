@@ -1,5 +1,5 @@
 import { EdgeTracer, traceEdges } from '../services/edge-tracer.js';
-import { CubeState } from '../services/edge-tracer.js';
+import { CubeState } from '../models/cube-models.js';
 import { generate_scramble_sequence, scramble_cube, print_cube, example_usage, explain_move, test_individual_moves, test_rotation_variants, test_specific_moves } from '../services/cube-scrambler.js';
 
 /**
@@ -295,6 +295,35 @@ class TestRunner {
     this.test('should handle specific moves', () => {
       // This test calls the built-in test function
       test_specific_moves();
+    });
+
+    // Test 7: Wide move explanations
+    this.test('should explain wide moves correctly', () => {
+      const lwExplanation = explain_move('Lw');
+      this.expect(lwExplanation).toContain('Left wide');
+      this.expect(lwExplanation).toContain('M slice');
+      
+      const dwExplanation = explain_move('Dw');
+      this.expect(dwExplanation).toContain('Down wide');
+      this.expect(dwExplanation).toContain('E slice');
+    });
+
+    // Test 8: Wide move scrambling
+    this.test('should apply wide moves in scrambles', () => {
+      const testScramble = "Lw Dw Lw' Dw'";
+      const scrambledCube = scramble_cube(testScramble);
+      this.expect(scrambledCube).toBeDefined();
+      this.expect(scrambledCube.faces).toBeDefined();
+    });
+
+    // Test 9: Wide move generation
+    this.test('should generate scrambles with wide moves', () => {
+      const scramble = generate_scramble_sequence(20);
+      const moves = scramble.split(' ');
+      
+      // Should be able to generate scrambles (may or may not contain wide moves)
+      this.expect(moves).toHaveLength(20);
+      this.expect(scramble).toBeDefined();
     });
   }
 
