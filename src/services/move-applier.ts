@@ -3,7 +3,7 @@
 
 import { CubeState, CubeFace, FullMove, MoveVariant, POSITION_LETTERS, EDGE_PIECES, FACE_COLORS } from '../models/cube-models.js';
 import { EdgeTracerCubeState, Position3D, EdgeTracer } from './edge-tracer.js';
-import { CornerTracer, CornerState, convertFromScramblerCube } from './corner-tracer.js';
+import { CornerTracer, CornerState } from './corner-tracer.js';
 import { scramble_cube, rotate_face_clockwise, rotate_face_counter_clockwise, apply_move } from './cube-scrambler.js';
 
 // Edge swap algorithm - fixed sequence
@@ -66,8 +66,8 @@ export class MoveApplier {
    * Convert CubeState to CornerTracerState
    */
   public convertToCornerTracerState(cubeState: CubeState): CornerState {
-    // Use the existing CornerTracer conversion function
-    return convertFromScramblerCube(cubeState);
+    // Use the existing CornerTracer conversion method
+    return this.cornerTracer.convertFromScramblerCube(cubeState);
   }
 
   /**
