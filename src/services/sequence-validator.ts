@@ -148,8 +148,13 @@ export class SequenceValidator {
       
       // Get setup move for this letter
       const setupMove = this.moveApplier.setupMoves.get(letter);
-      if (!setupMove) {
+      if (setupMove === undefined) {
         throw new Error(`No setup move found for letter: ${letter}. Valid edge letters are: ${Array.from(this.moveApplier.setupMoves.keys()).join(', ')}`);
+      }
+      
+      // Skip if setup move is empty (like buffer position or position d)
+      if (setupMove.trim() === '') {
+        continue;
       }
       
       // Add: setup move + edge swap algorithm + inverse setup move

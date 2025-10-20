@@ -39,6 +39,7 @@ import {
 } from './services/notation-session-manager.js';
 import { validateEdgeAnswer, validateCornerAnswer } from './services/notation-validator.js';
 import { renderEdgeSquares, renderCornerSquares, renderNotationResults } from './ui/notation-renderer.js';
+import { TracingRenderer } from './ui/tracing-renderer.js';
 
 // Application state
 let currentPairIndex = 0;
@@ -48,6 +49,9 @@ let currentTimer = 0;
 let currentPieceIndex = 0;
 let currentNotationTimer = 0;
 let timerInterval: number | null = null;
+
+// Tracing drill state
+let tracingRenderer: TracingRenderer | null = null;
 
 // Initialize the application
 export async function initializeApp(): Promise<void> {
@@ -268,6 +272,12 @@ async function handleStartSession(): Promise<void> {
     return;
   }
   
+  // Check if it's a tracing drill
+  if (drillType === DrillType.CORNER_TRACING_DRILL || drillType === DrillType.EDGE_TRACING_DRILL) {
+    await handleStartTracingSession(drillType);
+    return;
+  }
+  
   const pairCount = parseInt(input.value, 10);
   
   const validation = validatePairCount(pairCount, drillType);
@@ -473,6 +483,37 @@ async function handleStartNotationSession(drillType: DrillType.EDGE_NOTATION_DRI
     console.error('Error creating notation session:', error);
     showNotification('Error starting notation session', 'error');
   }
+}
+
+async function handleStartTracingSession(drillType: DrillType.CORNER_TRACING_DRILL | DrillType.EDGE_TRACING_DRILL): Promise<void> {
+  try {
+    // Initialize tracing renderer if not already done
+    if (!tracingRenderer) {
+      tracingRenderer = new TracingRenderer();
+    }
+    
+    // Render the tracing screen
+    tracingRenderer.renderTracingScreen(drillType);
+    
+    // Set keyboard callbacks
+    setKeyboardCallbacks({
+      escape: handleCancelTracing
+    });
+  } catch (error) {
+    console.error('Error starting tracing session:', error);
+    showNotification('Error starting tracing session', 'error');
+  }
+}
+
+function handleCancelTracing(): void {
+  // Clear tracing renderer state
+  tracingRenderer = null;
+  
+  // Clear keyboard callbacks
+  clearKeyboardCallbacks();
+  
+  // Go back to setup screen
+  showScreen('setup-screen');
 }
 
 function displayCurrentPiece(): void {

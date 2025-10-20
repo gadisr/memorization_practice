@@ -69,7 +69,9 @@ function formatDrillType(type: DrillType): string {
     [DrillType.JOURNEY_MODE]: 'Journey Mode',
     [DrillType.FULL_CUBE_SIMULATION]: 'Full Cube Simulation',
     [DrillType.EDGE_NOTATION_DRILL]: 'Edge Notation',
-    [DrillType.CORNER_NOTATION_DRILL]: 'Corner Notation'
+    [DrillType.CORNER_NOTATION_DRILL]: 'Corner Notation',
+    [DrillType.CORNER_TRACING_DRILL]: 'Corner Tracing',
+    [DrillType.EDGE_TRACING_DRILL]: 'Edge Tracing'
   };
   return names[type] || type;
 }

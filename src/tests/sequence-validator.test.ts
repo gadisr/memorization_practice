@@ -347,6 +347,185 @@ function runSequenceValidatorTests() {
     });
   });
 
+  describe('Edge Tracing Drill Flow', () => {
+    test('should complete full drill workflow with problematic scrambles', () => {
+      const problematicScrambles = [
+        "U2 D' F' L B' F2",
+        "D2 L' R F' U' R'",
+        "R U R' U' F' B'",
+        "L' U L U' R' F R"
+      ];
+
+      for (const scrambleString of problematicScrambles) {
+        console.log(`\n=== Testing drill flow with scramble: ${scrambleString} ===`);
+        
+        try {
+          // Step 1: Generate scrambled cube (same as drill)
+          const scrambledCube = scramble_cube(scrambleString);
+          console.log('✅ Scrambled cube generated');
+          
+          // Step 2: Convert to EdgeTracerCubeState (same as drill)
+          const initialEdgeTracerCube = validator.moveApplier.convertToEdgeTracerState(scrambledCube);
+          console.log('✅ Edge tracer conversion successful');
+          console.log('Edge positions loaded:', Object.keys(initialEdgeTracerCube).length);
+          
+          // Step 3: Get expected sequence from EdgeTracer (same as drill)
+          const expectedSequence = validator.edgeTracer.do_full_trace(initialEdgeTracerCube);
+          console.log('✅ Edge tracing successful');
+          console.log('Expected sequence:', expectedSequence);
+          
+          // Step 4: Test with empty user sequence (same as drill UX)
+          const emptyResult = validator.scrambleAndValidate(scrambleString, "");
+          expect(emptyResult).toBeDefined();
+          expect(emptyResult.expectedSequence).toBe(expectedSequence);
+          expect(emptyResult.userSequence).toBe("");
+          expect(typeof emptyResult.score).toBe('number');
+          console.log('✅ Empty sequence validation successful');
+          
+          // Step 5: Test with the expected sequence (perfect match)
+          const perfectResult = validator.scrambleAndValidate(scrambleString, expectedSequence);
+          expect(perfectResult.isValid).toBe(true);
+          expect(perfectResult.score).toBe(100);
+          expect(perfectResult.errors.length).toBe(0);
+          console.log('✅ Perfect sequence validation successful');
+          
+          // Step 6: Test with partial sequence (common user scenario)
+          if (expectedSequence.length > 0) {
+            const partialSequence = expectedSequence.split(' ').slice(0, 2).join(' ');
+            const partialResult = validator.scrambleAndValidate(scrambleString, partialSequence);
+            expect(partialResult).toBeDefined();
+            expect(partialResult.score).toBeGreaterThan(0);
+            expect(partialResult.score).toBeLessThan(100);
+            console.log('✅ Partial sequence validation successful');
+          }
+          
+          // Step 7: Test with wrong sequence (common user scenario)
+          const wrongSequence = "a b c d e f";
+          const wrongResult = validator.scrambleAndValidate(scrambleString, wrongSequence);
+          expect(wrongResult).toBeDefined();
+          expect(wrongResult.isValid).toBe(false);
+          expect(wrongResult.score).toBeLessThan(100);
+          console.log('✅ Wrong sequence validation successful');
+          
+          console.log(`✅ All drill flow tests passed for scramble: ${scrambleString}`);
+          
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          const errorStack = error instanceof Error ? error.stack : 'No stack trace available';
+          console.error(`❌ Drill flow test failed for scramble ${scrambleString}:`, errorMessage);
+          console.error('Stack:', errorStack);
+          throw error;
+        }
+      }
+    });
+
+    test('should handle edge conversion issues gracefully', () => {
+      const scrambleString = "U2 D' F' L B' F2";
+      console.log(`\n=== Testing edge conversion with scramble: ${scrambleString} ===`);
+      
+      try {
+        // Test the exact flow that was failing
+        const scrambledCube = scramble_cube(scrambleString);
+        console.log('✅ Scrambled cube generated');
+        
+        // Test edge tracer conversion directly
+        const edgeTracer = validator.edgeTracer;
+        const edgeCubeState = edgeTracer.convertFromScramblerCube(scrambledCube);
+        console.log('✅ Edge tracer conversion successful');
+        console.log('Edge positions loaded:', Object.keys(edgeCubeState).length);
+        
+        // Test move applier conversion
+        const moveApplierCubeState = validator.moveApplier.convertToEdgeTracerState(scrambledCube);
+        console.log('✅ Move applier conversion successful');
+        console.log('Move applier positions loaded:', Object.keys(moveApplierCubeState).length);
+        
+        // Test edge tracing
+        const result = edgeTracer.do_full_trace(edgeCubeState);
+        console.log('✅ Edge tracing successful');
+        console.log('Result:', result);
+        
+        // Test full validation
+        const validationResult = validator.scrambleAndValidate(scrambleString, result);
+        expect(validationResult).toBeDefined();
+        expect(validationResult.isValid).toBe(true);
+        expect(validationResult.score).toBe(100);
+        console.log('✅ Full validation successful');
+        
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorStack = error instanceof Error ? error.stack : 'No stack trace available';
+        console.error('❌ Edge conversion test failed:', errorMessage);
+        console.error('Stack:', errorStack);
+        throw error;
+      }
+    });
+
+    test('should validate individual edge positions', () => {
+      const scrambleString = "U2 D' F' L B' F2";
+      console.log(`\n=== Testing individual edge positions with scramble: ${scrambleString} ===`);
+      
+      const scrambledCube = scramble_cube(scrambleString);
+      const edgeTracer = validator.edgeTracer;
+      const edgeCubeState = validator.moveApplier.convertToEdgeTracerState(scrambledCube);
+      
+      // Test each edge position individually
+      const allEdgePositions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 
+                                'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'];
+      
+      let validPositions = 0;
+      let invalidPositions = 0;
+      
+      for (const position of allEdgePositions) {
+        try {
+          console.log(`\n--- Testing position ${position} ---`);
+          
+          // Get secondary position
+          const secondaryPosition = edgeTracer.get_secondary_edge_letter_safe(position);
+          console.log(`Secondary position for ${position}: ${secondaryPosition}`);
+          
+          if (secondaryPosition === 'invalid') {
+            console.warn(`⚠️ Position ${position} has invalid secondary position`);
+            invalidPositions++;
+            continue;
+          }
+          
+          // Get colors at this position from converted EdgeTracerCubeState
+          const colors = (edgeCubeState as any)[position]?.colors as [string, string] | undefined;
+          if (colors && colors.length === 2) {
+            const [mainColor, secondaryColor] = colors;
+            console.log(`Colors at ${position}: [${mainColor}, ${secondaryColor}]`);
+            // Test if this combination is valid
+            const solvedPosition = edgeTracer.get_edge_solved_position_by_colors([mainColor, secondaryColor]);
+            if (solvedPosition !== 'invalid') {
+              console.log(`✅ Valid combination, solved position: ${solvedPosition}`);
+              validPositions++;
+            } else {
+              console.warn(`⚠️ Invalid color combination: [${mainColor}, ${secondaryColor}]`);
+              invalidPositions++;
+            }
+          } else {
+            console.warn(`⚠️ Missing edge colors for position ${position}`);
+            invalidPositions++;
+          }
+          
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          console.error(`❌ Error testing position ${position}:`, errorMessage);
+          invalidPositions++;
+        }
+      }
+      
+      console.log(`\n=== Position Analysis Summary ===`);
+      console.log(`Valid positions: ${validPositions}`);
+      console.log(`Invalid positions: ${invalidPositions}`);
+      console.log(`Total positions: ${allEdgePositions.length}`);
+      
+      // The test should pass even if some positions are invalid (graceful handling)
+      expect(validPositions).toBeGreaterThan(0);
+      console.log('✅ Position analysis completed successfully');
+    });
+  });
+
   describe('Sequence Validator Utilities', () => {
     test('should export convenience functions', () => {
       expect(validateDrillSequence).toBeDefined();

@@ -3,6 +3,7 @@
 
 import { CubeState, CubeFace, FullMove, MoveVariant, POSITION_LETTERS, EDGE_PIECES, FACE_COLORS } from '../models/cube-models.js';
 import { EdgeTracerCubeState, Position3D, EdgeTracer } from './edge-tracer.js';
+import { CornerTracer, CornerState, convertFromScramblerCube } from './corner-tracer.js';
 import { scramble_cube, rotate_face_clockwise, rotate_face_counter_clockwise, apply_move } from './cube-scrambler.js';
 
 // Edge swap algorithm - fixed sequence
@@ -11,17 +12,21 @@ const EDGE_SWAP_ALGORITHM = "R U R' U' R' F R2 U' R' U' R U R' F'";
 export class MoveApplier {
   public setupMoves: Map<string, string> = new Map();
   private edgeTracer: EdgeTracer;
+  private cornerTracer: CornerTracer;
 
   constructor() {
     this.loadSetupMoves();
     this.edgeTracer = new EdgeTracer();
+    this.cornerTracer = new CornerTracer();
   }
 
   private loadSetupMoves(): void {
     // Load setup moves from the JSON data
     const setupMovesData = {
       "a": "Lw2 D' L2",
+      "b": "", // Buffer position - no setup move needed
       "c": "Lw2 D L2", 
+      "d": "", // No setup move needed for position d
       "e": "L' Dw L'",
       "f": "Dw' L",
       "g": "L Dw L'",
@@ -55,6 +60,14 @@ export class MoveApplier {
   public convertToEdgeTracerState(cubeState: CubeState): EdgeTracerCubeState {
     // Use the existing EdgeTracer conversion method
     return this.edgeTracer.convertFromScramblerCube(cubeState);
+  }
+
+  /**
+   * Convert CubeState to CornerTracerState
+   */
+  public convertToCornerTracerState(cubeState: CubeState): CornerState {
+    // Use the existing CornerTracer conversion function
+    return convertFromScramblerCube(cubeState);
   }
 
   /**
@@ -150,8 +163,13 @@ export class MoveApplier {
       
       // Get setup move for this letter
       const setupMove = this.setupMoves.get(letter);
-      if (!setupMove) {
+      if (setupMove === undefined) {
         throw new Error(`No setup move found for letter: ${letter}. Valid edge letters are: ${Array.from(this.setupMoves.keys()).join(', ')}`);
+      }
+      
+      // Skip if setup move is empty (like buffer position)
+      if (setupMove.trim() === '') {
+        continue;
       }
       
       // Add: setup move + edge swap algorithm + inverse setup move

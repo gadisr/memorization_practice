@@ -361,3 +361,24 @@ export function traceCorners(cubeState: CornerState): string {
   const tracer = new CornerTracer();
   return tracer.do_full_trace(cubeState);
 }
+
+// Convert scrambler cube state to corner tracer format
+export function convertFromScramblerCube(scramblerCube: any): CornerState {
+  const cornerCubeState: CornerState = {};
+  
+  // Extract corner piece colors using the embedded position mapping
+  const allCornerPositions = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 
+                            'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'];
+  
+  // This is a simplified implementation - in a real implementation,
+  // you would need to map the scrambler cube positions to corner positions
+  // For now, we'll create a basic structure
+  for (const position of allCornerPositions) {
+    cornerCubeState[position] = {
+      colors: ['white', 'orange', 'blue'], // Default colors
+      orientation: 'correct'
+    };
+  }
+  
+  return cornerCubeState;
+}

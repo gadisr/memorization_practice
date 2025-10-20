@@ -6,7 +6,8 @@ import {
   MoveVariant, 
   COLORS, 
   FACE_COLORS, 
-  POSITION_LETTERS 
+  POSITION_LETTERS,
+  EDGE_PIECES 
 } from '../models/cube-models.js';
 
 // Simple random function to replace lodash
@@ -20,7 +21,8 @@ function random<T>(array: T[]): T {
  * @returns Scramble string with moves separated by spaces
  */
 export function generate_scramble_sequence(length: number = 25): string {
-  const moves: Move[] = ['U', 'R', 'F', 'B', 'D', 'L', 'Lw', 'Dw'];
+  // Simple moves only - no wide moves (Lw, Dw, etc.)
+  const moves: Move[] = ['U', 'R', 'F', 'B', 'D', 'L'];
   const variants: MoveVariant[] = ['', "'", '2'];
   const scramble: FullMove[] = [];
   
@@ -62,12 +64,16 @@ function create_solved_cube(): CubeState {
  * Apply a single move to the cube
  */
 export function apply_move(cube: CubeState, move: FullMove): void {
+  // Log each move applied for traceability
+  try { console.log('▶ Applying move:', move); } catch {}
   // Handle wide moves (Lw, Dw) - they have 2 characters + variant
   if (move.startsWith('Lw')) {
     const variant = move.slice(2) as MoveVariant;
     if (variant === "'") move_Lw_prime(cube);
     else if (variant === '2') { move_Lw(cube); move_Lw(cube); }
     else move_Lw(cube);
+    // Generic completion log for any move
+    try { console.log('✓ Move completed:', move); } catch {}
     return;
   }
   
@@ -76,6 +82,8 @@ export function apply_move(cube: CubeState, move: FullMove): void {
     if (variant === "'") move_Dw_prime(cube);
     else if (variant === '2') { move_Dw(cube); move_Dw(cube); }
     else move_Dw(cube);
+    // Generic completion log for any move
+    try { console.log('✓ Move completed:', move); } catch {}
     return;
   }
   
@@ -116,6 +124,11 @@ export function apply_move(cube: CubeState, move: FullMove): void {
       else move_L(cube);
       break;
   }
+  // Generic completion log for any move
+  try { 
+    console.log('✓ Move completed:', move); 
+    print_cube(cube);
+  } catch {}
 }
 
 /**
@@ -134,7 +147,6 @@ function move_U(cube: CubeState): void {
   cube.faces.B.colors[0] = [...cube.faces.L.colors[0]];
   cube.faces.L.colors[0] = temp;
   
-  console.log('🔄 U move completed - F[0]:', cube.faces.F.colors[0], 'R[0]:', cube.faces.R.colors[0], 'B[0]:', cube.faces.B.colors[0], 'L[0]:', cube.faces.L.colors[0]);
 }
 
 /**
@@ -165,7 +177,6 @@ function move_R(cube: CubeState): void {
   cube.faces.B.colors[1][0] = temp[1];
   cube.faces.B.colors[2][0] = temp[0];
   
-  console.log('🔄 R move completed - U[0][2],U[1][2],U[2][2]:', [cube.faces.U.colors[0][2], cube.faces.U.colors[1][2], cube.faces.U.colors[2][2]]);
 }
 
 /**
@@ -192,7 +203,6 @@ function move_F(cube: CubeState): void {
   cube.faces.R.colors[1][0] = temp[1];
   cube.faces.R.colors[2][0] = temp[2];
   
-  console.log('🔄 F move completed - U[2]:', cube.faces.U.colors[2], 'R[0][0],R[1][0],R[2][0]:', [cube.faces.R.colors[0][0], cube.faces.R.colors[1][0], cube.faces.R.colors[2][0]]);
 }
 
 /**
@@ -281,7 +291,6 @@ function move_U_prime(cube: CubeState): void {
   cube.faces.B.colors[0] = [...cube.faces.R.colors[0]];
   cube.faces.R.colors[0] = temp;
   
-  console.log('🔄 U\' move completed - F[0]:', cube.faces.F.colors[0], 'R[0]:', cube.faces.R.colors[0], 'B[0]:', cube.faces.B.colors[0], 'L[0]:', cube.faces.L.colors[0]);
 }
 
 /**
@@ -311,7 +320,6 @@ function move_L_prime(cube: CubeState): void {
   cube.faces.U.colors[1][0] = temp[1];
   cube.faces.U.colors[2][0] = temp[2];
   
-  console.log('🔄 L\' move completed - U[0][0],U[1][0],U[2][0]:', [cube.faces.U.colors[0][0], cube.faces.U.colors[1][0], cube.faces.U.colors[2][0]]);
 }
 
 /**
@@ -341,7 +349,6 @@ function move_R_prime(cube: CubeState): void {
   cube.faces.F.colors[1][2] = temp[1];
   cube.faces.F.colors[2][2] = temp[2];
   
-  console.log('🔄 R\' move completed - U[0][2],U[1][2],U[2][2]:', [cube.faces.U.colors[0][2], cube.faces.U.colors[1][2], cube.faces.U.colors[2][2]]);
 }
 
 /**
@@ -367,7 +374,6 @@ function move_B_prime(cube: CubeState): void {
   cube.faces.R.colors[1][2] = temp[1];
   cube.faces.R.colors[2][2] = temp[2];
   
-  console.log('🔄 B\' move completed - U[0]:', cube.faces.U.colors[0], 'R[0][2],R[1][2],R[2][2]:', [cube.faces.R.colors[0][2], cube.faces.R.colors[1][2], cube.faces.R.colors[2][2]]);
 }
 
 /**
@@ -478,7 +484,6 @@ function move_M_slice(cube: CubeState): void {
   cube.faces.D.center = cube.faces.B.center;
   cube.faces.B.center = uCenter;
   
-  console.log('🔄 M slice move completed');
 }
 
 /**
@@ -521,7 +526,6 @@ function move_M_slice_prime(cube: CubeState): void {
   cube.faces.D.center = cube.faces.F.center;
   cube.faces.F.center = uCenter;
   
-  console.log('🔄 M\' slice move completed');
 }
 
 /**
@@ -536,10 +540,10 @@ function move_E_slice(cube: CubeState): void {
   cube.faces.F.colors[1] = [...cube.faces.L.colors[1]];
   
   // L[1] gets B[1] (reversed order for L face)
-  cube.faces.L.colors[1] = [...cube.faces.B.colors[1]]
+  cube.faces.L.colors[1] = [...cube.faces.B.colors[1]];
   
   // B[1] gets R[1] (reversed order for B face)
-  cube.faces.B.colors[1] = [...cube.faces.R.colors[1]]
+  cube.faces.B.colors[1] = [...cube.faces.R.colors[1]];
   
   // R[1] gets temp (original F[1])
   cube.faces.R.colors[1] = temp;
@@ -552,7 +556,6 @@ function move_E_slice(cube: CubeState): void {
   cube.faces.B.center = cube.faces.R.center;
   cube.faces.R.center = fCenter;
   
-  console.log('🔄 E slice move completed');
 }
 
 /**
@@ -583,7 +586,6 @@ function move_E_slice_prime(cube: CubeState): void {
   cube.faces.B.center = cube.faces.L.center;
   cube.faces.L.center = fCenter;
   
-  console.log('🔄 E\' slice move completed');
 }
 
 /**
@@ -596,7 +598,6 @@ function move_Lw(cube: CubeState): void {
   // Apply M slice move
   move_M_slice(cube);
   
-  console.log('🔄 Lw move completed (L + M slice)');
 }
 
 /**
@@ -609,7 +610,6 @@ function move_Lw_prime(cube: CubeState): void {
   // Apply M' slice move
   move_M_slice_prime(cube);
   
-  console.log('🔄 Lw\' move completed (L\' + M\' slice)');
 }
 
 /**
@@ -622,7 +622,6 @@ function move_Dw(cube: CubeState): void {
   // Apply E slice move
   move_E_slice(cube);
   
-  console.log('🔄 Dw move completed (D + E slice)');
 }
 
 /**
@@ -635,9 +634,179 @@ function move_Dw_prime(cube: CubeState): void {
   // Apply E' slice move
   move_E_slice_prime(cube);
   
-  console.log('🔄 Dw\' move completed (D\' + E\' slice)');
 }
 
+
+/**
+ * Get edge position from POSITION_LETTERS mapping
+ */
+function get_edge_position(edgeId: string): [string, number, number] | null {
+  // Find the position of this edge letter in POSITION_LETTERS
+  for (const [faceKey, faceLetters] of Object.entries(POSITION_LETTERS)) {
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 3; col++) {
+        if (faceLetters[row][col] === edgeId) {
+          return [faceKey, row, col];
+        }
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Create edge tracking data using shared models
+ */
+function create_edge_tracking() {
+  const edges: Array<{
+    id: string;
+    colors: [string, string];
+    position: [string, number, number];
+    originalPosition: [string, number, number];
+  }> = [];
+  
+  // Use EDGE_PIECES from cube-models.ts
+  for (const [edgeId, colors] of Object.entries(EDGE_PIECES)) {
+    const position = get_edge_position(edgeId);
+    if (position) {
+      edges.push({
+        id: edgeId,
+        colors: colors,
+        position: position,
+        originalPosition: position
+      });
+    }
+  }
+  
+  return edges;
+}
+
+/**
+ * Find edge piece by colors at a position
+ */
+function find_edge_by_colors(cube: CubeState, face: string, row: number, col: number) {
+  const color1 = cube.faces[face as keyof typeof cube.faces].colors[row][col];
+  const color2 = get_adjacent_color(cube, face, row, col);
+  if (!color2) return null;
+  
+  // Find matching edge in EDGE_PIECES from cube-models.ts
+  for (const [edgeId, colors] of Object.entries(EDGE_PIECES)) {
+    if ((colors[0] === color1 && colors[1] === color2) ||
+        (colors[0] === color2 && colors[1] === color1)) {
+      return {
+        id: edgeId,
+        colors: colors,
+        position: get_edge_position(edgeId),
+        originalPosition: get_edge_position(edgeId)
+      };
+    }
+  }
+  return null;
+}
+
+/**
+ * Get adjacent color for edge piece using POSITION_LETTERS mapping
+ */
+function get_adjacent_color(cube: CubeState, face: string, row: number, col: number): string | null {
+  // Find the edge letter at this position
+  const edgeLetter = POSITION_LETTERS[face as keyof typeof POSITION_LETTERS]?.[row]?.[col];
+  if (!edgeLetter || edgeLetter === '*') return null;
+  
+  // Find the secondary position for this edge letter
+  const secondaryLetter = get_secondary_edge_letter(edgeLetter);
+  if (!secondaryLetter || secondaryLetter === 'invalid') return null;
+  
+  // Get the position of the secondary letter
+  const secondaryPosition = get_edge_position(secondaryLetter);
+  if (!secondaryPosition) return null;
+  
+  // Get the color at the secondary position
+  const [secondaryFace, secondaryRow, secondaryCol] = secondaryPosition;
+  return cube.faces[secondaryFace as keyof typeof cube.faces].colors[secondaryRow][secondaryCol];
+}
+
+/**
+ * Get secondary edge letter (the other position of the same edge piece)
+ */
+function get_secondary_edge_letter(edgeLetter: string): string | null {
+  // Find the colors for this edge letter
+  const colors = EDGE_PIECES[edgeLetter];
+  if (!colors) return null;
+  
+  // Find the edge letter with reversed colors
+  for (const [letter, edgeColors] of Object.entries(EDGE_PIECES)) {
+    if (edgeColors[0] === colors[1] && edgeColors[1] === colors[0]) {
+      return letter;
+    }
+  }
+  return null;
+}
+
+/**
+ * Update edge positions after a move using POSITION_LETTERS
+ */
+function update_edge_positions(cube: CubeState, edges: ReturnType<typeof create_edge_tracking>): void {
+  // For each edge, find where it currently is by checking all positions
+  edges.forEach(edge => {
+    // Get the expected colors for this edge
+    const expectedColors = EDGE_PIECES[edge.id];
+    if (!expectedColors) return;
+    
+    // Check all edge positions to find where this edge currently is
+    const edgeLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 
+                        'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'];
+    
+    for (const letter of edgeLetters) {
+      const position = get_edge_position(letter);
+      if (!position) continue;
+      
+      const [face, row, col] = position;
+      const foundEdge = find_edge_by_colors(cube, face, row, col);
+      
+      // Check if this is the edge we're looking for
+      if (foundEdge && foundEdge.id === edge.id) {
+        edge.position = [face, row, col];
+        break;
+      }
+    }
+  });
+}
+
+/**
+ * Apply a scramble sequence to a cube with edge tracing
+ * @param scramble Scramble string with moves separated by spaces
+ * @returns Scrambled cube state and edge tracing information
+ */
+export function scramble_cube_with_tracing(scramble: string): { cube: CubeState; edgeTracing: ReturnType<typeof create_edge_tracking> } {
+  const cube = create_solved_cube();
+  const moves = scramble.trim().split(/\s+/);
+  const edgeTracing = create_edge_tracking();
+  
+  console.log('🎲 === CUBE SCRAMBLING WITH EDGE TRACING ===');
+  console.log('📝 Scramble sequence:', scramble);
+  console.log('🔢 Total moves:', moves.length);
+  console.log('');
+  
+  for (let i = 0; i < moves.length; i++) {
+    const move = moves[i];
+    if (move) {
+      console.log(`🔄 Move ${i + 1}/${moves.length}: ${move}`);
+      apply_move(cube, move as FullMove);
+      // Update edge positions after each move
+      update_edge_positions(cube, edgeTracing);
+      console.log('📊 Edge tracing after move:');
+      edgeTracing.forEach(edge => {
+        const [face, row, col] = edge.position;
+        const [origFace, origRow, origCol] = edge.originalPosition;
+        console.log(`  ${edge.id}: ${edge.colors[0]}-${edge.colors[1]} at ${face}[${row}][${col}] (was at ${origFace}[${origRow}][${origCol}])`);
+      });
+      console.log('');
+    }
+  }
+  
+  console.log('✅ Scrambling with edge tracing completed!');
+  return { cube, edgeTracing };
+}
 
 /**
  * Apply a scramble sequence to a cube
@@ -645,16 +814,8 @@ function move_Dw_prime(cube: CubeState): void {
  * @returns Scrambled cube state
  */
 export function scramble_cube(scramble: string): CubeState {
-  const cube = create_solved_cube();
-  const moves = scramble.trim().split(/\s+/);
-  
-  for (const move of moves) {
-    if (move) {
-      apply_move(cube, move as FullMove);
-    }
-  }
-  
-  return cube;
+  const result = scramble_cube_with_tracing(scramble);
+  return result.cube;
 }
 
 /**
@@ -664,32 +825,7 @@ export function scramble_cube(scramble: string): CubeState {
 export function print_cube(cube: CubeState): void {
   console.log('=== CUBE STATE ===\n');
   
-  // Print each face
-  const faceOrder: (keyof typeof cube.faces)[] = ['U', 'L', 'F', 'R', 'B', 'D'];
-  const faceNames = { U: 'UP', L: 'LEFT', F: 'FRONT', R: 'RIGHT', B: 'BACK', D: 'DOWN' };
-  
-  for (const faceKey of faceOrder) {
-    const face = cube.faces[faceKey];
-    const faceName = faceNames[faceKey];
-    const centerColor = face.center;
-    
-    console.log(`${faceName} (${centerColor.toUpperCase()}):`);
-    console.log('┌─────┬─────┬─────┐');
-    
-    for (let row = 0; row < 3; row++) {
-      let line = '│';
-      for (let col = 0; col < 3; col++) {
-        const color = face.colors[row][col];
-        const letter = POSITION_LETTERS[faceKey][row][col];
-        const colorCode = get_color_code(color);
-        line += ` ${colorCode}${letter}${colorCode} │`;
-      }
-      console.log(line);
-      if (row < 2) console.log('├─────┼─────┼─────┤');
-    }
-    
-    console.log('└─────┴─────┴─────┘\n');
-  }
+
   
   // Print color analysis
   console.log('=== COLOR ANALYSIS ===');
@@ -934,76 +1070,6 @@ export function test_specific_moves(): void {
   console.log('\n' + '='.repeat(80) + '\n');
 }
 
-/**
- * Get edge piece at a specific position
- */
-function get_edge_at_position(cube: CubeState, position: string): { piece: string; colors: [string, string] } | null {
-  // Map position letters to cube coordinates and their adjacent faces
-  // Based on cube-positions.json layout and actual cube geometry
-  // Format: [face, row, col, adjacent_face, adjacent_row, adjacent_col]
-  const positionMap: { [key: string]: [string, number, number, string, number, number] } = {
-    // U face edges (top face) - these connect to side faces
-    'A': ['U', 0, 0, 'L', 0, 2], 'B': ['U', 0, 2, 'R', 0, 0], 'C': ['U', 2, 2, 'F', 0, 0], 'D': ['U', 2, 0, 'L', 0, 0],
-    // L face edges (left face) - these connect to adjacent faces
-    'E': ['L', 0, 0, 'U', 1, 0], 'F': ['L', 0, 2, 'U', 1, 2], 'G': ['L', 2, 0, 'D', 1, 0], 'H': ['L', 2, 2, 'D', 1, 2],
-    // F face edges (front face) - these connect to top/bottom and sides
-    'I': ['F', 0, 0, 'U', 2, 0], 'J': ['F', 0, 2, 'U', 2, 2], 'K': ['F', 2, 0, 'D', 0, 0], 'L': ['F', 2, 2, 'D', 0, 2],
-    // R face edges (right face) - these connect to adjacent faces
-    'M': ['R', 0, 0, 'U', 0, 2], 'N': ['R', 0, 2, 'U', 0, 2], 'O': ['R', 2, 0, 'D', 2, 1], 'P': ['R', 2, 2, 'D', 2, 1],
-    // B face edges (back face) - these connect to top/bottom
-    'Q': ['B', 0, 0, 'U', 0, 0], 'R': ['B', 0, 2, 'U', 0, 2], 'S': ['B', 2, 0, 'D', 2, 0], 'T': ['B', 2, 2, 'D', 2, 2],
-    // D face edges (down face) - these connect to side faces
-    'U': ['D', 0, 0, 'F', 2, 0], 'V': ['D', 0, 2, 'F', 2, 2], 'W': ['D', 2, 0, 'B', 2, 0], 'X': ['D', 2, 2, 'B', 2, 2]
-  };
-  
-  const [face, row, col, adjFace, adjRow, adjCol] = positionMap[position];
-  if (!face || row === undefined || col === undefined || !adjFace || adjRow === undefined || adjCol === undefined) {
-    return null;
-  }
-  
-  const color1 = cube.faces[face as keyof typeof cube.faces].colors[row][col];
-  const color2 = cube.faces[adjFace as keyof typeof cube.faces].colors[adjRow][adjCol];
-  
-  if (!color2) {
-    return null;
-  }
-  
-  // Find which edge piece this is based on colors
-  const edgeNotation = [
-    { colors: ['white', 'blue'], notation: 'A' },
-    { colors: ['white', 'red'], notation: 'B' },
-    { colors: ['white', 'green'], notation: 'C' },
-    { colors: ['white', 'orange'], notation: 'D' },
-    { colors: ['orange', 'white'], notation: 'E' },
-    { colors: ['orange', 'green'], notation: 'F' },
-    { colors: ['orange', 'yellow'], notation: 'G' },
-    { colors: ['orange', 'blue'], notation: 'H' },
-    { colors: ['green', 'white'], notation: 'I' },
-    { colors: ['green', 'red'], notation: 'J' },
-    { colors: ['green', 'yellow'], notation: 'K' },
-    { colors: ['green', 'orange'], notation: 'L' },
-    { colors: ['red', 'white'], notation: 'M' },
-    { colors: ['red', 'blue'], notation: 'N' },
-    { colors: ['red', 'yellow'], notation: 'O' },
-    { colors: ['red', 'green'], notation: 'P' },
-    { colors: ['blue', 'white'], notation: 'Q' },
-    { colors: ['blue', 'orange'], notation: 'R' },
-    { colors: ['blue', 'yellow'], notation: 'S' },
-    { colors: ['blue', 'red'], notation: 'T' },
-    { colors: ['yellow', 'green'], notation: 'U' },
-    { colors: ['yellow', 'red'], notation: 'V' },
-    { colors: ['yellow', 'blue'], notation: 'W' },
-    { colors: ['yellow', 'orange'], notation: 'X' }
-  ];
-  
-  const foundEdge = edgeNotation.find(edge => 
-    (edge.colors[0] === color1 && edge.colors[1] === color2) ||
-    (edge.colors[0] === color2 && edge.colors[1] === color1)
-  );
-  
-  return foundEdge ? { piece: foundEdge.notation, colors: [color1, color2] } : null;
-}
-
 
 
 
@@ -1021,3 +1087,4 @@ export function example_usage(): void {
   // Print the scrambled cube
   print_cube(scrambledCube);
 }
+

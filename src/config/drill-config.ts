@@ -90,6 +90,22 @@ export const DRILL_CONFIGS: Map<DrillType, DrillConfig> = new Map([
     description: 'Recognize Speffz notation from 3-color corner pieces - Accuracy & Speed',
     introduction: 'Corner Notation Drill displays corner pieces (3 colors) and asks for the Speffz letter. Corners are more complex than edges due to three stickers and multiple possible orientations.',
     howItHelps: 'Corner notation is trickier than edges because you must identify which of the three stickers is the "reference" sticker in your scheme. This drill builds automatic corner recognition, preventing notation errors that would ruin your solve. Like edge notation, speed here directly reduces your memo time. Mastering both edge and corner notation means you can focus entirely on memorization during actual solves, rather than struggling to identify pieces.'
+  }],
+  [DrillType.CORNER_TRACING_DRILL, {
+    type: DrillType.CORNER_TRACING_DRILL,
+    defaultPairCount: 1,
+    qualityMetric: QualityMetric.VIVIDNESS,
+    description: 'Trace corner cycles from scramble string',
+    introduction: 'Corner Tracing Drill presents you with a scramble string and asks you to trace the corner cycles, inputting the correct letter sequence that represents the corner movements.',
+    howItHelps: 'This drill trains the core skill of corner tracing - following how corner pieces move through cycles during a scramble. It builds the foundation for corner memorization by teaching you to track piece movements and convert them to letter sequences. This is essential for BLD corner memorization where you must trace and memorize corner cycles accurately.'
+  }],
+  [DrillType.EDGE_TRACING_DRILL, {
+    type: DrillType.EDGE_TRACING_DRILL,
+    defaultPairCount: 1,
+    qualityMetric: QualityMetric.VIVIDNESS,
+    description: 'Trace edge cycles from scramble string',
+    introduction: 'Edge Tracing Drill presents you with a scramble string and asks you to trace the edge cycles, inputting the correct letter sequence that represents the edge movements.',
+    howItHelps: 'This drill trains the core skill of edge tracing - following how edge pieces move through cycles during a scramble. It builds the foundation for edge memorization by teaching you to track piece movements and convert them to letter sequences. This is essential for BLD edge memorization where you must trace and memorize edge cycles accurately.'
   }]
 ]);
 
