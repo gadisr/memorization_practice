@@ -30,5 +30,5 @@ x: L2
 
 Edges
 1. After tracing edges, we now have a scrambled cube and a sequence, we want to apply the sequence on the cube to solve it.
-2. for every letter in the sequence, run: setup move, edge swap algorithm, inverse setup move.
+2. for every letter in the sequence, run: setup move, edge swap algorithm, inverse setup move (for example: Lw2 D' L2 -> L2 D Lw2).
 3. check that all edges in position (can be flipped)

@@ -61,7 +61,7 @@ function create_solved_cube(): CubeState {
 /**
  * Apply a single move to the cube
  */
-function apply_move(cube: CubeState, move: FullMove): void {
+export function apply_move(cube: CubeState, move: FullMove): void {
   // Handle wide moves (Lw, Dw) - they have 2 characters + variant
   if (move.startsWith('Lw')) {
     const variant = move.slice(2) as MoveVariant;
@@ -413,7 +413,7 @@ function move_F_prime(cube: CubeState): void {
 /**
  * Rotate a face clockwise (90 degrees)
  */
-function rotate_face_clockwise(face: CubeFace): void {
+export function rotate_face_clockwise(face: CubeFace): void {
   const colors = face.colors;
   
   // Transpose and reverse each row (standard 90-degree rotation)
@@ -427,7 +427,7 @@ function rotate_face_clockwise(face: CubeFace): void {
 /**
  * Rotate a face counter-clockwise (90 degrees)
  */
-function rotate_face_counter_clockwise(face: CubeFace): void {
+export function rotate_face_counter_clockwise(face: CubeFace): void {
   const colors = face.colors;
   
   // Counter-clockwise 90-degree rotation: transpose then reverse each row
@@ -648,21 +648,11 @@ export function scramble_cube(scramble: string): CubeState {
   const cube = create_solved_cube();
   const moves = scramble.trim().split(/\s+/);
   
-  console.log('🎲 === CUBE SCRAMBLING ===');
-  console.log('📝 Scramble sequence:', scramble);
-  console.log('🔢 Total moves:', moves.length);
-  console.log('');
-  
-  for (let i = 0; i < moves.length; i++) {
-    const move = moves[i];
+  for (const move of moves) {
     if (move) {
-      console.log(`🔄 Move ${i + 1}/${moves.length}: ${move}`);
       apply_move(cube, move as FullMove);
     }
   }
-  
-  print_color_analysis(cube);
-  console.log('✅ Scrambling completed!');
   
   return cube;
 }

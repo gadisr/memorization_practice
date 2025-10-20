@@ -53,14 +53,14 @@ export const FACE_COLORS = {
   B: 'blue'
 } as const;
 
-// Position to letter mapping for reference
+// Position to letter mapping for reference (matching cube-positions.json)
 export const POSITION_LETTERS = {
   U: [['A', 'a', 'B'], ['d', '*', 'b'], ['D', 'c', 'C']],
   L: [['E', 'e', 'F'], ['h', '*', 'f'], ['H', 'g', 'G']],
   F: [['I', 'i', 'J'], ['l', '*', 'j'], ['L', 'k', 'K']],
-  R: [['M', 'm', 'N'], ['p', '*', 'n'], ['P', 'o', 'O']],
-  B: [['Q', 'q', 'R'], ['t', '*', 'r'], ['T', 's', 'S']],
-  D: [['U', 'u', 'V'], ['x', '*', 'v'], ['X', 'w', 'W']]
+  R: [['M', 'm', 'N'], ['o', 'Q', 'n'], ['O', 'p', 'P']],
+  B: [['Q', 'q', 'R'], ['s', 'T', 'r'], ['S', 't', 'T']],
+  D: [['U', 'u', 'V'], ['w', 'X', 'v'], ['W', 'x', 'X']]
 } as const;
 
 // Edge piece definitions (position -> colors) - using lowercase letters a-x
