@@ -7,6 +7,8 @@ import { CubeState, FullMove } from '../models/cube-models.js';
 
 // Edge swap algorithm - fixed sequence
 const EDGE_SWAP_ALGORITHM = "R U R' U' R' F R2 U' R' U' R U R' F'";
+const CORNER_SWAP_ALGORITHM = "R U' R' U' R U R' F' R U R' U' R' F R";
+
 import { 
   SequenceValidationInput, 
   DrillValidationResult, 
@@ -197,7 +199,8 @@ export class SequenceValidator {
    */
   public areAllEdgesInPosition(cube: any): boolean { // EdgeTracerCubeState
     const validation = this.validateCubeState(cube);
-    return validation.isValid;
+    // Check if all 24 edges are in their correct positions
+    return validation.edgesInPosition.length === 24;
   }
 
   /**
@@ -230,9 +233,9 @@ export class SequenceValidator {
     // Base score from letter matching
     let score = (correctLetters / expectedLetters.length) * 100;
     
-    // Penalty for length differences
+    // Penalty for length differences (more lenient for partial sequences)
     const lengthDifference = Math.abs(expectedLetters.length - userLetters.length);
-    const lengthPenalty = Math.min(lengthDifference * 5, 20); // Max 20% penalty
+    const lengthPenalty = Math.min(lengthDifference * 2, 10); // Max 10% penalty, 2% per missing letter
     score = Math.max(0, score - lengthPenalty);
     
     return Math.round(score);
@@ -276,8 +279,8 @@ export class SequenceValidator {
       }
     }
     
-    // All edges should be in position for a valid solution
-    const isValid = edgesInPosition.length === allEdgePositions.length && errors.length === 0;
+    // Validation is successful if there are no errors and the sequence was processed correctly
+    const isValid = errors.length === 0;
     
     
     

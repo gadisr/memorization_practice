@@ -2,6 +2,8 @@ How to validate the a sequence is correct, or how to solve with a sequence
 
 algoriths: 
 edge swap: R U R' U' R' F R2 U' R' U' R U R' F'
+corner swap: R U' R' U' R U R' F' R U R' U' R' F R
+
 
 Setup Moves:
 Edges:
@@ -27,6 +29,29 @@ u: D' L2
 v: D2 L2
 w: D L2
 x: L2
+
+Corners: 
+B: R D'
+C: F
+D: F R'
+F: F2
+G: D2 R
+H: D2
+I: F' D
+J: F2 D
+K: D R
+L: D
+M: R'
+N: R2 
+O: R
+P: Already Setup!
+Q: R' F
+S: D' R
+T: D'
+U: F'
+V: D' F'
+W: D2 F'
+X: D F'
 
 Edges
 1. After tracing edges, we now have a scrambled cube and a sequence, we want to apply the sequence on the cube to solve it.

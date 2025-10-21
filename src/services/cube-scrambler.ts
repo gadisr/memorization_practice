@@ -9,6 +9,7 @@ import {
   POSITION_LETTERS,
   EDGE_PIECES 
 } from '../models/cube-models.js';
+import { CornerTracer } from './corner-tracer.js';
 
 // Simple random function to replace lodash
 function random<T>(array: T[]): T {
@@ -777,12 +778,13 @@ function update_edge_positions(cube: CubeState, edges: ReturnType<typeof create_
  * @param scramble Scramble string with moves separated by spaces
  * @returns Scrambled cube state and edge tracing information
  */
-export function scramble_cube_with_tracing(scramble: string): { cube: CubeState; edgeTracing: ReturnType<typeof create_edge_tracking> } {
+export function scramble_cube_with_tracing(scramble: string): { cube: CubeState; edgeTracing: ReturnType<typeof create_edge_tracking>; cornerTracing: any } {
   const cube = create_solved_cube();
   const moves = scramble.trim().split(/\s+/);
   const edgeTracing = create_edge_tracking();
+  const cornerTracer = new CornerTracer();
   
-  console.log('🎲 === CUBE SCRAMBLING WITH EDGE TRACING ===');
+  console.log('🎲 === CUBE SCRAMBLING WITH EDGE AND CORNER TRACING ===');
   console.log('📝 Scramble sequence:', scramble);
   console.log('🔢 Total moves:', moves.length);
   console.log('');
@@ -791,7 +793,21 @@ export function scramble_cube_with_tracing(scramble: string): { cube: CubeState;
     const move = moves[i];
     if (move) {
       console.log(`🔄 Move ${i + 1}/${moves.length}: ${move}`);
+      console.log(`▶ Applying move: ${move}`);
       apply_move(cube, move as FullMove);
+      console.log(`✓ Move completed: ${move}`);
+      console.log('=== CUBE STATE ===');
+      console.log('');
+      console.log('=== COLOR ANALYSIS ===');
+      console.log('Face Colors:');
+      Object.entries(cube.faces).forEach(([face, faceData]) => {
+        console.log(`${face}: ${faceData.center} (center)`);
+        faceData.colors.forEach((row, rowIndex) => {
+          const rowColors = row.map(color => color.substring(0, 3)).join(' ');
+          console.log(`  Row ${rowIndex}: ${rowColors}`);
+        });
+      });
+      
       // Update edge positions after each move
       update_edge_positions(cube, edgeTracing);
       console.log('📊 Edge tracing after move:');
@@ -800,12 +816,25 @@ export function scramble_cube_with_tracing(scramble: string): { cube: CubeState;
         const [origFace, origRow, origCol] = edge.originalPosition;
         console.log(`  ${edge.id}: ${edge.colors[0]}-${edge.colors[1]} at ${face}[${row}][${col}] (was at ${origFace}[${origRow}][${origCol}])`);
       });
+      
+      // Update corner positions after each move
+      const cornerState = cornerTracer.convertFromScramblerCube(cube);
+      console.log('📊 Corner tracing after move:');
+      const allCornerPositions = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 
+                                 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'];
+      allCornerPositions.forEach(position => {
+        if (cornerState[position]) {
+          const colors = cornerState[position].colors;
+          const orientation = cornerState[position].orientation;
+          console.log(`  ${position}: [${colors.join(', ')}] (${orientation})`);
+        }
+      });
       console.log('');
     }
   }
   
-  console.log('✅ Scrambling with edge tracing completed!');
-  return { cube, edgeTracing };
+  console.log('✅ Scrambling with edge and corner tracing completed!');
+  return { cube, edgeTracing, cornerTracing: cornerTracer };
 }
 
 /**

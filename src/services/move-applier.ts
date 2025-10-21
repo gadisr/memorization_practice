@@ -8,14 +8,18 @@ import { scramble_cube, rotate_face_clockwise, rotate_face_counter_clockwise, ap
 
 // Edge swap algorithm - fixed sequence
 const EDGE_SWAP_ALGORITHM = "R U R' U' R' F R2 U' R' U' R U R' F'";
+// Corner swap algorithm - fixed sequence
+const CORNER_SWAP_ALGORITHM = "R U' R' U' R U R' F' R U R' U' R' F R";
 
 export class MoveApplier {
   public setupMoves: Map<string, string> = new Map();
+  public cornerSetupMoves: Map<string, string> = new Map();
   private edgeTracer: EdgeTracer;
   private cornerTracer: CornerTracer;
 
   constructor() {
     this.loadSetupMoves();
+    this.loadCornerSetupMoves();
     this.edgeTracer = new EdgeTracer();
     this.cornerTracer = new CornerTracer();
   }
@@ -50,6 +54,37 @@ export class MoveApplier {
 
     for (const [letter, move] of Object.entries(setupMovesData)) {
       this.setupMoves.set(letter, move);
+    }
+  }
+
+  private loadCornerSetupMoves(): void {
+    // Load corner setup moves from the applying_sequence.txt data
+    const cornerSetupMovesData = {
+      "B": "R D'",
+      "C": "F",
+      "D": "F R'",
+      "F": "F2",
+      "G": "D2 R",
+      "H": "D2",
+      "I": "F' D",
+      "J": "F2 D",
+      "K": "D R",
+      "L": "D",
+      "M": "R'",
+      "N": "R2",
+      "O": "R",
+      "P": "", // Already Setup!
+      "Q": "R' F",
+      "S": "D' R",
+      "T": "D'",
+      "U": "F'",
+      "V": "D' F'",
+      "W": "D2 F'",
+      "X": "D F'"
+    };
+
+    for (const [letter, move] of Object.entries(cornerSetupMovesData)) {
+      this.cornerSetupMoves.set(letter, move);
     }
   }
 
@@ -145,6 +180,75 @@ export class MoveApplier {
         errors
       };
     }
+  }
+
+  /**
+   * Apply a sequence of corner letters to a cube and return the result using cube-scrambler
+   * This is the new simplified approach that uses only cube-scrambler for move application
+   */
+  public applyCornerSequenceToCube(
+    cubeState: CubeState, 
+    sequence: string
+  ): { success: boolean; finalState: CubeState; errors: string[] } {
+    
+    const errors: string[] = [];
+    
+    try {
+      // Convert sequence of corner letters to sequence of moves
+      const moveSequence = this.convertCornerLetterSequenceToMoves(sequence);
+      
+      // Apply moves using cube-scrambler
+      const finalCubeState = this.applyMovesToCube(cubeState, moveSequence);
+      
+      return {
+        success: true,
+        finalState: finalCubeState,
+        errors
+      };
+      
+    } catch (error) {
+      errors.push(`Error applying corner sequence: ${error}`);
+      
+      return {
+        success: false,
+        finalState: cubeState, // Return original state on error
+        errors
+      };
+    }
+  }
+
+  /**
+   * Convert a sequence of corner letters to a sequence of cube moves
+   * Each letter becomes: setup move + corner swap algorithm + inverse setup move
+   */
+  public convertCornerLetterSequenceToMoves(sequence: string): string {
+    const letters = sequence.trim().split(/\s+/).filter(letter => letter.length > 0);
+    const moves: string[] = [];
+    
+    for (const letter of letters) {
+      // Check if this is the buffer position
+      if (letter === 'A') {
+        throw new Error(`Letter 'A' is the buffer position and should not appear in tracing sequences. Buffer is where corners get swapped TO, not a target corner to swap.`);
+      }
+      
+      // Get setup move for this letter
+      const setupMove = this.cornerSetupMoves.get(letter);
+      if (setupMove === undefined) {
+        throw new Error(`No setup move found for letter: ${letter}. Valid corner letters are: ${Array.from(this.cornerSetupMoves.keys()).join(', ')}`);
+      }
+      
+      // Skip if setup move is empty (like buffer position)
+      if (setupMove.trim() === '') {
+        continue;
+      }
+      
+      // Add: setup move + corner swap algorithm + inverse setup move
+      moves.push(setupMove);
+      moves.push(CORNER_SWAP_ALGORITHM);
+      moves.push(this.getInverseMove(setupMove));
+    }
+    
+    return moves.join(' ');
   }
 
   /**

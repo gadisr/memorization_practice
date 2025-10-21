@@ -317,7 +317,7 @@ export class EdgeTracer {
     }
     
     console.log('✅ Full edge trace completed:', tracingString);
-    return tracingString;
+    return tracingString.trim();
   }
 
   // Helper method to create a solved cube state for testing

@@ -6,7 +6,7 @@ import { scramble_cube, apply_move } from './cube-scrambler.js';
 import { CubeState, FullMove } from '../models/cube-models.js';
 
 // Corner swap algorithm - fixed sequence
-const CORNER_SWAP_ALGORITHM = "R U R' U' R' F R2 U' R' U' R U R' F'";
+const CORNER_SWAP_ALGORITHM = "R U' R' U' R U R' F' R U R' U' R' F R";
 import { 
   SequenceValidationInput, 
   CornerDrillValidationResult, 
@@ -127,75 +127,24 @@ export class CornerTracingValidator {
     cube: CubeState,
     sequence: string
   ): CubeState {
-    // Convert sequence of letters to sequence of moves
-    const moveSequence = this.convertLetterSequenceToMoves(sequence);
+    // Use MoveApplier's corner sequence application
+    const result = this.moveApplier.applyCornerSequenceToCube(cube, sequence);
     
-    // Apply moves using cube-scrambler
-    return this.applyMovesToCube(cube, moveSequence);
+    if (!result.success) {
+      throw new Error(`Failed to apply corner sequence: ${result.errors.join(', ')}`);
+    }
+    
+    return result.finalState;
   }
 
   /**
    * Convert a sequence of corner letters to a sequence of cube moves
    */
   private convertLetterSequenceToMoves(sequence: string): string {
-    const letters = sequence.trim().split(/\s+/).filter(letter => letter.length > 0);
-    const moves: string[] = [];
-    
-    for (const letter of letters) {
-      // Check if this is the buffer position
-      if (letter === 'a') {
-        throw new Error(`Letter 'a' is the buffer position and should not appear in tracing sequences. Buffer is where corners get swapped TO, not a target corner to swap.`);
-      }
-      
-      // Get setup move for this letter
-      const setupMove = this.getCornerSetupMove(letter);
-      if (!setupMove) {
-        throw new Error(`Invalid corner letter: ${letter}`);
-      }
-      
-      // Add setup move + algorithm + inverse setup move
-      moves.push(setupMove);
-      moves.push(CORNER_SWAP_ALGORITHM);
-      moves.push(this.getInverseMove(setupMove));
-    }
-    
-    return moves.join(' ');
+    // Use the MoveApplier's corner sequence conversion
+    return this.moveApplier.convertCornerLetterSequenceToMoves(sequence);
   }
 
-  /**
-   * Get the setup move for a corner letter
-   */
-  private getCornerSetupMove(letter: string): string | null {
-    const cornerSetupMoves: { [key: string]: string } = {
-      'b': 'R',
-      'c': 'R2',
-      'd': 'R\'',
-      'e': 'L',
-      'f': 'L2',
-      'g': 'L\'',
-      'h': 'U',
-      'i': 'U2',
-      'j': 'U\'',
-      'k': 'D',
-      'l': 'D2',
-      'm': 'D\'',
-      'n': 'F',
-      'o': 'F2',
-      'p': 'F\'',
-      'q': 'B',
-      'r': 'B2',
-      's': 'B\'',
-      't': 'U',
-      'u': 'U2',
-      'v': 'U\'',
-      'w': 'D',
-      'x': 'D2',
-      'y': 'D\'',
-      'z': 'F'
-    };
-    
-    return cornerSetupMoves[letter.toLowerCase()] || null;
-  }
 
   /**
    * Get the inverse of a move
@@ -210,19 +159,6 @@ export class CornerTracingValidator {
     }
   }
 
-  /**
-   * Apply a sequence of moves to a cube
-   */
-  private applyMovesToCube(cube: CubeState, moveSequence: string): CubeState {
-    let currentCube = { ...cube };
-    const moves = moveSequence.trim().split(/\s+/).filter(move => move.length > 0);
-    
-    for (const move of moves) {
-      apply_move(currentCube, move as FullMove);
-    }
-    
-    return currentCube;
-  }
 
   /**
    * Validate the final corner cube state
@@ -264,20 +200,40 @@ export class CornerTracingValidator {
    * Check if a corner is in the correct position
    */
   private isCornerInCorrectPosition(position: string, colors: [string, string, string]): boolean {
-    // This is a simplified check - in a real implementation, you'd compare
-    // against the solved state for each position
-    // For now, we'll assume corners are correct if they have valid colors
-    return colors.every(color => color && color.length > 0);
+    try {
+      // Use CornerTracer to get the expected position for these colors
+      const expectedPosition = this.cornerTracer.get_corner_solved_position_by_colors(colors);
+      
+      // Check if the corner piece should be in this position
+      return expectedPosition === position;
+    } catch (error) {
+      console.log(`Error checking corner position: ${error}`);
+      return false;
+    }
   }
 
   /**
    * Check if a corner is twisted (wrong orientation)
    */
   private isCornerTwisted(position: string, colors: [string, string, string]): boolean {
-    // This is a simplified check - in a real implementation, you'd check
-    // the orientation against the solved state
-    // For now, we'll assume no corners are twisted if they have valid colors
-    return false;
+    try {
+      // Use CornerTracer to check if the corner is in the correct position but twisted
+      const expectedPosition = this.cornerTracer.get_corner_solved_position_by_colors(colors);
+      
+      // If the corner is in the right position but the colors don't match exactly,
+      // it might be twisted
+      if (expectedPosition === position) {
+        // Check if the colors are in the correct order
+        // This is a simplified check - in a full implementation, you'd check
+        // the exact color orientation
+        return false; // For now, assume no twisting
+      }
+      
+      return false;
+    } catch (error) {
+      console.log(`Error checking if corner is twisted: ${error}`);
+      return false;
+    }
   }
 
   /**
