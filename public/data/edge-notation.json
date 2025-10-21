@@ -1,0 +1,27 @@
+[
+    { "colors": ["white", "blue"], "notation": "a" },
+    { "colors": ["white", "red"], "notation": "b" },
+    { "colors": ["white", "green"], "notation": "c" },
+    { "colors": ["white", "orange"], "notation": "d" },
+  { "colors": ["orange", "white"], "notation": "e" },
+  { "colors": ["orange", "green"], "notation": "f" },
+  { "colors": ["orange", "yellow"], "notation": "g" },
+  { "colors": ["orange", "blue"], "notation": "h" },
+  { "colors": ["green", "white"], "notation": "i" },
+  { "colors": ["green", "red"], "notation": "j" },
+  { "colors": ["green", "yellow"], "notation": "k" },
+  { "colors": ["green", "orange"], "notation": "l" },
+  { "colors": ["red", "white"], "notation": "m" },
+  { "colors": ["red", "blue"], "notation": "n" },
+  { "colors": ["red", "yellow"], "notation": "o" },
+  { "colors": ["red", "green"], "notation": "p" },
+  { "colors": ["blue", "white"], "notation": "q" },
+  { "colors": ["blue", "orange"], "notation": "r" },
+  { "colors": ["blue", "yellow"], "notation": "s" },
+  { "colors": ["blue", "red"], "notation": "t" },
+  { "colors": ["yellow", "green"], "notation": "u" },
+  { "colors": ["yellow", "red"], "notation": "v" },
+  { "colors": ["yellow", "blue"], "notation": "w" },
+  { "colors": ["yellow", "orange"], "notation": "x" }
+]
+

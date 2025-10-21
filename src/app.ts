@@ -40,6 +40,7 @@ import {
 import { validateEdgeAnswer, validateCornerAnswer } from './services/notation-validator.js';
 import { renderEdgeSquares, renderCornerSquares, renderNotationResults } from './ui/notation-renderer.js';
 import { TracingRenderer } from './ui/tracing-renderer.js';
+import { OnboardingManager } from './onboarding/onboarding-manager.js';
 
 // Application state
 let currentPairIndex = 0;
@@ -55,11 +56,24 @@ let tracingRenderer: TracingRenderer | null = null;
 
 // Initialize the application
 export async function initializeApp(): Promise<void> {
+  // Check if user should see onboarding
+  if (OnboardingManager.shouldShowOnboarding()) {
+    // Redirect to onboarding
+    window.location.href = 'onboarding.html';
+    return;
+  }
+  
   const configs = getAllDrillConfigs();
   renderSetupScreen(configs);
   attachEventListeners();
   initializeAuthUI();
   initializeKeyboardHandler();
+  
+  // Check for onboarding recommendations
+  checkOnboardingRecommendations();
+  
+  // Show appropriate tutorial button based on onboarding status
+  setupTutorialButtons();
   
   // Always start with setup screen, let auth UI handle dashboard loading
   showScreen('setup-screen');
@@ -73,6 +87,8 @@ function attachEventListeners(): void {
   const viewDashboardBtn = document.getElementById('view-dashboard-btn');
   const showTechniqueIntroBtn = document.getElementById('show-technique-intro-btn');
   const showDrillInfoBtn = document.getElementById('show-drill-info-btn');
+  const startTutorialBtn = document.getElementById('start-tutorial-btn');
+  const reviewTutorialBtn = document.getElementById('review-tutorial-btn');
   
   if (drillSelect) {
     drillSelect.addEventListener('change', handleDrillChange);
@@ -119,6 +135,18 @@ function attachEventListeners(): void {
           showDrillInfo(config);
         }
       }
+    });
+  }
+  
+  if (startTutorialBtn) {
+    startTutorialBtn.addEventListener('click', () => {
+      window.location.href = 'onboarding.html';
+    });
+  }
+  
+  if (reviewTutorialBtn) {
+    reviewTutorialBtn.addEventListener('click', () => {
+      window.location.href = 'onboarding.html';
     });
   }
   
@@ -698,6 +726,51 @@ function handleCancelNotation(): void {
     cancelNotationSession();
     showScreen('setup-screen');
     clearKeyboardCallbacks();
+  }
+}
+
+// Check for onboarding recommendations and apply them
+function checkOnboardingRecommendations(): void {
+  const recommendedDrillType = localStorage.getItem('recommended_drill_type');
+  const recommendedPairCount = localStorage.getItem('recommended_pair_count');
+  
+  if (recommendedDrillType && recommendedPairCount) {
+    // Set the recommended drill type and pair count
+    const drillSelect = document.getElementById('drill-select') as HTMLSelectElement;
+    const pairCountInput = document.getElementById('pair-count') as HTMLInputElement;
+    
+    if (drillSelect) {
+      drillSelect.value = recommendedDrillType;
+      // Trigger change event to update description
+      drillSelect.dispatchEvent(new Event('change'));
+    }
+    
+    if (pairCountInput) {
+      pairCountInput.value = recommendedPairCount;
+    }
+    
+    // Clear the recommendations
+    localStorage.removeItem('recommended_drill_type');
+    localStorage.removeItem('recommended_pair_count');
+    
+    // Show a notification about the recommendations
+    showNotification('Welcome! We\'ve set up your first session based on your onboarding preferences.', 'success');
+  }
+}
+
+// Setup tutorial buttons based on onboarding status
+function setupTutorialButtons(): void {
+  const startTutorialBtn = document.getElementById('start-tutorial-btn');
+  const reviewTutorialBtn = document.getElementById('review-tutorial-btn');
+  
+  if (OnboardingManager.hasCompletedOnboarding()) {
+    // User has completed onboarding, show review button
+    if (startTutorialBtn) startTutorialBtn.style.display = 'none';
+    if (reviewTutorialBtn) reviewTutorialBtn.style.display = 'inline-block';
+  } else {
+    // User hasn't completed onboarding, show start button
+    if (startTutorialBtn) startTutorialBtn.style.display = 'inline-block';
+    if (reviewTutorialBtn) reviewTutorialBtn.style.display = 'none';
   }
 }
 

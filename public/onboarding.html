@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLD Memory Trainer - Onboarding</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="onboarding.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <!-- Onboarding Screen -->
+    <div id="onboarding-screen" class="screen">
+      <div id="onboarding-container">
+        <!-- Content will be dynamically rendered here -->
+      </div>
+    </div>
+
+    <!-- Info Modal (shared with main app) -->
+    <div id="info-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modal-title">Information</h2>
+          <button id="close-modal-btn" class="btn-close">&times;</button>
+        </div>
+        <div id="modal-body" class="modal-body">
+          <!-- Content will be dynamically inserted -->
+        </div>
+        <div class="modal-footer">
+          <button id="modal-close-footer-btn" class="btn btn-primary">Got it!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification hidden">
+      <span id="notification-message"></span>
+    </div>
+  </div>
+
+  <script type="module" src="../dist/onboarding/onboarding-app.js"></script>
+</body>
+</html>

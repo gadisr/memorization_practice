@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Solve a Rubik's Cube Blindfolded - Beginner's Guide</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .intro-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    .intro-header {
+      text-align: center;
+      margin-bottom: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .intro-header h1 {
+      font-size: 2.5em;
+      margin: 0 0 10px 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .intro-header p {
+      font-size: 1.2em;
+      margin: 0;
+      opacity: 0.9;
+    }
+    
+    .section {
+      margin: 40px 0;
+      padding: 30px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-left: 5px solid #667eea;
+    }
+    
+    .section h2 {
+      color: #333;
+      font-size: 1.8em;
+      margin: 0 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .section h3 {
+      color: #555;
+      font-size: 1.4em;
+      margin: 25px 0 15px 0;
+    }
+    
+    .step {
+      background: #f8f9ff;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 10px;
+      border-left: 4px solid #667eea;
+    }
+    
+    .step-number {
+      background: #667eea;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+    
+    .analogy {
+      background: #fff3cd;
+      border: 2px solid #ffeaa7;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+    
+    .analogy h4 {
+      color: #856404;
+      margin: 0 0 10px 0;
+      font-size: 1.2em;
+    }
+    
+    .youtube-link {
+      background: #ff0000;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      text-decoration: none;
+      display: inline-block;
+      margin: 20px 0;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+    
+    .youtube-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255,0,0,0.3);
+    }
+    
+    .website-features {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin: 30px 0;
+    }
+    
+    .website-features h3 {
+      color: white;
+      margin: 0 0 20px 0;
+    }
+    
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .feature-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .feature-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .feature-list li::before {
+      content: "✨ ";
+      margin-right: 10px;
+    }
+    
+    .back-to-app {
+      text-align: center;
+      margin: 40px 0;
+    }
+    
+    .btn-primary {
+      background: #667eea;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+    
+    .emoji {
+      font-size: 1.2em;
+    }
+    
+    .highlight {
+      background: #fff3cd;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    
+    @media (max-width: 768px) {
+      .intro-container {
+        padding: 10px;
+      }
+      
+      .intro-header h1 {
+        font-size: 2em;
+      }
+      
+      .section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="intro-container">
+    <div class="intro-header">
+      <h1>🧠 How to Solve a Rubik's Cube Blindfolded</h1>
+      <p>A comprehensive beginner's guide to blindfolded cubing</p>
+    </div>
+
+    <div class="section">
+      <h2>🎯 What is Blindfolded Cubing?</h2>
+      <p>Blindfolded cubing (often called "BLD" for "Blindfolded") is the advanced technique of solving a Rubik's cube without looking at it during the solving process. It's one of the most impressive and challenging disciplines in speedcubing.</p>
+      
+      <div class="analogy">
+        <h4>🧠 The Mental Challenge:</h4>
+        <p>Think of it like memorizing a complex sequence of moves for a dance routine, then performing it perfectly without being able to see your feet. You must rely entirely on your memory and spatial awareness to execute the solution correctly.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🔧 The Process (How It Works)</h2>
+      
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>Inspection Phase</strong> 👀<br>
+        You have 15 minutes to study the scrambled cube and memorize the positions of all pieces. This is where you create your mental map of what needs to be moved where.
+      </div>
+      
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>Blindfold Application</strong> 🎭<br>
+        Once you've memorized the cube state, you put on the blindfold. From this point forward, you cannot see the cube and must rely entirely on your memory.
+      </div>
+      
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>Execution Phase</strong> ⚡<br>
+        You execute the memorized sequence of moves to solve the cube. This typically involves solving corners first, then edges, using specific algorithms for each piece.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🧩 The Memory System: Letter Pairs</h2>
+      <p>The key to blindfolded cubing is an efficient memory system. Most cubers use <span class="highlight">letter pairs</span> combined with visual imagery to encode and recall piece positions.</p>
+      
+      <div class="analogy">
+        <h4>🧠 Memory Palace Technique:</h4>
+        <p>Instead of trying to remember raw positions like "corner A → position B," cubers create memorable associations:</p>
+        <ul>
+          <li><strong>AB</strong> might become "Apple Banana" 🍎🍌</li>
+          <li><strong>CD</strong> might become "Cat Dog" 🐱🐶</li>
+          <li><strong>EF</strong> might become "Elephant Fish" 🐘🐠</li>
+        </ul>
+        <p>These pairs are then linked into a story or journey: "An Apple and Banana are playing with a Cat and Dog, while an Elephant and Fish watch!" The more vivid and memorable the imagery, the easier it is to recall during execution.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🎓 Learning Progression</h2>
+      
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>Master Regular Solving</strong> 🧩<br>
+        You need to be proficient at solving a Rubik's cube sighted first. This means being comfortable with basic algorithms and understanding cube mechanics.
+      </div>
+      
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>Learn Letter Notation</strong> 🔤<br>
+        Study the Speffz lettering system to understand how each piece position is assigned a letter. This is your foundation for creating letter pairs.
+      </div>
+      
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>Practice Memory Techniques</strong> 🧠<br>
+        Start with 2-3 letter pairs and develop your own imagery system. Practice until you can consistently recall these pairs.
+      </div>
+      
+      <div class="step">
+        <span class="step-number">4</span>
+        <strong>Build Up Complexity</strong> 📈<br>
+        Gradually increase to 5-10 pairs, then work toward the full 20+ pairs needed for a complete solve.
+      </div>
+      
+      <div class="step">
+        <span class="step-number">5</span>
+        <strong>Execute Your First BLD Solve</strong> 🏆<br>
+        Once you can memorize and recall 20+ letter pairs, attempt your first full blindfolded solve!
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📺 Comprehensive Learning Resource</h2>
+      <p>For hands-on learning, there's an excellent YouTube tutorial series that provides detailed, step-by-step instruction for blindfolded cubing.</p>
+      
+      <a href="https://www.youtube.com/watch?v=fqIU6Plcjr0" target="_blank" class="youtube-link">
+        🎥 Watch the Complete Tutorial Series on YouTube
+      </a>
+      
+      <p><strong>What you'll learn in the videos:</strong></p>
+      <ul>
+        <li>🎯 Proper cube setup and inspection techniques</li>
+        <li>🔤 Speffz notation system and letter pair creation</li>
+        <li>🧠 Advanced memory techniques and visualization</li>
+        <li>⚡ Speed optimization and accuracy improvement</li>
+        <li>🏆 Structured practice methods and progression</li>
+      </ul>
+    </div>
+
+    <div class="website-features">
+      <h3>🚀 What This Website Offers</h3>
+      <p>This BLD Memory Trainer provides structured training tools to develop your blindfolded cubing skills systematically.</p>
+      
+      <ul class="feature-list">
+        <li><strong>Flash Pairs</strong> - Practice individual letter pair recognition and visualization</li>
+        <li><strong>Story Building</strong> - Develop skills to chain multiple pairs into coherent narratives</li>
+        <li><strong>Speed Training</strong> - Improve your memorization and recall speed</li>
+        <li><strong>Progress Tracking</strong> - Monitor your improvement with detailed statistics</li>
+        <li><strong>Adaptive Difficulty</strong> - Progressive training from beginner to advanced levels</li>
+        <li><strong>Offline Capability</strong> - Practice anywhere without internet dependency</li>
+      </ul>
+      
+      <p><strong>Structured training for systematic improvement 🎯</strong></p>
+    </div>
+
+    <div class="section">
+      <h2>🌟 Why Learn Blindfolded Cubing?</h2>
+      <p>Blindfolded cubing offers significant cognitive benefits and represents the pinnacle of cubing skill development.</p>
+      
+      <div class="analogy">
+        <h4>💪 Cognitive Training Benefits:</h4>
+        <p>Blindfolded cubing develops several key mental faculties:</p>
+        <ul>
+          <li>🎯 <strong>Sustained Attention</strong> - Extended focus during inspection and execution</li>
+          <li>🧠 <strong>Working Memory</strong> - Holding and manipulating complex spatial information</li>
+          <li>⚡ <strong>Processing Speed</strong> - Rapid pattern recognition and decision making</li>
+          <li>🎨 <strong>Creative Visualization</strong> - Developing unique memory associations</li>
+          <li>🏆 <strong>Mental Discipline</strong> - Building confidence through challenging practice</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🎯 Ready to Begin Your Training?</h2>
+      <p>Every expert blindfolded cuber started as a beginner. Success requires systematic practice and patience. Here's how to approach your training:</p>
+      
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>Start with Fundamentals</strong> 🌱<br>
+        Begin with 2-3 letter pairs and master the basics before progressing. Quality over quantity.
+      </div>
+      
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>Consistent Practice</strong> 📅<br>
+        Regular, focused practice sessions are more effective than sporadic long sessions.
+      </div>
+      
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>Develop Your System</strong> 🎨<br>
+        Create vivid, memorable imagery that works for you. Personal associations are most effective.
+      </div>
+      
+      <div class="step">
+        <span class="step-number">4</span>
+        <strong>Track Your Progress</strong> 📊<br>
+        Monitor your improvement and adjust your training accordingly. Data-driven practice leads to better results.
+      </div>
+    </div>
+
+    <div class="back-to-app">
+      <a href="index.html" class="btn-primary">
+        🚀 Start Training with BLD Memory Trainer
+      </a>
+    </div>
+  </div>
+</body>
+</html>
