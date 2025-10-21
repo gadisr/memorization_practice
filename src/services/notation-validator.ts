@@ -19,8 +19,8 @@ export async function validateEdgeAnswer(colors: [string, string], userAnswer: s
     throw new Error(`Edge piece not found for colors: ${colors.join(', ')}`);
   }
   
-  const normalizedUserAnswer = userAnswer.trim().toUpperCase();
-  const isCorrect = normalizedUserAnswer === edge.notation;
+  const normalizedUserAnswer = userAnswer.trim().toLowerCase();
+  const isCorrect = normalizedUserAnswer === edge.notation.toLowerCase();
   
   return {
     isCorrect,
@@ -40,8 +40,8 @@ export async function validateCornerAnswer(colors: [string, string, string], use
     throw new Error(`Corner piece not found for colors: ${colors.join(', ')}`);
   }
   
-  const normalizedUserAnswer = userAnswer.trim().toUpperCase();
-  const isCorrect = normalizedUserAnswer === corner.notation;
+  const normalizedUserAnswer = userAnswer.trim().toLowerCase();
+  const isCorrect = normalizedUserAnswer === corner.notation.toLowerCase();
   
   return {
     isCorrect,

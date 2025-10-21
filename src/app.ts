@@ -195,8 +195,9 @@ function attachEventListeners(): void {
   }
   
   if (notationInput) {
-    notationInput.addEventListener('keypress', (e) => {
+    notationInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
+        e.preventDefault(); // Prevent form submission if this is inside a form
         handleNotationSubmit();
       }
     });
