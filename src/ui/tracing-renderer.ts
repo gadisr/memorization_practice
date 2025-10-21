@@ -3,7 +3,8 @@
 import { DrillType } from '../types.js';
 import { SequenceValidator } from '../services/sequence-validator.js';
 import { CornerTracingValidator } from '../services/corner-tracing-validator.js';
-import { generate_scramble_sequence } from '../services/cube-scrambler.js';
+import { generate_scramble_sequence, scramble_cube_with_tracing } from '../services/cube-scrambler.js';
+import { AnimCubeJSViewer } from './animcubejs-viewer.js';
 
 export class TracingRenderer {
   private sequenceValidator: SequenceValidator;
@@ -11,6 +12,7 @@ export class TracingRenderer {
   private currentScramble: string = '';
   private startTime: number = 0;
   private isActive: boolean = false;
+  private animCubeJSViewer: AnimCubeJSViewer | null = null;
 
   constructor() {
     this.sequenceValidator = new SequenceValidator();
@@ -48,6 +50,20 @@ export class TracingRenderer {
             <div class="scramble-string" id="scramble-string">${this.currentScramble}</div>
           </div>
           
+          <div class="cube-3d-container" style="
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+          ">
+            <div id="cube-3d-viewer" style="
+              width: 300px;
+              height: 300px;
+              border: 2px solid #ccc;
+              border-radius: 8px;
+              background: #f5f5f5;
+            "></div>
+          </div>
+          
           <div class="instruction">
             <p>${instructionText}</p>
             <p><strong>Instructions:</strong></p>
@@ -83,6 +99,48 @@ export class TracingRenderer {
 
     this.attachTracingEventListeners(drillType);
     this.startTracingTimer();
+    this.initializeAnimCubeJSViewer();
+  }
+
+  /**
+   * Initialize AnimCubeJS viewer
+   */
+  private async initializeAnimCubeJSViewer(): Promise<void> {
+    try {
+      // Create AnimCubeJS viewer
+      this.animCubeJSViewer = new AnimCubeJSViewer({
+        containerId: 'cube-3d-viewer',
+        width: 300,
+        height: 300,
+        backgroundColor: '#f5f5f5',
+        enableControls: true,
+        enableAnimations: true,
+        size: 200,
+        bgColor: '#f5f5f5',
+        scheme: 'WOBGRY',
+        edit: false,
+        buttons: true,
+        sliders: true,
+        colors: 'WOBGRY',
+        speed: 1
+      });
+
+      // Initialize the viewer
+      await this.animCubeJSViewer.initialize();
+
+      // Wait longer for AnimCubeJS to be fully ready and rendered
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Apply the scramble using initmove parameter
+      console.log('Applying initial scramble to visual cube:', this.currentScramble);
+      await this.animCubeJSViewer.applyScrambleAsInitMove(this.currentScramble);
+
+      // Wait a bit more to ensure the scramble is visually applied
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+    } catch (error) {
+      console.error('Failed to initialize AnimCubeJS viewer:', error);
+    }
   }
 
   /**
@@ -101,8 +159,8 @@ export class TracingRenderer {
     }
 
     if (newScrambleButton) {
-      newScrambleButton.addEventListener('click', () => {
-        this.generateNewScramble();
+      newScrambleButton.addEventListener('click', async () => {
+        await this.generateNewScramble();
       });
     }
 
@@ -252,8 +310,8 @@ export class TracingRenderer {
     }
 
     if (newScrambleButton) {
-      newScrambleButton.addEventListener('click', () => {
-        this.generateNewScramble();
+      newScrambleButton.addEventListener('click', async () => {
+        await this.generateNewScramble();
       });
     }
 
@@ -267,7 +325,7 @@ export class TracingRenderer {
   /**
    * Generate a new scramble
    */
-  private generateNewScramble(): void {
+  private async generateNewScramble(): Promise<void> {
     this.currentScramble = generate_scramble_sequence(6);
     this.startTime = Date.now();
     this.isActive = true;
@@ -286,6 +344,16 @@ export class TracingRenderer {
 
     if (resultsDiv) {
       resultsDiv.style.display = 'none';
+    }
+
+    // Apply the new scramble to the visual cube using initmove
+    if (this.animCubeJSViewer) {
+      try {
+        await this.animCubeJSViewer.applyScrambleAsInitMove(this.currentScramble);
+        console.log('Applied new scramble to visual cube as initmove:', this.currentScramble);
+      } catch (error) {
+        console.error('Failed to apply scramble to visual cube:', error);
+      }
     }
 
     this.focusInput();
@@ -375,5 +443,15 @@ export class TracingRenderer {
         notification.parentNode.removeChild(notification);
       }
     }, 3000);
+  }
+
+  /**
+   * Dispose of AnimCubeJS viewer resources
+   */
+  public dispose(): void {
+    if (this.animCubeJSViewer) {
+      this.animCubeJSViewer.dispose();
+      this.animCubeJSViewer = null;
+    }
   }
 }
