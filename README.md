@@ -6,7 +6,7 @@ A lightweight web-based training application for blindfold cubers to improve vis
 
 ### Training Modes
 
-- **Flash Pairs** - Display single letter pairs randomly (30 pairs, Vividness metric)
+- **Flash Pairs** - Display single letter pairs randomly (30 pairs, Vividness metric) 
 - **2-Pair Fusion** - Form single mini-scenes from 2 pairs (10 pairs, Vividness metric)
 - **3-Pair Chain** - Progressive chaining of 3 pairs (5 pairs, Vividness metric)
 - **8-Pair Chain** - Continuous scene building (8 pairs, Flow metric)
