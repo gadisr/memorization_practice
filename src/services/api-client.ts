@@ -5,7 +5,8 @@
 import { getAuthToken } from './auth-service.js';
 import { SessionData, NotationSessionData } from '../types.js';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+// Get API base URL from global config or default
+const API_BASE_URL = (window as any).API_BASE_URL || 'http://localhost:8000/api/v1';
 
 async function getAuthHeaders(): Promise<HeadersInit> {
   const token = await getAuthToken();

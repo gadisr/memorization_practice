@@ -38,5 +38,8 @@ COPY public/ ./public/
 # Expose port 3000 (matching the serve.py configuration)
 EXPOSE 3000
 
+# Set environment variable for API base URL
+ENV API_BASE_URL=http://backend:8000/api/v1
+
 # Set the command to run the development server
 CMD ["python3", "serve.py"]
