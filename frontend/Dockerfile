@@ -1,3 +1,22 @@
+# Use Node.js image to compile TypeScript, then switch to Python for serving
+FROM node:18-alpine AS builder
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files and tsconfig
+COPY package*.json ./
+COPY tsconfig.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source files
+COPY src/ ./src/
+
+# Compile TypeScript
+RUN npm run build
+
 # Use Python 3.12 slim image for serving static files
 FROM python:3.12-slim
 
@@ -6,6 +25,9 @@ WORKDIR /app
 
 # Copy the entire project to the container
 COPY . /app
+
+# Copy the compiled JavaScript from the builder stage
+COPY --from=builder /app/dist ./dist
 
 # Install any Python dependencies if needed
 # (The serve.py script uses only standard library modules)
