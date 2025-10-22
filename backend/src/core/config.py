@@ -1,7 +1,9 @@
 """Application configuration settings."""
 
 from pydantic_settings import BaseSettings
-from typing import Optional
+from typing import Optional, List
+from pydantic import field_validator
+import json
 
 
 class Settings(BaseSettings):
@@ -20,7 +22,18 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "BLD Memory Trainer API"
     
     # CORS
-    ALLOWED_ORIGINS: list[str] = ["http://localhost:8000", "http://localhost:3000"]
+    ALLOWED_ORIGINS: List[str] = ["http://localhost:8000", "http://localhost:3000"]
+    
+    @field_validator('ALLOWED_ORIGINS', mode='before')
+    @classmethod
+    def parse_allowed_origins(cls, v):
+        """Parse ALLOWED_ORIGINS from JSON string or return default list."""
+        if isinstance(v, str):
+            try:
+                return json.loads(v)
+            except json.JSONDecodeError:
+                return ["http://localhost:8000", "http://localhost:3000"]
+        return v
     
     class Config:
         env_file = ".env"
