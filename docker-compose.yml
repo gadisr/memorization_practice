@@ -39,9 +39,6 @@ services:
     container_name: bld_trainer_frontend
     ports:
       - "3000:3000"
-    volumes:
-      - .:/app
-    command: python3 serve.py
 
 volumes:
   postgres_data:

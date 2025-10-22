@@ -23,11 +23,14 @@ FROM python:3.12-slim
 # Set working directory
 WORKDIR /app
 
-# Copy the entire project to the container
-COPY . /app
+# Copy the serve.py script
+COPY serve.py ./
 
 # Copy the compiled JavaScript from the builder stage
 COPY --from=builder /app/dist ./dist
+
+# Copy public directory if it exists
+COPY public/ ./public/
 
 # Install any Python dependencies if needed
 # (The serve.py script uses only standard library modules)
