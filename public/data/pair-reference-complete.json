@@ -1,0 +1,184 @@
+{
+  "AA": {
+    "pair": "AA",
+    "person": "Astronaut",
+    "object": "Axe",
+    "image": "Astronaut + Axe",
+    "is_buffer": false
+  },
+  "AB": {
+    "pair": "AB",
+    "person": "Astronaut",
+    "object": "Ball",
+    "image": "Astronaut + Ball",
+    "is_buffer": false
+  },
+  "AC": {
+    "pair": "AC",
+    "person": "Astronaut",
+    "object": "Camera",
+    "image": "Astronaut + Camera",
+    "is_buffer": false
+  },
+  "AD": {
+    "pair": "AD",
+    "person": "Astronaut",
+    "object": "Drum",
+    "image": "Astronaut + Drum",
+    "is_buffer": false
+  },
+  "AE": {
+    "pair": "AE",
+    "person": "Astronaut",
+    "object": "Egg",
+    "image": "Astronaut + Egg",
+    "is_buffer": false
+  },
+  "AF": {
+    "pair": "AF",
+    "person": "Astronaut",
+    "object": "Flag",
+    "image": "Astronaut + Flag",
+    "is_buffer": false
+  },
+  "AG": {
+    "pair": "AG",
+    "person": "Astronaut",
+    "object": "Globe",
+    "image": "Astronaut + Globe",
+    "is_buffer": false
+  },
+  "AH": {
+    "pair": "AH",
+    "person": "Astronaut",
+    "object": "Hammer",
+    "image": "Astronaut + Hammer",
+    "is_buffer": false
+  },
+  "AI": {
+    "pair": "AI",
+    "person": "Astronaut",
+    "object": "[Buffer-1]",
+    "image": "Astronaut + [Buffer-1]",
+    "is_buffer": true
+  },
+  "AJ": {
+    "pair": "AJ",
+    "person": "Astronaut",
+    "object": "Jetpack",
+    "image": "Astronaut + Jetpack",
+    "is_buffer": false
+  },
+  "AK": {
+    "pair": "AK",
+    "person": "Astronaut",
+    "object": "Key",
+    "image": "Astronaut + Key",
+    "is_buffer": false
+  },
+  "AL": {
+    "pair": "AL",
+    "person": "Astronaut",
+    "object": "Ladder",
+    "image": "Astronaut + Ladder",
+    "is_buffer": false
+  },
+  "AM": {
+    "pair": "AM",
+    "person": "Astronaut",
+    "object": "Mask",
+    "image": "Astronaut + Mask",
+    "is_buffer": false
+  },
+  "AN": {
+    "pair": "AN",
+    "person": "Astronaut",
+    "object": "Net",
+    "image": "Astronaut + Net",
+    "is_buffer": false
+  },
+  "AO": {
+    "pair": "AO",
+    "person": "Astronaut",
+    "object": "[Buffer-0]",
+    "image": "Astronaut + [Buffer-0]",
+    "is_buffer": true
+  },
+  "AP": {
+    "pair": "AP",
+    "person": "Astronaut",
+    "object": "Pan",
+    "image": "Astronaut + Pan",
+    "is_buffer": false
+  },
+  "AQ": {
+    "pair": "AQ",
+    "person": "Astronaut",
+    "object": "Quill",
+    "image": "Astronaut + Quill",
+    "is_buffer": false
+  },
+  "AR": {
+    "pair": "AR",
+    "person": "Astronaut",
+    "object": "Rope",
+    "image": "Astronaut + Rope",
+    "is_buffer": false
+  },
+  "AS": {
+    "pair": "AS",
+    "person": "Astronaut",
+    "object": "Sword",
+    "image": "Astronaut + Sword",
+    "is_buffer": false
+  },
+  "AT": {
+    "pair": "AT",
+    "person": "Astronaut",
+    "object": "Torch",
+    "image": "Astronaut + Torch",
+    "is_buffer": false
+  },
+  "AU": {
+    "pair": "AU",
+    "person": "Astronaut",
+    "object": "Umbrella",
+    "image": "Astronaut + Umbrella",
+    "is_buffer": false
+  },
+  "AV": {
+    "pair": "AV",
+    "person": "Astronaut",
+    "object": "Vase",
+    "image": "Astronaut + Vase",
+    "is_buffer": false
+  },
+  "AW": {
+    "pair": "AW",
+    "person": "Astronaut",
+    "object": "Wheel",
+    "image": "Astronaut + Wheel",
+    "is_buffer": false
+  },
+  "AX": {
+    "pair": "AX",
+    "person": "Astronaut",
+    "object": "Xylophone",
+    "image": "Astronaut + Xylophone",
+    "is_buffer": false
+  },
+  "AY": {
+    "pair": "AY",
+    "person": "Astronaut",
+    "object": "Yo-yo",
+    "image": "Astronaut + Yo-yo",
+    "is_buffer": false
+  },
+  "AZ": {
+    "pair": "AZ",
+    "person": "Astronaut",
+    "object": "Zipper",
+    "image": "Astronaut + Zipper",
+    "is_buffer": false
+  }
+}

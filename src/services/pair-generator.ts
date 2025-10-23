@@ -10,7 +10,7 @@ export async function loadPairReference(): Promise<string[]> {
   if (pairCache) return pairCache;
   
   try {
-    const response = await fetch('./data/pair-reference.json');
+    const response = await fetch('/public/data/pair-reference.json');
     const pairs = await response.json() as string[];
     pairCache = pairs;
     return pairCache;

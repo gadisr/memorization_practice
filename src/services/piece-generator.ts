@@ -12,7 +12,7 @@ export async function loadEdgePieces(): Promise<EdgePiece[]> {
     return cachedEdgePieces;
   }
   
-  const response = await fetch('/src/data/edge-notation.json');
+  const response = await fetch('/public/data/edge-notation.json');
   const pieces: EdgePiece[] = await response.json();
   cachedEdgePieces = pieces;
   return pieces;
@@ -23,7 +23,7 @@ export async function loadCornerPieces(): Promise<CornerPiece[]> {
     return cachedCornerPieces;
   }
   
-  const response = await fetch('/src/data/corner-notation.json');
+  const response = await fetch('/public/data/corner-notation.json');
   const pieces: CornerPiece[] = await response.json();
   cachedCornerPieces = pieces;
   return pieces;
