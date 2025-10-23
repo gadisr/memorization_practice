@@ -1,0 +1,315 @@
+# HTTPS Deployment Guide
+
+This guide explains how to deploy your BLD Memory Trainer application with HTTPS support on port 443.
+
+## 🏗️ Architecture Overview
+
+The HTTPS deployment uses the following architecture:
+
+```
+Internet → Nginx (Port 443/80) → Frontend (Port 3000) + Backend (Port 8000)
+```
+
+- **Nginx**: Reverse proxy with SSL/TLS termination
+- **Frontend**: React application served on port 3000
+- **Backend**: FastAPI application on port 8000
+- **PostgreSQL**: Database on port 5432
+
+## 🚀 Quick Start
+
+### 1. Development/Testing Setup
+
+For development or testing with self-signed certificates:
+
+```bash
+# Start the application with self-signed SSL
+docker-compose up -d
+
+# Your application will be available at:
+# https://localhost (with SSL warning)
+# http://localhost (redirects to HTTPS)
+```
+
+### 2. Production Setup
+
+For production with real SSL certificates:
+
+```bash
+# 1. Set up SSL certificates
+./ssl/setup-production-ssl.sh blindfoldcubing.com
+
+# 2. Start the application
+docker-compose up -d
+
+# Your application will be available at:
+# https://blindfoldcubing.com
+```
+
+## 🔒 SSL Certificate Options
+
+### Option 1: Let's Encrypt (Recommended for Production)
+
+```bash
+# Install certbot (Ubuntu/Debian)
+sudo apt-get update && sudo apt-get install certbot
+
+# Generate certificate
+./ssl/setup-production-ssl.sh blindfoldcubing.com
+```
+
+### Option 2: Self-Signed Certificate (Development/Testing)
+
+```bash
+# Generate self-signed certificate
+./ssl/setup-production-ssl.sh --self-signed blindfoldcubing.com
+```
+
+### Option 3: Custom Certificate
+
+If you have your own SSL certificate:
+
+```bash
+# Copy your certificate files
+cp your-cert.pem ssl/cert.pem
+cp your-key.pem ssl/key.pem
+
+# Set proper permissions
+chmod 644 ssl/cert.pem
+chmod 600 ssl/key.pem
+```
+
+## 🔧 Configuration Details
+
+### Nginx Configuration
+
+The Nginx configuration (`nginx/nginx.conf`) includes:
+
+- **SSL/TLS**: Modern TLS 1.2/1.3 with secure ciphers
+- **Security Headers**: HSTS, X-Frame-Options, etc.
+- **Rate Limiting**: API protection against abuse
+- **CORS**: Proper CORS headers for API requests
+- **Compression**: Gzip compression for better performance
+- **Caching**: Static file caching with proper headers
+
+### Docker Compose Changes
+
+Key changes made to `docker-compose.yml`:
+
+1. **Added Nginx service** with SSL support
+2. **Updated port mappings**:
+   - Nginx: 80 (HTTP) → 443 (HTTPS redirect)
+   - Nginx: 443 (HTTPS)
+   - Backend/Frontend: Internal only (no external ports)
+3. **Updated environment variables** for HTTPS URLs
+4. **Added SSL volume mount** for certificate management
+
+### Environment Variables
+
+Updated environment variables for HTTPS:
+
+```yaml
+# Backend CORS origins (now includes HTTPS)
+ALLOWED_ORIGINS: '["https://blindfoldcubing.com", "https://www.blindfoldcubing.com", "https://localhost", ...]'
+
+# Frontend API URL (now HTTPS)
+API_BASE_URL: https://blindfoldcubing.com/api/v1
+```
+
+## 🛠️ Deployment Commands
+
+### Start the Application
+
+```bash
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Check service status
+docker-compose ps
+```
+
+### Stop the Application
+
+```bash
+# Stop all services
+docker-compose down
+
+# Stop and remove volumes (⚠️ deletes database data)
+docker-compose down -v
+```
+
+### Update the Application
+
+```bash
+# Pull latest changes
+git pull
+
+# Rebuild and restart
+docker-compose up -d --build
+
+# Or restart specific service
+docker-compose restart nginx
+```
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+1. **SSL Certificate Errors**
+   ```bash
+   # Check certificate files
+   ls -la ssl/
+   
+   # Verify certificate
+   openssl x509 -in ssl/cert.pem -text -noout
+   ```
+
+2. **Port Conflicts**
+   ```bash
+   # Check if ports 80/443 are in use
+   sudo netstat -tlnp | grep -E ':(80|443)'
+   
+   # Stop conflicting services
+   sudo systemctl stop apache2  # or nginx, etc.
+   ```
+
+3. **Container Issues**
+   ```bash
+   # Check container logs
+   docker-compose logs nginx
+   docker-compose logs backend
+   docker-compose logs frontend
+   
+   # Restart specific service
+   docker-compose restart nginx
+   ```
+
+4. **CORS Issues**
+   - Verify `ALLOWED_ORIGINS` includes your HTTPS domain
+   - Check browser developer tools for CORS errors
+   - Ensure API calls use HTTPS URLs
+
+### Health Checks
+
+```bash
+# Check if services are running
+curl -k https://localhost/health
+
+# Check SSL certificate
+openssl s_client -connect blindfoldcubing.com:443 -servername blindfoldcubing.com
+
+# Test API endpoints
+curl -k https://blindfoldcubing.com/api/v1/health
+```
+
+## 🔄 SSL Certificate Renewal
+
+### Let's Encrypt Auto-Renewal
+
+```bash
+# Add to crontab for automatic renewal
+echo '0 12 * * * /usr/bin/certbot renew --quiet && docker-compose restart nginx' | crontab -
+
+# Test renewal
+certbot renew --dry-run
+```
+
+### Manual Renewal
+
+```bash
+# Renew certificate
+certbot renew
+
+# Copy renewed certificates
+cp /etc/letsencrypt/live/blindfoldcubing.com/fullchain.pem ssl/cert.pem
+cp /etc/letsencrypt/live/blindfoldcubing.com/privkey.pem ssl/key.pem
+
+# Restart nginx
+docker-compose restart nginx
+```
+
+## 📊 Performance Optimization
+
+### Nginx Optimizations
+
+The configuration includes several performance optimizations:
+
+- **HTTP/2**: Enabled for better multiplexing
+- **Gzip Compression**: Reduces bandwidth usage
+- **Static File Caching**: Long-term caching for assets
+- **Connection Pooling**: Efficient upstream connections
+
+### Monitoring
+
+```bash
+# Monitor nginx access logs
+docker-compose logs -f nginx
+
+# Check SSL certificate expiration
+openssl x509 -in ssl/cert.pem -noout -dates
+
+# Monitor resource usage
+docker stats
+```
+
+## 🔐 Security Considerations
+
+### Production Security Checklist
+
+- [ ] Use Let's Encrypt or trusted CA certificates
+- [ ] Enable HSTS headers (already configured)
+- [ ] Set up proper firewall rules
+- [ ] Regular security updates
+- [ ] Monitor SSL certificate expiration
+- [ ] Use strong SSL ciphers (already configured)
+- [ ] Implement rate limiting (already configured)
+
+### Firewall Configuration
+
+```bash
+# Allow HTTPS traffic
+sudo ufw allow 443/tcp
+sudo ufw allow 80/tcp
+
+# Block direct access to backend/frontend
+sudo ufw deny 3000/tcp
+sudo ufw deny 8000/tcp
+```
+
+## 📝 Environment-Specific Configuration
+
+### Development
+
+```bash
+# Use self-signed certificates
+./ssl/setup-production-ssl.sh --self-signed localhost
+docker-compose up -d
+```
+
+### Staging
+
+```bash
+# Use Let's Encrypt staging environment
+certbot certonly --staging -d staging.blindfoldcubing.com
+```
+
+### Production
+
+```bash
+# Use production Let's Encrypt certificates
+./ssl/setup-production-ssl.sh blindfoldcubing.com
+docker-compose up -d
+```
+
+## 🆘 Support
+
+If you encounter issues:
+
+1. Check the logs: `docker-compose logs`
+2. Verify SSL certificates: `openssl x509 -in ssl/cert.pem -text`
+3. Test connectivity: `curl -k https://blindfoldcubing.com/health`
+4. Check firewall rules: `sudo ufw status`
+
+For additional help, refer to the main documentation or create an issue in the repository.

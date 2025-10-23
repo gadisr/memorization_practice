@@ -86,7 +86,7 @@ export async function getUserSessions(
     ...(drillType ? { drill_type: drillType } : {})
   });
   
-  const response = await fetch(`${API_BASE_URL}/sessions?${params}`, { headers });
+  const response = await fetch(`${API_BASE_URL}/sessions/?${params}`, { headers });
   
   if (!response.ok) throw new Error('Failed to fetch sessions');
   
