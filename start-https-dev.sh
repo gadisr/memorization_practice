@@ -24,8 +24,8 @@ echo ""
 chmod 644 ssl/cert.pem
 chmod 600 ssl/key.pem
 
-echo "🐳 Starting Docker services..."
-docker-compose up -d
+echo "🐳 Starting Docker services with development SSL..."
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 echo ""
 echo "⏳ Waiting for services to start..."

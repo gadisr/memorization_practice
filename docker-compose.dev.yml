@@ -1,0 +1,13 @@
+# Development override for docker-compose.yml
+# This uses self-signed certificates for local development
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    # Remove volume mount for development (uses self-signed certs from container)
+    volumes: []

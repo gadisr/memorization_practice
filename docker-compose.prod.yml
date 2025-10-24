@@ -1,0 +1,21 @@
+# Production override for docker-compose.yml
+# This excludes the local PostgreSQL container and uses managed database
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  # Remove postgres service for production (use managed database)
+  postgres:
+    profiles:
+      - local-only
+
+  # Update backend to not depend on postgres
+  backend:
+    depends_on: []
+    environment:
+      # Override with production environment variables
+      DATABASE_URL: ${DATABASE_URL}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+      FIREBASE_CREDENTIALS_PATH: ${FIREBASE_CREDENTIALS_PATH}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}

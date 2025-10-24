@@ -20,10 +20,10 @@ services:
     build: ./backend
     container_name: bld_trainer_api
     environment:
-      DATABASE_URL: postgresql://bld_user:bld_password@postgres:5432/bld_trainer
-      FIREBASE_PROJECT_ID: cube-trainer-ce95a
-      FIREBASE_CREDENTIALS_PATH: /app/firebase-credentials.json
-      ALLOWED_ORIGINS: '["https://blindfoldcubing.com", "https://www.blindfoldcubing.com", "https://localhost", "https://64.23.137.68", "http://localhost:3000", "http://localhost:8000", "http://frontend:3000", "http://64.23.137.68:3000"]'
+      DATABASE_URL: ${DATABASE_URL:-postgresql://bld_user:bld_password@postgres:5432/bld_trainer}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID:-cube-trainer-ce95a}
+      FIREBASE_CREDENTIALS_PATH: ${FIREBASE_CREDENTIALS_PATH:-/app/firebase-credentials.json}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-'["https://blindfoldcubing.com", "https://www.blindfoldcubing.com", "https://localhost", "https://64.23.137.68", "http://localhost:3000", "http://localhost:8000", "http://frontend:3000", "http://64.23.137.68:3000"]'}
     expose:
       - "8000"
     depends_on:
@@ -46,7 +46,9 @@ services:
       - backend
 
   nginx:
-    build: ./nginx
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: bld_trainer_nginx
     ports:
       - "80:80"

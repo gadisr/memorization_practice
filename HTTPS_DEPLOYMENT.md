@@ -4,16 +4,25 @@ This guide explains how to deploy your BLD Memory Trainer application with HTTPS
 
 ## 🏗️ Architecture Overview
 
-The HTTPS deployment uses the following architecture:
+The HTTPS deployment supports two architectures:
 
+### Development Architecture
 ```
-Internet → Nginx (Port 443/80) → Frontend (Port 3000) + Backend (Port 8000)
+Internet → Nginx (Port 443/80) → Frontend (Port 3000) + Backend (Port 8000) + PostgreSQL (Port 5432)
 ```
 
+### Production Architecture
+```
+Internet → Nginx (Port 443/80) → Frontend (Port 3000) + Backend (Port 8000) → Managed PostgreSQL
+```
+
+**Components:**
 - **Nginx**: Reverse proxy with SSL/TLS termination
 - **Frontend**: React application served on port 3000
 - **Backend**: FastAPI application on port 8000
-- **PostgreSQL**: Database on port 5432
+- **PostgreSQL**: 
+  - **Development**: Docker container on port 5432
+  - **Production**: Managed database service (AWS RDS, Google Cloud SQL, etc.)
 
 ## 🚀 Quick Start
 
@@ -23,27 +32,84 @@ For development or testing with self-signed certificates:
 
 ```bash
 # Start the application with self-signed SSL
-docker-compose up -d
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 # Your application will be available at:
-# https://localhost (with SSL warning)
-# http://localhost (redirects to HTTPS)
+# https://blindfoldcubing.com (with SSL warning)
+# http://blindfoldcubing.com (redirects to HTTPS)
 ```
 
 ### 2. Production Setup
 
-For production with real SSL certificates:
+For production with real SSL certificates and managed PostgreSQL:
+
+```bash
+# 1. Configure production environment
+cp production.env.example production.env
+# Edit production.env with your managed database credentials
+
+# 2. Deploy with production script
+./deploy-production.sh
+
+# Your application will be available at:
+# https://blindfoldcubing.com
+```
+
+### 3. Manual Production Setup
+
+If you prefer manual setup:
 
 ```bash
 # 1. Set up SSL certificates
 ./ssl/setup-production-ssl.sh blindfoldcubing.com
 
-# 2. Start the application
-docker-compose up -d
+# 2. Configure environment variables
+export DATABASE_URL="postgresql://user:pass@your-managed-db:5432/dbname"
+export FIREBASE_PROJECT_ID="your-project-id"
+export FIREBASE_CREDENTIALS_PATH="/app/firebase-credentials.json"
+export ALLOWED_ORIGINS='["https://blindfoldcubing.com", "https://www.blindfoldcubing.com"]'
 
-# Your application will be available at:
-# https://blindfoldcubing.com
+# 3. Start production services (without PostgreSQL)
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
+
+## 🗄️ Database Configuration
+
+The deployment supports two database modes:
+
+### Development Mode (Docker PostgreSQL)
+- **Use case**: Local development and testing
+- **Database**: PostgreSQL container in Docker
+- **Connection**: `postgresql://bld_user:bld_password@postgres:5432/bld_trainer`
+- **Command**: `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d`
+- **Pros**: Self-contained, no external dependencies
+- **Cons**: Data not persistent, not suitable for production
+
+### Production Mode (Managed PostgreSQL)
+- **Use case**: Live production deployment
+- **Database**: Managed service (AWS RDS, Google Cloud SQL, Azure Database, etc.)
+- **Connection**: Provided via `DATABASE_URL` environment variable
+- **Command**: `./deploy-production.sh` or `docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
+- **Pros**: Scalable, managed, persistent, production-ready
+- **Cons**: Requires external service, costs money
+
+## 🔒 SSL Certificate Strategy
+
+The deployment supports two SSL certificate modes:
+
+### Development Mode (Self-Signed Certificates)
+- **Use case**: Local development and testing
+- **Certificate source**: Generated inside the nginx container
+- **Command**: `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d`
+- **Pros**: No external dependencies, works offline
+- **Cons**: Browser security warnings, not trusted by browsers
+
+### Production Mode (Let's Encrypt Certificates)
+- **Use case**: Live production deployment
+- **Certificate source**: Generated on host system and mounted into container
+- **Command**: `./ssl/setup-production-ssl.sh blindfoldcubing.com && docker-compose up -d`
+- **Pros**: Trusted by browsers, automatic renewal
+- **Cons**: Requires internet access, domain DNS setup
 
 ## 🔒 SSL Certificate Options
 
@@ -117,40 +183,48 @@ API_BASE_URL: https://blindfoldcubing.com/api/v1
 
 ## 🛠️ Deployment Commands
 
-### Start the Application
+### Development Commands
 
 ```bash
-# Start all services
-docker-compose up -d
+# Start development environment (with Docker PostgreSQL)
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 # View logs
-docker-compose logs -f
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs -f
 
-# Check service status
-docker-compose ps
-```
-
-### Stop the Application
-
-```bash
-# Stop all services
-docker-compose down
+# Stop development environment
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
 
 # Stop and remove volumes (⚠️ deletes database data)
-docker-compose down -v
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
+```
+
+### Production Commands
+
+```bash
+# Deploy production environment (with managed PostgreSQL)
+./deploy-production.sh
+
+# Or manually:
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+# View logs
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml logs -f
+
+# Stop production environment
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
 ```
 
 ### Update the Application
 
 ```bash
-# Pull latest changes
+# Development
 git pull
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
-# Rebuild and restart
-docker-compose up -d --build
-
-# Or restart specific service
-docker-compose restart nginx
+# Production
+git pull
+./deploy-production.sh
 ```
 
 ## 🔍 Troubleshooting
