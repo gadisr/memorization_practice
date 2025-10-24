@@ -2,8 +2,6 @@
 
 from pydantic_settings import BaseSettings
 from typing import Optional, List
-from pydantic import field_validator
-import json
 
 
 class Settings(BaseSettings):
@@ -21,24 +19,13 @@ class Settings(BaseSettings):
     API_V1_PREFIX: str = "/api/v1"
     PROJECT_NAME: str = "BLD Memory Trainer API"
     
-    # CORS
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:8000", "http://localhost:3000"]
-    
-    @field_validator('ALLOWED_ORIGINS', mode='before')
-    @classmethod
-    def parse_allowed_origins(cls, v):
-        """Parse ALLOWED_ORIGINS from JSON string, comma-separated string, or return default list."""
-        if isinstance(v, str):
-            # First try to parse as JSON
-            try:
-                return json.loads(v)
-            except json.JSONDecodeError:
-                # If JSON parsing fails, try comma-separated string
-                if ',' in v:
-                    return [origin.strip() for origin in v.split(',') if origin.strip()]
-                # If no comma, treat as single origin
-                return [v.strip()] if v.strip() else ["http://localhost:8000", "http://localhost:3000"]
-        return v
+    # CORS - Production defaults
+    ALLOWED_ORIGINS: List[str] = [
+        "https://blindfoldcubing.com",
+        "https://www.blindfoldcubing.com",
+        "http://localhost:8000",  # For development
+        "http://localhost:3000"   # For development
+    ]
     
     class Config:
         env_file = ".env"
