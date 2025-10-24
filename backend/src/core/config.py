@@ -27,12 +27,17 @@ class Settings(BaseSettings):
     @field_validator('ALLOWED_ORIGINS', mode='before')
     @classmethod
     def parse_allowed_origins(cls, v):
-        """Parse ALLOWED_ORIGINS from JSON string or return default list."""
+        """Parse ALLOWED_ORIGINS from JSON string, comma-separated string, or return default list."""
         if isinstance(v, str):
+            # First try to parse as JSON
             try:
                 return json.loads(v)
             except json.JSONDecodeError:
-                return ["http://localhost:8000", "http://localhost:3000"]
+                # If JSON parsing fails, try comma-separated string
+                if ',' in v:
+                    return [origin.strip() for origin in v.split(',') if origin.strip()]
+                # If no comma, treat as single origin
+                return [v.strip()] if v.strip() else ["http://localhost:8000", "http://localhost:3000"]
         return v
     
     class Config:
