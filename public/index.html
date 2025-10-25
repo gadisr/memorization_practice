@@ -244,6 +244,49 @@
         </div>
       </div>
 
+      <!-- Progress Charts Section -->
+      <div class="charts-section">
+        <div class="chart-controls">
+          <div class="control-group">
+            <label for="time-range-select">Time Range:</label>
+            <select id="time-range-select" class="input-field">
+              <option value="7">Last 7 days</option>
+              <option value="30" selected>Last 30 days</option>
+              <option value="90">Last 90 days</option>
+              <option value="all">All time</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="drill-filter-select">Drill Type:</label>
+            <select id="drill-filter-select" class="input-field">
+              <option value="all" selected>All Drills</option>
+              <option value="flash">Flash Pairs</option>
+              <option value="chain">Chain Drills</option>
+              <option value="notation">Notation Drills</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="charts-grid">
+          <div class="chart-container">
+            <h3>Accuracy Progress</h3>
+            <canvas id="accuracy-chart"></canvas>
+          </div>
+          <div class="chart-container">
+            <h3>Speed Progress</h3>
+            <canvas id="speed-chart"></canvas>
+          </div>
+          <div class="chart-container">
+            <h3>Quality Trends</h3>
+            <canvas id="quality-chart"></canvas>
+          </div>
+          <div class="chart-container">
+            <h3>Drill Comparison</h3>
+            <canvas id="comparison-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <h2>Recent Sessions</h2>
         <div id="sessions-table-container">

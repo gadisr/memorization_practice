@@ -224,6 +224,15 @@ export function renderRecallFeedback(validation: RecallValidation): void {
 export function renderDashboard(sessions: SessionData[], notationSessions: any[] = []): void {
   renderDashboardStats(sessions, notationSessions);
   renderSessionsTable(sessions, notationSessions);
+  
+  // Initialize charts if Chart.js is available
+  if (typeof window !== 'undefined' && (window as any).Chart) {
+    import('./chart-renderer.js').then(({ initializeCharts }) => {
+      initializeCharts(sessions, notationSessions);
+    }).catch(error => {
+      console.error('Failed to load chart renderer:', error);
+    });
+  }
 }
 
 function renderDashboardStats(sessions: SessionData[], notationSessions: any[] = []): void {

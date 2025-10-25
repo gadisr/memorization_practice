@@ -41,6 +41,7 @@ import { validateEdgeAnswer, validateCornerAnswer } from './services/notation-va
 import { renderEdgeSquares, renderCornerSquares, renderNotationResults } from './ui/notation-renderer.js';
 import { TracingRenderer } from './ui/tracing-renderer.js';
 import { OnboardingManager } from './onboarding/onboarding-manager.js';
+import { loadChartJS } from './ui/chart-renderer.js';
 
 // Application state
 let currentPairIndex = 0;
@@ -105,6 +106,9 @@ function attachEventListeners(): void {
   if (viewDashboardBtn) {
     viewDashboardBtn.addEventListener('click', async () => {
       try {
+        // Load Chart.js first
+        await loadChartJS();
+        
         const sessions = await getAllSessions();
         const notationSessions = await getAllNotationSessions();
         console.log('Loaded sessions:', sessions.length, 'notation sessions:', notationSessions.length);
@@ -245,6 +249,18 @@ function attachEventListeners(): void {
   
   if (discardNotationBtn) {
     discardNotationBtn.addEventListener('click', handleDiscardNotation);
+  }
+  
+  // Chart controls
+  const timeRangeSelect = document.getElementById('time-range-select') as HTMLSelectElement;
+  const drillFilterSelect = document.getElementById('drill-filter-select') as HTMLSelectElement;
+  
+  if (timeRangeSelect) {
+    timeRangeSelect.addEventListener('change', handleChartFilterChange);
+  }
+  
+  if (drillFilterSelect) {
+    drillFilterSelect.addEventListener('change', handleChartFilterChange);
   }
 }
 
@@ -771,6 +787,30 @@ function setupTutorialButtons(): void {
     // User hasn't completed onboarding, show start button
     if (startTutorialBtn) startTutorialBtn.style.display = 'inline-block';
     if (reviewTutorialBtn) reviewTutorialBtn.style.display = 'none';
+  }
+}
+
+// Handle chart filter changes
+async function handleChartFilterChange(): Promise<void> {
+  try {
+    const timeRangeSelect = document.getElementById('time-range-select') as HTMLSelectElement;
+    const drillFilterSelect = document.getElementById('drill-filter-select') as HTMLSelectElement;
+    
+    if (!timeRangeSelect || !drillFilterSelect) return;
+    
+    const timeRange = timeRangeSelect.value;
+    const drillFilter = drillFilterSelect.value;
+    
+    // Load sessions
+    const sessions = await getAllSessions();
+    const notationSessions = await getAllNotationSessions();
+    
+    // Update charts with new filters
+    const { updateChartsWithFilters } = await import('./ui/chart-renderer.js');
+    updateChartsWithFilters(timeRange, drillFilter, sessions, notationSessions);
+    
+  } catch (error) {
+    console.error('Error updating charts with filters:', error);
   }
 }
 

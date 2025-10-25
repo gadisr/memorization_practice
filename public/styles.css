@@ -1194,6 +1194,119 @@ tr:hover {
   transform: translateY(0);
 }
 
+/* Chart Styles */
+.charts-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.chart-controls {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-group label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.control-group select {
+  min-width: 150px;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.control-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.chart-container {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.chart-container h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: 300px !important;
+  max-height: 300px;
+}
+
+/* Chart responsive behavior */
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .control-group {
+    width: 100%;
+  }
+  
+  .control-group select {
+    width: 100%;
+  }
+  
+  .chart-container canvas {
+    height: 250px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .charts-section {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .chart-container {
+    padding: 0.75rem;
+  }
+  
+  .chart-container canvas {
+    height: 200px !important;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .intro-link {
