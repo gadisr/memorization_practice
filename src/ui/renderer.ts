@@ -2,7 +2,7 @@
  * UI rendering functions
  */
 
-import { DrillConfig, QualityMetric, SessionData, DrillType, RecallValidation } from '../types.js';
+import { DrillConfig, QualityMetric, SessionData, DrillType, RecallValidation, NotationSessionData } from '../types.js';
 import { getQualityScaleLabel, getQualityScaleMax } from '../services/quality-adapter.js';
 import { formatTime } from '../services/timer.js';
 import { isOrderRequired } from '../services/recall-validator.js';
@@ -295,6 +295,11 @@ function renderSessionsTable(sessions: SessionData[], notationSessions: any[] = 
   
   recentSessions.forEach(session => {
     const row = document.createElement('tr');
+    row.className = 'clickable-row';
+    row.style.cursor = 'pointer';
+    
+    // Store session data for click handler
+    (row as any).sessionData = session;
     
     const dateCell = document.createElement('td');
     dateCell.textContent = formatSessionDate(session.date);
@@ -357,6 +362,11 @@ function renderSessionsTable(sessions: SessionData[], notationSessions: any[] = 
     row.appendChild(totalTimeCell);
     row.appendChild(accuracyCell);
     row.appendChild(qualityCell);
+    
+    // Add click handler to open session detail modal
+    row.addEventListener('click', () => {
+      showSessionDetailModal(session);
+    });
     
     tbody.appendChild(row);
   });
@@ -450,6 +460,21 @@ export function hideModal(): void {
   }
 }
 
+export function showSessionDetailModal(session: any): void {
+  const modal = document.getElementById('session-detail-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    renderSessionDetail(session, session.isNotation);
+  }
+}
+
+export function hideSessionDetailModal(): void {
+  const modal = document.getElementById('session-detail-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
 export function showTechniqueIntro(introHtml: string): void {
   showModal('About BLD Memorization Technique', introHtml);
 }
@@ -475,4 +500,181 @@ export function showDrillInfo(config: DrillConfig): void {
   showModal(`${drillName} - Drill Information`, content);
 }
 
-
+export function renderSessionDetail(session: SessionData | NotationSessionData, isNotation: boolean = false): void {
+  const titleEl = document.getElementById('session-detail-title');
+  const bodyEl = document.getElementById('session-detail-body');
+  
+  if (!titleEl || !bodyEl) return;
+  
+  if (isNotation) {
+    const notationSession = session as NotationSessionData;
+    const drillTypeName = notationSession.drillType === DrillType.EDGE_NOTATION_DRILL ? 'Edge Notation' : 'Corner Notation';
+    titleEl.textContent = `Session Details - ${drillTypeName}`;
+    
+    const totalTime = notationSession.attempts.reduce((sum, a) => sum + a.timeSeconds, 0);
+    
+    bodyEl.innerHTML = `
+      <div class="session-detail-section">
+        <h3>Summary</h3>
+        <div class="result-stats">
+          <div class="stat">
+            <span class="stat-label">Date:</span>
+            <span class="stat-value">${formatSessionDate(notationSession.date)}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Accuracy:</span>
+            <span class="stat-value">${notationSession.correctCount} / ${notationSession.totalPieces} (${notationSession.accuracy.toFixed(1)}%)</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Average Time:</span>
+            <span class="stat-value">${notationSession.averageTime.toFixed(2)}s per piece</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Total Time:</span>
+            <span class="stat-value">${totalTime.toFixed(2)}s</span>
+          </div>
+        </div>
+      </div>
+      
+      ${notationSession.notes ? `
+        <div class="session-detail-section">
+          <h3>Notes</h3>
+          <p>${notationSession.notes}</p>
+        </div>
+      ` : ''}
+      
+      <div class="session-detail-section">
+        <h3>Attempts Breakdown</h3>
+        <div class="attempts-list">
+          ${notationSession.attempts.map((attempt, index) => `
+            <div class="attempt-item ${attempt.isCorrect ? 'correct' : 'incorrect'}">
+              <span class="attempt-number">#${index + 1}</span>
+              <span class="attempt-colors">${attempt.pieceColors.join(' - ')}</span>
+              <span class="attempt-answer">
+                Your answer: <strong>${attempt.userAnswer || '(no answer)'}</strong>
+                ${!attempt.isCorrect ? `<br>Correct: <strong>${attempt.correctAnswer}</strong>` : ''}
+              </span>
+              <span class="attempt-time">${attempt.timeSeconds.toFixed(2)}s</span>
+              <span class="attempt-icon">${attempt.isCorrect ? '✓' : '✗'}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  } else {
+    const regularSession = session as SessionData;
+    titleEl.textContent = `Session Details - ${formatDrillName(regularSession.drillType)}`;
+    
+    const hasRecallValidation = regularSession.recallValidation !== undefined;
+    const accuracyDisplay = hasRecallValidation 
+      ? regularSession.recallValidation!.accuracy.toFixed(0) + '%'
+      : regularSession.recallAccuracy.toFixed(0) + '%';
+    
+    bodyEl.innerHTML = `
+      <div class="session-detail-section">
+        <h3>Summary</h3>
+        <div class="result-stats">
+          <div class="stat">
+            <span class="stat-label">Date:</span>
+            <span class="stat-value">${formatSessionDate(regularSession.date)}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Pairs:</span>
+            <span class="stat-value">${regularSession.pairCount}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Accuracy:</span>
+            <span class="stat-value">${accuracyDisplay}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Avg Time/Pair:</span>
+            <span class="stat-value">${formatTime(regularSession.averageTime)}</span>
+          </div>
+          ${regularSession.totalTime ? `
+            <div class="stat">
+              <span class="stat-label">Total Time:</span>
+              <span class="stat-value">${formatTime(regularSession.totalTime)}</span>
+            </div>
+          ` : ''}
+          ${regularSession.vividness !== undefined ? `
+            <div class="stat">
+              <span class="stat-label">Vividness:</span>
+              <span class="stat-value">${regularSession.vividness}</span>
+            </div>
+          ` : ''}
+          ${regularSession.flow !== undefined ? `
+            <div class="stat">
+              <span class="stat-label">Flow:</span>
+              <span class="stat-value">${regularSession.flow}</span>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+      
+      ${hasRecallValidation ? `
+        <div class="session-detail-section">
+          <h3>Recall Breakdown</h3>
+          <div class="recall-stats">
+            <div class="recall-stat">
+              <div class="stat-value" style="color: #4CAF50">${regularSession.recallValidation!.correctPairs.length}</div>
+              <div class="stat-label">Correct</div>
+            </div>
+            <div class="recall-stat">
+              <div class="stat-value" style="color: #F44336">${regularSession.recallValidation!.missedPairs.length}</div>
+              <div class="stat-label">Missed</div>
+            </div>
+            ${regularSession.recallValidation!.incorrectPairs.length > 0 ? `
+              <div class="recall-stat">
+                <div class="stat-value" style="color: #FF9800">${regularSession.recallValidation!.incorrectPairs.length}</div>
+                <div class="stat-label">Wrong Position</div>
+              </div>
+            ` : ''}
+            ${regularSession.recallValidation!.extraPairs.length > 0 ? `
+              <div class="recall-stat">
+                <div class="stat-value" style="color: #9E9E9E">${regularSession.recallValidation!.extraPairs.length}</div>
+                <div class="stat-label">Extra</div>
+              </div>
+            ` : ''}
+          </div>
+          
+          <div class="recall-details">
+            ${regularSession.recallValidation!.correctPairs.map(pair => `
+              <div class="recall-item correct">
+                <span class="recall-icon">✓</span>
+                <span>${pair}</span>
+              </div>
+            `).join('')}
+            ${regularSession.recallValidation!.incorrectPairs.map(pair => `
+              <div class="recall-item incorrect">
+                <span class="recall-icon">✗</span>
+                <span>${pair}</span>
+                <span style="margin-left: auto; opacity: 0.7;">Wrong position</span>
+              </div>
+            `).join('')}
+            ${regularSession.recallValidation!.missedPairs.map(pair => `
+              <div class="recall-item missed">
+                <span class="recall-icon">⚠</span>
+                <span>${pair}</span>
+                <span style="margin-left: auto; opacity: 0.7;">Not recalled</span>
+              </div>
+            `).join('')}
+            ${regularSession.recallValidation!.extraPairs.map(pair => `
+              <div class="recall-item extra">
+                <span class="recall-icon">ℹ</span>
+                <span>${pair}</span>
+                <span style="margin-left: auto; opacity: 0.7;">Not in session</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+      
+      ${regularSession.notes ? `
+        <div class="session-detail-section">
+          <h3>Notes</h3>
+          <p>${regularSession.notes}</p>
+        </div>
+      ` : ''}
+    `;
+  }
+}
