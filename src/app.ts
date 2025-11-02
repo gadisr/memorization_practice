@@ -26,7 +26,8 @@ import {
   clearPairCountWarning,
   showTechniqueIntro,
   showDrillInfo,
-  hideModal
+  hideModal,
+  hideSessionDetailModal
 } from './ui/renderer.js';
 import { initializeKeyboardHandler, setKeyboardCallbacks, clearKeyboardCallbacks } from './ui/keyboard-handler.js';
 import {
@@ -42,9 +43,11 @@ import { renderEdgeSquares, renderCornerSquares, renderNotationResults } from '.
 import { TracingRenderer } from './ui/tracing-renderer.js';
 import { OnboardingManager } from './onboarding/onboarding-manager.js';
 import { loadChartJS } from './ui/chart-renderer.js';
+import { getSessionRank, getNotationSessionRank } from './services/session-ranker.js';
 
 // Application state
 let currentPairIndex = 0;
+let furthestPairIndex = 0;
 let currentTimer = 0;
 
 // Notation training state
@@ -176,9 +179,36 @@ function attachEventListeners(): void {
     });
   }
   
+  // Session detail modal close buttons
+  const closeSessionDetailBtn = document.getElementById('close-session-detail-btn');
+  const sessionDetailCloseFooterBtn = document.getElementById('session-detail-close-footer-btn');
+  const sessionDetailModal = document.getElementById('session-detail-modal');
+  
+  if (closeSessionDetailBtn) {
+    closeSessionDetailBtn.addEventListener('click', hideSessionDetailModal);
+  }
+  
+  if (sessionDetailCloseFooterBtn) {
+    sessionDetailCloseFooterBtn.addEventListener('click', hideSessionDetailModal);
+  }
+  
+  // Close session detail modal when clicking outside
+  if (sessionDetailModal) {
+    sessionDetailModal.addEventListener('click', (e) => {
+      if (e.target === sessionDetailModal) {
+        hideSessionDetailModal();
+      }
+    });
+  }
+  
   // Session screen
+  const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
   const cancelSessionBtn = document.getElementById('cancel-session-btn');
+  
+  if (prevBtn) {
+    prevBtn.addEventListener('click', handlePreviousPair);
+  }
   
   if (nextBtn) {
     nextBtn.addEventListener('click', handleNextPair);
@@ -334,6 +364,8 @@ async function handleStartSession(): Promise<void> {
   try {
     const session = await createSession(drillType, pairCount);
     currentPairIndex = 0;
+    furthestPairIndex = 0;
+    currentTimer = 0; // Reset timer when starting new session
     
     showScreen('session-screen');
     displayCurrentPair();
@@ -341,6 +373,8 @@ async function handleStartSession(): Promise<void> {
     // Set keyboard callbacks for session
     setKeyboardCallbacks({
       space: handleNextPair,
+      arrowLeft: handlePreviousPair,
+      arrowRight: handleNextPair,
       escape: handleCancelSession
     });
   } catch (error) {
@@ -356,7 +390,37 @@ function displayCurrentPair(): void {
   const currentPair = session.pairs[currentPairIndex];
   if (currentPair) {
     renderSessionScreen(currentPair.pair, currentPairIndex, session.pairCount);
-    currentTimer = startTimer();
+    
+    // Timer management: timer only starts when advancing to new furthest pair
+    // Start timer if at furthest pair and timer not yet started (initial case)
+    if (currentPairIndex === furthestPairIndex && currentTimer === 0) {
+      currentTimer = startTimer();
+    }
+    // Don't restart timer when returning to furthest pair or viewing previous pairs
+    
+    // Update Previous button state
+    updatePreviousButtonState();
+  }
+}
+
+function handlePreviousPair(): void {
+  const session = getActiveSession();
+  if (!session) return;
+  
+  // Don't go before first pair
+  if (currentPairIndex === 0) return;
+  
+  // Decrement index (timer keeps running for furthest pair)
+  currentPairIndex--;
+  
+  // Update display (doesn't affect timer)
+  displayCurrentPair();
+}
+
+function updatePreviousButtonState(): void {
+  const prevBtn = document.getElementById('prev-btn') as HTMLButtonElement;
+  if (prevBtn) {
+    prevBtn.disabled = currentPairIndex === 0;
   }
 }
 
@@ -364,11 +428,19 @@ function handleNextPair(): void {
   const session = getActiveSession();
   if (!session) return;
   
-  // Stop timer and record timing
-  const timing = stopTimer(currentTimer);
-  recordPairTiming(timing);
+  // If at furthest pair, stop timer and record timing
+  if (currentPairIndex === furthestPairIndex) {
+    const timing = stopTimer(currentTimer);
+    recordPairTiming(timing);
+  }
   
   currentPairIndex++;
+  
+  // If moving to a new furthest pair, update furthestPairIndex and start new timer
+  if (currentPairIndex > furthestPairIndex) {
+    furthestPairIndex = currentPairIndex;
+    currentTimer = startTimer();
+  }
   
   if (currentPairIndex < session.pairCount) {
     // More pairs to go
@@ -437,13 +509,16 @@ async function handleSaveSession(): Promise<void> {
   try {
     const completedSession = await finalizeSession(userRecall, quality, notes || undefined);
     
+    // Calculate and display ranking
+    const rankInfo = await getSessionRank(completedSession);
+    
     // Show validation feedback
     if (completedSession.recallValidation) {
       renderRecallFeedback(completedSession.recallValidation);
       
       // Delay navigation to let user see results
       setTimeout(async () => {
-        showNotification('Session saved successfully!', 'success');
+        showNotification(`Session saved successfully! ${rankInfo.message}`, 'success');
         const sessions = await getAllSessions();
         const notationSessions = await getAllNotationSessions();
         renderDashboard(sessions, notationSessions);
@@ -452,7 +527,7 @@ async function handleSaveSession(): Promise<void> {
       }, 3000);
     } else {
       // Fallback if validation not available
-      showNotification('Session saved successfully!', 'success');
+      showNotification(`Session saved successfully! ${rankInfo.message}`, 'success');
       const sessions = await getAllSessions();
       const notationSessions = await getAllNotationSessions();
       renderDashboard(sessions, notationSessions);
@@ -711,8 +786,11 @@ async function handleSaveNotation(): Promise<void> {
   const notes = notesInput?.value.trim() || undefined;
   
   try {
-    await finalizeNotationSession(notes);
-    showNotification('Notation training saved successfully!', 'success');
+    const completedSession = await finalizeNotationSession(notes);
+    
+    // Calculate and display ranking
+    const rankInfo = await getNotationSessionRank(completedSession);
+    showNotification(`Notation training saved successfully! ${rankInfo.message}`, 'success');
     
     // Navigate to dashboard
     const sessions = await getAllSessions();

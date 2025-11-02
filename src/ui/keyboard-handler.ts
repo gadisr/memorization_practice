@@ -7,6 +7,8 @@ export type KeyboardCallback = {
   enter?: () => void;
   escape?: () => void;
   numbers?: (num: number) => void;
+  arrowLeft?: () => void;
+  arrowRight?: () => void;
 };
 
 let currentCallbacks: KeyboardCallback = {};
@@ -60,6 +62,20 @@ function handleKeyPress(event: KeyboardEvent): void {
       if (currentCallbacks.numbers) {
         const num = parseInt(event.key, 10);
         currentCallbacks.numbers(num);
+      }
+      break;
+      
+    case 'ArrowLeft':
+      event.preventDefault();
+      if (currentCallbacks.arrowLeft) {
+        currentCallbacks.arrowLeft();
+      }
+      break;
+      
+    case 'ArrowRight':
+      event.preventDefault();
+      if (currentCallbacks.arrowRight) {
+        currentCallbacks.arrowRight();
       }
       break;
   }

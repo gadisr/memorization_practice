@@ -90,6 +90,22 @@
       </div>
     </div>
 
+    <!-- Session Detail Modal -->
+    <div id="session-detail-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="session-detail-title">Session Details</h2>
+          <button id="close-session-detail-btn" class="btn-close">&times;</button>
+        </div>
+        <div id="session-detail-body" class="modal-body">
+          <!-- Content will be dynamically inserted -->
+        </div>
+        <div class="modal-footer">
+          <button id="session-detail-close-footer-btn" class="btn btn-primary">Close</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Session Screen -->
     <div id="session-screen" class="screen hidden">
       <div class="session-header">
@@ -103,6 +119,7 @@
       </div>
 
       <div class="session-controls">
+        <button id="prev-btn" class="btn btn-large">Previous (←)</button>
         <button id="next-btn" class="btn btn-large btn-primary">Next (Space)</button>
       </div>
     </div>
