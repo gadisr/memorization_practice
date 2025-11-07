@@ -8,7 +8,7 @@ import http.server
 import socketserver
 import os
 
-PORT = 3000
+PORT = int(os.environ.get('PORT', '3000'))
 DIRECTORY = "."
 
 class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
@@ -24,18 +24,17 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
     
     def do_GET(self):
+        # Redirect root path to public/index.html
+        if self.path == '/' or self.path == '/public/' or self.path == '/public/index.html':
+            self.path = '/public/index.html'
+        
         # Check if this is an HTML file that needs API base URL injection
-        if self.path.endswith('.html') or self.path == '/' or self.path == '/public/' or self.path == '/public/index.html':
+        if self.path.endswith('.html') or self.path == '/public/index.html':
             # Get the API base URL from environment variable
             api_base_url = os.environ.get('API_BASE_URL', 'http://localhost:8000/api/v1')
             
             # Read the HTML file
-            if self.path == '/' or self.path == '/public/':
-                file_path = 'public/index.html'
-            elif self.path == '/public/index.html':
-                file_path = 'public/index.html'
-            else:
-                file_path = self.path.lstrip('/')
+            file_path = 'public/index.html' if self.path == '/public/index.html' else self.path.lstrip('/')
             
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
