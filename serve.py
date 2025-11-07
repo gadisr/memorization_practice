@@ -28,6 +28,13 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         if self.path == '/' or self.path == '/public/' or self.path == '/public/index.html':
             self.path = '/public/index.html'
         
+        # Fallback for assets under /public
+        resolved_path = self.translate_path(self.path)
+        if not os.path.exists(resolved_path):
+            fallback_path = f'/public{self.path}'
+            if os.path.exists(self.translate_path(fallback_path)):
+                self.path = fallback_path
+        
         # Check if this is an HTML file that needs API base URL injection
         if self.path.endswith('.html') or self.path == '/public/index.html':
             # Get the API base URL from environment variable
