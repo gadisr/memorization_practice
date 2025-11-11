@@ -275,6 +275,14 @@ export class OnboardingManager {
    * Check if user should see onboarding
    */
   public static shouldShowOnboarding(): boolean {
+    if (typeof window !== 'undefined') {
+      const forceFlag = localStorage.getItem('onboarding_force');
+      if (forceFlag === 'true') {
+        localStorage.removeItem('onboarding_force');
+        return true;
+      }
+    }
+
     // Don't show if already completed
     if (OnboardingManager.hasCompletedOnboarding()) {
       return false;

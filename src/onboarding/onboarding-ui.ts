@@ -3,6 +3,15 @@
  */
 
 import { OnboardingScreen, OnboardingProgress } from './onboarding-types.js';
+import { MEDIA_ASSETS, CALLOUT_CARDS, QUIZ_BANK } from './onboarding-data.js';
+
+function extractQuizId(data: unknown): string | undefined {
+  if (data && typeof data === 'object' && 'quizId' in data) {
+    const value = (data as { quizId?: unknown }).quizId;
+    return typeof value === 'string' ? value : undefined;
+  }
+  return undefined;
+}
 
 /**
  * Render an onboarding screen
@@ -30,8 +39,6 @@ export function renderOnboardingScreen(screen: OnboardingScreen, progress: Onboa
       <div class="onboarding-content">
         <h1 class="screen-title">${screen.title}</h1>
         <div class="screen-content">${screen.content}</div>
-        
-        ${screen.visualComponent ? `<div class="visual-component" id="visual-${screen.visualComponent}"></div>` : ''}
         
         <div class="interactive-elements">
           ${renderInteractiveElements(screen.interactiveElements || [])}
@@ -75,12 +82,42 @@ function renderInteractiveElements(elements: any[]): string {
         `;
       case 'demo':
         return `
-          <div class="interactive-demo" id="${element.id}" data-type="${element.data?.type || 'default'}">
-            <button class="btn btn-demo" data-action="demo" data-extra='${JSON.stringify(element.data)}'>
+          <div class="interactive-demo" data-type="${element.data?.type || 'default'}">
+            <button class="btn btn-demo" id="${element.id}" data-action="demo" data-extra='${JSON.stringify(element.data)}'>
               Try Interactive Demo
             </button>
           </div>
         `;
+      case 'quiz': {
+        const quizId = extractQuizId(element.data);
+        const quiz = quizId ? QUIZ_BANK[quizId] : undefined;
+        if (!quiz) {
+          return `
+            <div class="quiz-card quiz-missing" id="${element.id}">
+              <p>Quiz data not found.</p>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="quiz-card" id="${element.id}" data-quiz-id="${quiz.id}">
+            <p class="quiz-question">${quiz.question}</p>
+            ${quiz.prompt ? `<p class="quiz-prompt">${quiz.prompt}</p>` : ''}
+            <div class="quiz-options">
+              ${quiz.options.map(option => `
+                <button 
+                  type="button" 
+                  class="quiz-option" 
+                  data-option-id="${option.id}"
+                >
+                  ${option.label}
+                </button>
+              `).join('')}
+            </div>
+            <div class="quiz-feedback" aria-live="polite"></div>
+          </div>
+        `;
+      }
       default:
         return '';
     }
@@ -94,11 +131,10 @@ function generateNavigationDots(progress: OnboardingProgress): string {
   return Array.from({ length: progress.totalSteps }, (_, index) => {
     const stepNumber = index + 1;
     const isActive = stepNumber === progress.currentStep;
-    const isCompleted = progress.completedSteps.includes(progress.currentScreen);
     
     return `
       <div 
-        class="nav-dot ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}"
+        class="nav-dot ${isActive ? 'active' : ''}"
         data-step="${stepNumber}"
       ></div>
     `;
@@ -132,10 +168,24 @@ function attachScreenEventListeners(screen: OnboardingScreen): void {
     });
   }
 
+  if (nextBtn && screen.interactiveElements?.some(element => element.type === 'quiz')) {
+    nextBtn.setAttribute('disabled', 'true');
+    nextBtn.classList.add('btn-disabled');
+  }
+
   // Interactive elements
   screen.interactiveElements?.forEach(element => {
     const elementEl = document.getElementById(element.id);
-    if (elementEl) {
+    if (!elementEl) {
+      return;
+    }
+
+    if (element.type === 'quiz') {
+      setupQuiz(elementEl, extractQuizId(element.data));
+      return;
+    }
+
+    if (element.type === 'demo' || element.type === 'button') {
       elementEl.addEventListener('click', () => {
         window.dispatchEvent(new CustomEvent('onboardingAction', {
           detail: {
@@ -162,6 +212,10 @@ function attachScreenEventListeners(screen: OnboardingScreen): void {
       }));
     });
   });
+
+  hydrateMediaFrames();
+  hydrateCalloutStacks();
+  bindMediaToggleButtons();
 }
 
 /**
@@ -323,5 +377,159 @@ export function hideInfoModal(): void {
   const modal = document.getElementById('info-modal');
   if (modal) {
     modal.classList.add('hidden');
+  }
+}
+
+function hydrateMediaFrames(): void {
+  const frames = Array.from(document.querySelectorAll<HTMLElement>('.media-frame[data-media]'));
+  frames.forEach(frame => {
+    const assetId = frame.dataset.media;
+    if (!assetId) {
+      frame.innerHTML = '';
+      return;
+    }
+
+    const asset = MEDIA_ASSETS[assetId];
+    if (!asset) {
+      frame.innerHTML = `<div class="media-placeholder">Media asset "${assetId}" missing.</div>`;
+      return;
+    }
+
+    if (asset.type === 'image') {
+      frame.innerHTML = `
+        <figure>
+          <img src="${asset.src}" alt="${asset.alt}" />
+          ${asset.caption ? `<figcaption>${asset.caption}</figcaption>` : ''}
+        </figure>
+      `;
+    } else if (asset.type === 'animation' || asset.type === 'video') {
+      frame.innerHTML = `
+        <figure>
+          <video src="${asset.src}" ${asset.type === 'animation' ? 'loop autoplay muted playsinline' : 'controls'}></video>
+          ${asset.caption ? `<figcaption>${asset.caption}</figcaption>` : ''}
+        </figure>
+      `;
+    }
+  });
+}
+
+function hydrateCalloutStacks(): void {
+  const stacks = Array.from(document.querySelectorAll<HTMLElement>('.callout-stack[data-callout]'));
+  stacks.forEach(stack => {
+    const calloutId = stack.dataset.callout;
+    if (!calloutId) {
+      stack.innerHTML = '';
+      return;
+    }
+
+    const callout = CALLOUT_CARDS[calloutId];
+    if (!callout) {
+      stack.innerHTML = `<div class="callout-card callout-missing">Callout "${calloutId}" not found.</div>`;
+      return;
+    }
+
+    stack.innerHTML = `
+      <div class="callout-card callout-${callout.tone}">
+        ${callout.icon ? `<span class="callout-icon">${callout.icon}</span>` : ''}
+        <div class="callout-content">
+          <h3>${callout.title}</h3>
+          <p>${callout.body}</p>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function bindMediaToggleButtons(): void {
+  const toggleGroups = Array.from(document.querySelectorAll<HTMLElement>('.media-toggle'));
+  toggleGroups.forEach(group => {
+    const buttons = Array.from(group.querySelectorAll<HTMLButtonElement>('.media-toggle-btn'));
+    if (!buttons.length) return;
+
+    const contentContainer = group.nextElementSibling as HTMLElement | null;
+    if (!contentContainer || !contentContainer.classList.contains('media-frame')) return;
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        buttons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        const targetAssetId = button.dataset.media;
+        if (targetAssetId) {
+          contentContainer.dataset.media = targetAssetId;
+          hydrateMediaFrames();
+        }
+      });
+    });
+
+    // Set first button active by default if none selected
+    if (!buttons.some(btn => btn.classList.contains('active'))) {
+      buttons[0].classList.add('active');
+    }
+  });
+}
+
+function setupQuiz(element: HTMLElement, quizId?: string): void {
+  if (!quizId) {
+    return;
+  }
+
+  const quiz = QUIZ_BANK[quizId];
+  if (!quiz) {
+    element.classList.add('quiz-missing');
+    element.insertAdjacentHTML('beforeend', `<p class="quiz-error">Quiz "${quizId}" not configured.</p>`);
+    return;
+  }
+
+  const optionButtons = Array.from(element.querySelectorAll<HTMLButtonElement>('.quiz-option'));
+  const feedbackEl = element.querySelector<HTMLElement>('.quiz-feedback');
+
+  optionButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const optionId = button.dataset.optionId;
+      const option = quiz.options.find(opt => opt.id === optionId);
+      if (!option || !feedbackEl) {
+        return;
+      }
+
+      optionButtons.forEach(btn => btn.disabled = true);
+
+      if (option.isCorrect) {
+        element.classList.remove('quiz-incorrect');
+        element.classList.add('quiz-correct');
+        feedbackEl.textContent = quiz.successMessage;
+        feedbackEl.dataset.state = 'success';
+        element.dataset.completed = 'true';
+        maybeUnlockNextButton();
+        window.dispatchEvent(new CustomEvent('onboardingQuizResult', {
+          detail: { quizId, correct: true }
+        }));
+      } else {
+        element.classList.remove('quiz-correct');
+        element.classList.add('quiz-incorrect');
+        feedbackEl.textContent = `${quiz.failureMessage} ${option.explanation}`;
+        feedbackEl.dataset.state = 'error';
+        optionButtons.forEach(btn => {
+          if (btn !== button) btn.disabled = false;
+        });
+        button.disabled = true;
+        window.dispatchEvent(new CustomEvent('onboardingQuizResult', {
+          detail: { quizId, correct: false }
+        }));
+      }
+    });
+  });
+}
+
+function maybeUnlockNextButton(): void {
+  const nextBtn = document.getElementById('next-screen') as HTMLButtonElement | null;
+  if (!nextBtn) {
+    return;
+  }
+
+  const pendingQuizzes = Array.from(document.querySelectorAll<HTMLElement>('.quiz-card')).filter(card => card.dataset.completed !== 'true');
+  if (pendingQuizzes.length === 0) {
+    nextBtn.removeAttribute('disabled');
+    nextBtn.classList.remove('btn-disabled');
   }
 }

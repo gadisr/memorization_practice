@@ -17,11 +17,11 @@ export interface OnboardingScreen {
 }
 
 export interface InteractiveElement {
-  type: 'button' | 'demo' | 'quiz' | 'animation';
+  type: 'button' | 'demo' | 'quiz' | 'media' | 'callout';
   id: string;
   label?: string;
   action?: string;
-  data?: any;
+  data?: unknown;
 }
 
 export interface OnboardingProgress {
@@ -77,4 +77,36 @@ export interface UserPreferences {
   hasCompletedOnboarding: boolean;
   preferredDifficulty: 'beginner' | 'intermediate' | 'advanced';
   interests: string[];
+}
+
+export interface QuizDefinition {
+  id: string;
+  question: string;
+  prompt?: string;
+  options: QuizOption[];
+  successMessage: string;
+  failureMessage: string;
+}
+
+export interface QuizOption {
+  id: string;
+  label: string;
+  isCorrect: boolean;
+  explanation: string;
+}
+
+export interface MediaAsset {
+  id: string;
+  type: 'image' | 'video' | 'animation';
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
+export interface CalloutCard {
+  id: string;
+  title: string;
+  body: string;
+  tone: 'info' | 'warning' | 'success';
+  icon?: string;
 }
