@@ -3,6 +3,7 @@
  */
 
 import { SessionData, NotationSessionData, DrillType } from '../types.js';
+import { formatDrillName } from '../utils/drill-name-formatter.js';
 
 const CSV_HEADERS = [
   'Date',
@@ -61,19 +62,7 @@ function formatDate(isoDate: string): string {
 }
 
 function formatDrillType(type: DrillType): string {
-  const names: Record<DrillType, string> = {
-    [DrillType.FLASH_PAIRS]: 'Flash Pairs',
-    [DrillType.TWO_PAIR_FUSION]: '2-Pair Fusion',
-    [DrillType.THREE_PAIR_CHAIN]: '3-Pair Chain',
-    [DrillType.EIGHT_PAIR_CHAIN]: '8-Pair Chain',
-    [DrillType.JOURNEY_MODE]: 'Journey Mode',
-    [DrillType.FULL_CUBE_SIMULATION]: 'Full Cube Simulation',
-    [DrillType.EDGE_NOTATION_DRILL]: 'Edge Notation',
-    [DrillType.CORNER_NOTATION_DRILL]: 'Corner Notation',
-    [DrillType.CORNER_TRACING_DRILL]: 'Corner Tracing',
-    [DrillType.EDGE_TRACING_DRILL]: 'Edge Tracing'
-  };
-  return names[type] || type;
+  return formatDrillName(type);
 }
 
 function escapeCsvField(field: string): string {

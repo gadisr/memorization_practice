@@ -7,14 +7,9 @@ import { DrillType, QualityMetric } from '../types.js';
 export function getQualityMetric(drillType: DrillType): QualityMetric {
   switch (drillType) {
     case DrillType.FLASH_PAIRS:
-    case DrillType.TWO_PAIR_FUSION:
-    case DrillType.THREE_PAIR_CHAIN:
+    case DrillType.EDGE_MEMORIZATION:
+    case DrillType.CORNER_MEMORIZATION:
       return QualityMetric.VIVIDNESS;
-    
-    case DrillType.EIGHT_PAIR_CHAIN:
-    case DrillType.JOURNEY_MODE:
-    case DrillType.FULL_CUBE_SIMULATION:
-      return QualityMetric.FLOW;
     
     default:
       return QualityMetric.VIVIDNESS;

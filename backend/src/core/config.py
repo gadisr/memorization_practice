@@ -1,6 +1,7 @@
 """Application configuration settings."""
 
 from pydantic_settings import BaseSettings
+from pydantic import field_validator
 from typing import Optional, List
 
 
@@ -26,6 +27,14 @@ class Settings(BaseSettings):
         "http://localhost:8000",  # For development
         "http://localhost:3000"   # For development
     ]
+    
+    @field_validator('ALLOWED_ORIGINS', mode='before')
+    @classmethod
+    def parse_allowed_origins(cls, v):
+        """Parse ALLOWED_ORIGINS from comma-separated string or return default list."""
+        if isinstance(v, str):
+            return [origin.strip() for origin in v.split(',') if origin.strip()]
+        return v
     
     class Config:
         env_file = ".env"

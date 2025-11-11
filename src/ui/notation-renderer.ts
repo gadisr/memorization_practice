@@ -3,6 +3,7 @@
  */
 
 import { NotationSessionData, DrillType } from '../types.js';
+import { formatDrillName, getNotationDrillShortName } from '../utils/drill-name-formatter.js';
 
 const cubeColors: Record<string, string> = {
   white: '#FFFFFF',
@@ -15,50 +16,117 @@ const cubeColors: Record<string, string> = {
 
 export function renderEdgeSquares(colors: [string, string]): void {
   const container = document.getElementById('color-squares-container');
-  if (!container) return;
+  if (!container) {
+    console.error('renderEdgeSquares: color-squares-container not found');
+    return;
+  }
   
+  if (!colors || colors.length !== 2) {
+    console.error('renderEdgeSquares: invalid colors', colors);
+    return;
+  }
+  
+  // Clear container and set the class for edge layout
   container.innerHTML = '';
   container.className = 'color-squares-edge';
+  container.style.display = 'flex'; // Ensure container is visible
   
   const topSquare = document.createElement('div');
   topSquare.className = 'color-square color-main';
-  topSquare.style.backgroundColor = cubeColors[colors[0]] || '#CCC';
+  const topColor = cubeColors[colors[0].toLowerCase()];
+  if (!topColor) {
+    console.warn('renderEdgeSquares: unknown color', colors[0], 'available colors:', Object.keys(cubeColors));
+  }
+  topSquare.style.backgroundColor = topColor || '#CCC';
+  topSquare.style.width = '100px';
+  topSquare.style.height = '100px';
+  topSquare.style.border = '2px solid #333';
+  topSquare.style.borderRadius = '4px';
   
   const bottomSquare = document.createElement('div');
   bottomSquare.className = 'color-square color-additional';
-  bottomSquare.style.backgroundColor = cubeColors[colors[1]] || '#CCC';
+  const bottomColor = cubeColors[colors[1].toLowerCase()];
+  if (!bottomColor) {
+    console.warn('renderEdgeSquares: unknown color', colors[1], 'available colors:', Object.keys(cubeColors));
+  }
+  bottomSquare.style.backgroundColor = bottomColor || '#CCC';
+  bottomSquare.style.width = '100px';
+  bottomSquare.style.height = '100px';
+  bottomSquare.style.border = '2px solid #333';
+  bottomSquare.style.borderRadius = '4px';
   
   container.appendChild(topSquare);
   container.appendChild(bottomSquare);
+  
+  console.log('renderEdgeSquares: Rendered squares with colors', colors, 'container children:', container.children.length);
 }
 
 export function renderCornerSquares(colors: [string, string, string]): void {
   const container = document.getElementById('color-squares-container');
-  if (!container) return;
+  if (!container) {
+    console.error('renderCornerSquares: color-squares-container not found');
+    return;
+  }
   
+  if (!colors || colors.length !== 3) {
+    console.error('renderCornerSquares: invalid colors', colors);
+    return;
+  }
+  
+  // Clear container and set the class for corner layout
   container.innerHTML = '';
   container.className = 'color-squares-corner';
+  container.style.display = 'flex'; // Ensure container is visible
   
   const topSquare = document.createElement('div');
   topSquare.className = 'color-square color-main';
-  topSquare.style.backgroundColor = cubeColors[colors[0]] || '#CCC';
+  const topColor = cubeColors[colors[0].toLowerCase()];
+  if (!topColor) {
+    console.warn('renderCornerSquares: unknown color', colors[0], 'available colors:', Object.keys(cubeColors));
+  }
+  topSquare.style.backgroundColor = topColor || '#CCC';
+  topSquare.style.width = '80px';
+  topSquare.style.height = '80px';
+  topSquare.style.border = '2px solid #333';
+  topSquare.style.borderRadius = '4px';
   
   const bottomRow = document.createElement('div');
   bottomRow.className = 'corner-bottom-row';
+  bottomRow.style.display = 'flex';
+  bottomRow.style.flexDirection = 'row';
+  bottomRow.style.gap = '8px';
   
   const bottomLeftSquare = document.createElement('div');
   bottomLeftSquare.className = 'color-square';
-  bottomLeftSquare.style.backgroundColor = cubeColors[colors[1]] || '#CCC';
+  const leftColor = cubeColors[colors[1].toLowerCase()];
+  if (!leftColor) {
+    console.warn('renderCornerSquares: unknown color', colors[1], 'available colors:', Object.keys(cubeColors));
+  }
+  bottomLeftSquare.style.backgroundColor = leftColor || '#CCC';
+  bottomLeftSquare.style.width = '80px';
+  bottomLeftSquare.style.height = '80px';
+  bottomLeftSquare.style.border = '2px solid #333';
+  bottomLeftSquare.style.borderRadius = '4px';
   
   const bottomRightSquare = document.createElement('div');
   bottomRightSquare.className = 'color-square';
-  bottomRightSquare.style.backgroundColor = cubeColors[colors[2]] || '#CCC';
+  const rightColor = cubeColors[colors[2].toLowerCase()];
+  if (!rightColor) {
+    console.warn('renderCornerSquares: unknown color', colors[2], 'available colors:', Object.keys(cubeColors));
+  }
+  bottomRightSquare.style.backgroundColor = rightColor || '#CCC';
+  bottomRightSquare.style.width = '80px';
+  bottomRightSquare.style.height = '80px';
+  bottomRightSquare.style.border = '2px solid #333';
+  bottomRightSquare.style.borderRadius = '4px';
   
   bottomRow.appendChild(bottomLeftSquare);
   bottomRow.appendChild(bottomRightSquare);
   
   container.appendChild(topSquare);
   container.appendChild(bottomRow);
+  
+  console.log('renderCornerSquares: Rendered squares with colors', colors, 'container children:', container.children.length);
 }
 
 export function clearColorSquares(): void {
@@ -72,7 +140,7 @@ export function renderNotationResults(session: NotationSessionData): void {
   const resultsContainer = document.getElementById('notation-results-container');
   if (!resultsContainer) return;
   
-  const drillTypeName = session.drillType === DrillType.EDGE_NOTATION_DRILL ? 'Edge Notation' : 'Corner Notation';
+  const drillTypeName = formatDrillName(session.drillType);
   
   const totalTime = session.attempts.reduce((sum, a) => sum + a.timeSeconds, 0);
   
@@ -138,7 +206,7 @@ export function renderNotationSessionsTable(sessions: NotationSessionData[]): vo
       <tbody>
         ${sessions.map(session => {
           const date = new Date(session.date).toLocaleDateString();
-          const drillType = session.drillType === DrillType.EDGE_NOTATION_DRILL ? 'Edge' : 'Corner';
+          const drillType = getNotationDrillShortName(session.drillType);
           return `
             <tr>
               <td>${date}</td>

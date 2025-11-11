@@ -4,6 +4,7 @@
 
 import { SessionData, NotationSessionData, DrillType } from '../types.js';
 import { ChartData, ProcessedSessionData, DrillTypeStats } from '../types/chart.js';
+import { formatDrillName } from '../utils/drill-name-formatter.js';
 
 /**
  * Process session data for accuracy progress chart
@@ -351,16 +352,5 @@ function formatDateLabel(dateString: string): string {
  * Format drill type name for display
  */
 function formatDrillTypeName(drillType: string): string {
-  const nameMap: Record<string, string> = {
-    'FLASH_PAIRS': 'Flash Pairs',
-    'TWO_PAIR_FUSION': '2-Pair Fusion',
-    'THREE_PAIR_CHAIN': '3-Pair Chain',
-    'EIGHT_PAIR_CHAIN': '8-Pair Chain',
-    'JOURNEY_MODE': 'Journey Mode',
-    'FULL_CUBE_SIMULATION': 'Full Cube',
-    'EDGE_NOTATION_DRILL': 'Edge Notation',
-    'CORNER_NOTATION_DRILL': 'Corner Notation'
-  };
-
-  return nameMap[drillType] || drillType;
+  return formatDrillName(drillType);
 }

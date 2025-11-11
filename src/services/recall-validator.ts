@@ -62,8 +62,8 @@ export function parseRecallInput(input: string): string[] {
  * Check if drill type requires ordered recall
  */
 export function isOrderRequired(drillType: DrillType): boolean {
-  // Only Flash Pairs doesn't require order
-  return drillType !== DrillType.FLASH_PAIRS;
+  // All drills now require ordered recall
+  return true;
 }
 
 /**
@@ -172,5 +172,89 @@ function normalizePair(pair: string): string {
   
   const chars = pair.split('').sort();
   return chars.join('');
+}
+
+/**
+ * Parse user input as individual letters
+ * Handles formats: "a b c d", "abcd", "a,b,c,d"
+ */
+export function parseLetterRecallInput(input: string): string[] {
+  // Remove extra whitespace and convert to uppercase
+  let cleaned = input.trim().toUpperCase();
+  
+  // Remove common separators (commas, semicolons, pipes)
+  cleaned = cleaned.replace(/[,;|]/g, ' ');
+  
+  // Split by whitespace
+  const tokens = cleaned.split(/\s+/).filter(t => t.length > 0);
+  
+  const letters: string[] = [];
+  
+  for (const token of tokens) {
+    if (token.length === 1) {
+      // Single letter
+      letters.push(token);
+    } else {
+      // Multiple characters - split into individual letters
+      for (const char of token) {
+        if (/[A-Z]/.test(char)) {
+          letters.push(char);
+        }
+      }
+    }
+  }
+  
+  return letters;
+}
+
+/**
+ * Validate letter recall for color memorization drills
+ * Compares user's recalled letters against actual letters in order
+ */
+export function validateLetterRecall(
+  userInput: string,
+  actualLetters: string[],
+  drillType: DrillType
+): RecallValidation {
+  const userLetters = parseLetterRecallInput(userInput);
+  
+  const correctPairs: string[] = [];
+  const incorrectPairs: string[] = [];
+  const missedPairs: string[] = [];
+  const extraPairs: string[] = [];
+  
+  // Check each position
+  for (let i = 0; i < actualLetters.length; i++) {
+    const actualLetter = actualLetters[i];
+    const userLetter = i < userLetters.length ? userLetters[i] : null;
+    
+    if (userLetter === actualLetter) {
+      correctPairs.push(actualLetter);
+    } else if (userLetter === null) {
+      missedPairs.push(actualLetter);
+    } else {
+      incorrectPairs.push(actualLetter);
+    }
+  }
+  
+  // Any letters beyond the actual letters count are extra
+  if (userLetters.length > actualLetters.length) {
+    for (let i = actualLetters.length; i < userLetters.length; i++) {
+      extraPairs.push(userLetters[i]);
+    }
+  }
+  
+  const accuracy = actualLetters.length > 0 
+    ? (correctPairs.length / actualLetters.length) * 100 
+    : 0;
+  
+  return {
+    isOrderRequired: true,
+    correctPairs,
+    incorrectPairs,
+    missedPairs,
+    extraPairs,
+    accuracy
+  };
 }
 

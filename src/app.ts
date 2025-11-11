@@ -2,7 +2,7 @@
  * Main application controller for BLD Memory Trainer
  */
 
-import { DrillType, SessionData, NotationSessionData, NotationAttempt, EdgePiece, CornerPiece } from './types.js';
+import { DrillType, SessionData, NotationSessionData, NotationAttempt, EdgePiece, CornerPiece, ColorMemorizationSessionData } from './types.js';
 import { getAllDrillConfigs, getDrillConfig, BLD_TECHNIQUE_INTRO } from './config/drill-config.js';
 import { createSession, getActiveSession, recordPairTiming, finalizeSession, cancelSession } from './services/session-manager.js';
 import { startTimer, stopTimer } from './services/timer.js';
@@ -44,6 +44,17 @@ import { TracingRenderer } from './ui/tracing-renderer.js';
 import { OnboardingManager } from './onboarding/onboarding-manager.js';
 import { loadChartJS } from './ui/chart-renderer.js';
 import { getSessionRank, getNotationSessionRank } from './services/session-ranker.js';
+import {
+  createColorMemorizationSession,
+  getActiveColorMemorizationSession,
+  recordPieceTiming,
+  finalizeColorMemorizationSession,
+  cancelColorMemorizationSession
+} from './services/color-memorization-session-manager.js';
+import {
+  renderColorMemorizationSessionScreen,
+  renderColorMemorizationRatingScreen
+} from './ui/color-memorization-renderer.js';
 
 // Application state
 let currentPairIndex = 0;
@@ -57,6 +68,10 @@ let timerInterval: number | null = null;
 
 // Tracing drill state
 let tracingRenderer: TracingRenderer | null = null;
+
+// Color memorization state
+let currentColorMemorizationPieceIndex = 0;
+let currentColorMemorizationTimer = 0;
 
 // Initialize the application
 export async function initializeApp(): Promise<void> {
@@ -147,12 +162,14 @@ function attachEventListeners(): void {
   
   if (startTutorialBtn) {
     startTutorialBtn.addEventListener('click', () => {
+      localStorage.setItem('onboarding_force', 'true');
       window.location.href = 'onboarding.html';
     });
   }
   
   if (reviewTutorialBtn) {
     reviewTutorialBtn.addEventListener('click', () => {
+      localStorage.setItem('onboarding_force', 'true');
       window.location.href = 'onboarding.html';
     });
   }
@@ -350,6 +367,12 @@ async function handleStartSession(): Promise<void> {
   // Check if it's a tracing drill
   if (drillType === DrillType.CORNER_TRACING_DRILL || drillType === DrillType.EDGE_TRACING_DRILL) {
     await handleStartTracingSession(drillType);
+    return;
+  }
+  
+  // Check if it's a color memorization drill
+  if (drillType === DrillType.EDGE_MEMORIZATION || drillType === DrillType.CORNER_MEMORIZATION) {
+    await handleStartColorMemorizationSession(drillType);
     return;
   }
   
@@ -593,7 +616,12 @@ async function handleStartNotationSession(drillType: DrillType.EDGE_NOTATION_DRI
     currentPieceIndex = 0;
     
     showScreen('notation-screen');
-    displayCurrentPiece();
+    
+    // Ensure screen is visible before rendering
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      displayCurrentPiece();
+    });
     
     // Set keyboard callbacks
     setKeyboardCallbacks({
@@ -634,6 +662,246 @@ function handleCancelTracing(): void {
   
   // Go back to setup screen
   showScreen('setup-screen');
+}
+
+// Color Memorization Handlers
+async function handleStartColorMemorizationSession(drillType: DrillType.EDGE_MEMORIZATION | DrillType.CORNER_MEMORIZATION): Promise<void> {
+  const input = document.getElementById('pair-count') as HTMLInputElement;
+  const pieceCount = parseInt(input.value, 10) || 12;
+  
+  try {
+    const session = await createColorMemorizationSession(drillType, pieceCount);
+    currentColorMemorizationPieceIndex = 0;
+    currentColorMemorizationTimer = 0;
+    
+    showScreen('session-screen');
+    displayCurrentColorMemorizationPiece();
+    
+    // Set keyboard callbacks for session
+    setKeyboardCallbacks({
+      space: handleNextColorMemorizationPiece,
+      arrowLeft: handlePreviousColorMemorizationPiece,
+      arrowRight: handleNextColorMemorizationPiece,
+      escape: handleCancelColorMemorizationSession
+    });
+  } catch (error) {
+    console.error('Error creating color memorization session:', error);
+    showNotification('Error starting color memorization session', 'error');
+  }
+}
+
+function displayCurrentColorMemorizationPiece(): void {
+  const session = getActiveColorMemorizationSession();
+  if (!session) return;
+  
+  const currentPiece = session.pieces[currentColorMemorizationPieceIndex];
+  if (!currentPiece) return;
+  
+  renderColorMemorizationSessionScreen(
+    currentPiece,
+    currentColorMemorizationPieceIndex,
+    session.pieceCount,
+    session.drillType
+  );
+  
+  // Timer management: timer only starts when advancing to new piece
+  if (currentColorMemorizationPieceIndex === 0 && currentColorMemorizationTimer === 0) {
+    currentColorMemorizationTimer = startTimer();
+  }
+  
+  // Attach event listeners
+  attachColorMemorizationEventListeners();
+  
+  // Update Previous button state
+  updateColorMemorizationPreviousButtonState();
+}
+
+function attachColorMemorizationEventListeners(): void {
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const cancelBtn = document.getElementById('cancel-btn');
+  
+  if (prevBtn) {
+    prevBtn.replaceWith(prevBtn.cloneNode(true)); // Remove old listeners
+    document.getElementById('prev-btn')?.addEventListener('click', handlePreviousColorMemorizationPiece);
+  }
+  
+  if (nextBtn) {
+    nextBtn.replaceWith(nextBtn.cloneNode(true)); // Remove old listeners
+    document.getElementById('next-btn')?.addEventListener('click', handleNextColorMemorizationPiece);
+  }
+  
+  if (cancelBtn) {
+    cancelBtn.replaceWith(cancelBtn.cloneNode(true)); // Remove old listeners
+    document.getElementById('cancel-btn')?.addEventListener('click', handleCancelColorMemorizationSession);
+  }
+}
+
+function updateColorMemorizationPreviousButtonState(): void {
+  const session = getActiveColorMemorizationSession();
+  if (!session) return;
+  
+  const prevBtn = document.getElementById('prev-btn') as HTMLButtonElement;
+  if (prevBtn) {
+    prevBtn.disabled = currentColorMemorizationPieceIndex === 0;
+  }
+}
+
+function handlePreviousColorMemorizationPiece(): void {
+  const session = getActiveColorMemorizationSession();
+  if (!session) return;
+  
+  if (currentColorMemorizationPieceIndex === 0) return;
+  
+  currentColorMemorizationPieceIndex--;
+  displayCurrentColorMemorizationPiece();
+  
+  // Update button state after navigation
+  updateColorMemorizationPreviousButtonState();
+}
+
+function handleNextColorMemorizationPiece(): void {
+  const session = getActiveColorMemorizationSession();
+  if (!session) return;
+  
+  // If at current piece, stop timer and record timing
+  if (currentColorMemorizationTimer > 0) {
+    const timing = stopTimer(currentColorMemorizationTimer);
+    recordPieceTiming(timing);
+  }
+  
+  currentColorMemorizationPieceIndex++;
+  
+  if (currentColorMemorizationPieceIndex < session.pieceCount) {
+    // More pieces to go - start new timer
+    currentColorMemorizationTimer = startTimer();
+    displayCurrentColorMemorizationPiece();
+  } else {
+    // Session complete, show rating screen
+    const metric = getQualityMetric(session.drillType);
+    renderColorMemorizationRatingScreen(session, metric);
+    showScreen('rating-screen');
+    
+    // Set keyboard callbacks for rating screen
+    setKeyboardCallbacks({
+      enter: handleSaveColorMemorizationSession,
+      escape: handleDiscardColorMemorizationSession,
+      numbers: handleQuickColorMemorizationRating
+    });
+    
+    // Attach event listeners for rating screen buttons
+    attachColorMemorizationRatingEventListeners();
+  }
+}
+
+function attachColorMemorizationRatingEventListeners(): void {
+  const saveBtn = document.getElementById('save-btn');
+  const discardBtn = document.getElementById('discard-btn');
+  
+  if (saveBtn) {
+    saveBtn.replaceWith(saveBtn.cloneNode(true)); // Remove old listeners
+    document.getElementById('save-btn')?.addEventListener('click', handleSaveColorMemorizationSession);
+  }
+  
+  if (discardBtn) {
+    discardBtn.replaceWith(discardBtn.cloneNode(true)); // Remove old listeners
+    document.getElementById('discard-btn')?.addEventListener('click', handleDiscardColorMemorizationSession);
+  }
+}
+
+function handleQuickColorMemorizationRating(num: number): void {
+  const session = getActiveColorMemorizationSession();
+  if (!session) return;
+  
+  const metric = getQualityMetric(session.drillType);
+  
+  if (validateQualityRating(num, metric)) {
+    const radios = document.querySelectorAll('input[name="quality"]');
+    radios.forEach((radio: Element) => {
+      const input = radio as HTMLInputElement;
+      if (input.value === num.toString()) {
+        input.checked = true;
+      }
+    });
+  }
+}
+
+async function handleSaveColorMemorizationSession(): Promise<void> {
+  const session = getActiveColorMemorizationSession();
+  if (!session) return;
+  
+  const recallTextInput = document.getElementById('recall-text-input') as HTMLTextAreaElement;
+  const notesInput = document.getElementById('notes-input') as HTMLTextAreaElement;
+  const qualityRadios = document.querySelectorAll('input[name="quality"]:checked');
+  
+  if (qualityRadios.length === 0) {
+    showNotification('Please select a quality rating', 'error');
+    return;
+  }
+  
+  const userRecall = recallTextInput.value.trim();
+  
+  if (!userRecall) {
+    showNotification('Please enter your recalled letters', 'error');
+    return;
+  }
+  
+  const quality = parseInt((qualityRadios[0] as HTMLInputElement).value, 10);
+  const notes = notesInput.value.trim();
+  
+  const metric = getQualityMetric(session.drillType);
+  if (!validateQualityRating(quality, metric)) {
+    showNotification('Invalid quality rating', 'error');
+    return;
+  }
+  
+  try {
+    const completedSession = await finalizeColorMemorizationSession(userRecall, quality, notes || undefined);
+    
+    // Calculate and display ranking
+    const rankInfo = await getSessionRank(completedSession as any);
+    
+    // Show validation feedback
+    if (completedSession.recallValidation) {
+      renderRecallFeedback(completedSession.recallValidation);
+      
+      // Delay navigation to let user see results
+      setTimeout(async () => {
+        showNotification(`Session saved successfully! ${rankInfo.message}`, 'success');
+        const sessions = await getAllSessions();
+        const notationSessions = await getAllNotationSessions();
+        renderDashboard(sessions, notationSessions);
+        showScreen('dashboard-screen');
+        clearKeyboardCallbacks();
+      }, 3000);
+    } else {
+      showNotification(`Session saved successfully! ${rankInfo.message}`, 'success');
+      const sessions = await getAllSessions();
+      const notationSessions = await getAllNotationSessions();
+      renderDashboard(sessions, notationSessions);
+      showScreen('dashboard-screen');
+      clearKeyboardCallbacks();
+    }
+  } catch (error) {
+    console.error('Error saving color memorization session:', error);
+    showNotification('Error saving session', 'error');
+  }
+}
+
+function handleDiscardColorMemorizationSession(): void {
+  if (confirm('Are you sure you want to discard this session?')) {
+    cancelColorMemorizationSession();
+    showScreen('setup-screen');
+    clearKeyboardCallbacks();
+  }
+}
+
+function handleCancelColorMemorizationSession(): void {
+  if (confirm('Are you sure you want to cancel this session?')) {
+    cancelColorMemorizationSession();
+    showScreen('setup-screen');
+    clearKeyboardCallbacks();
+  }
 }
 
 function displayCurrentPiece(): void {
@@ -827,6 +1095,7 @@ function handleCancelNotation(): void {
 function checkOnboardingRecommendations(): void {
   const recommendedDrillType = localStorage.getItem('recommended_drill_type');
   const recommendedPairCount = localStorage.getItem('recommended_pair_count');
+  const redirectView = localStorage.getItem('onboarding_redirect_view');
   
   if (recommendedDrillType && recommendedPairCount) {
     // Set the recommended drill type and pair count
@@ -849,6 +1118,12 @@ function checkOnboardingRecommendations(): void {
     
     // Show a notification about the recommendations
     showNotification('Welcome! We\'ve set up your first session based on your onboarding preferences.', 'success');
+  }
+
+  if (redirectView === 'dashboard') {
+    localStorage.removeItem('onboarding_redirect_view');
+    const viewDashboardBtn = document.getElementById('view-dashboard-btn') as HTMLButtonElement | null;
+    viewDashboardBtn?.click();
   }
 }
 

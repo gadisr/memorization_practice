@@ -4,15 +4,12 @@
 
 export enum DrillType {
   FLASH_PAIRS = 'FLASH_PAIRS',
-  TWO_PAIR_FUSION = 'TWO_PAIR_FUSION',
-  THREE_PAIR_CHAIN = 'THREE_PAIR_CHAIN',
-  EIGHT_PAIR_CHAIN = 'EIGHT_PAIR_CHAIN',
-  JOURNEY_MODE = 'JOURNEY_MODE',
-  FULL_CUBE_SIMULATION = 'FULL_CUBE_SIMULATION',
   EDGE_NOTATION_DRILL = 'EDGE_NOTATION_DRILL',
   CORNER_NOTATION_DRILL = 'CORNER_NOTATION_DRILL',
   CORNER_TRACING_DRILL = 'CORNER_TRACING_DRILL',
-  EDGE_TRACING_DRILL = 'EDGE_TRACING_DRILL'
+  EDGE_TRACING_DRILL = 'EDGE_TRACING_DRILL',
+  EDGE_MEMORIZATION = 'EDGE_MEMORIZATION',
+  CORNER_MEMORIZATION = 'CORNER_MEMORIZATION'
 }
 
 export enum QualityMetric {
@@ -96,6 +93,24 @@ export interface NotationSessionData {
   accuracy: number;
   averageTime: number;
   totalTime?: number;
+  notes?: string;
+}
+
+export interface ColorMemorizationSessionData {
+  id: string;
+  date: string;
+  drillType: DrillType.EDGE_MEMORIZATION | DrillType.CORNER_MEMORIZATION;
+  pieces: (EdgePiece | CornerPiece)[];
+  pieceCount: number;
+  letters: string[];  // The letters corresponding to the pieces (ordered)
+  timings: number[];
+  averageTime: number;
+  totalTime?: number;
+  recallAccuracy: number;
+  userRecall?: string;
+  recallValidation?: RecallValidation;
+  vividness?: number;
+  flow?: number;
   notes?: string;
 }
 

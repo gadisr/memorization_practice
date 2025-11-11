@@ -6,6 +6,7 @@ import { DrillConfig, QualityMetric, SessionData, DrillType, RecallValidation, N
 import { getQualityScaleLabel, getQualityScaleMax } from '../services/quality-adapter.js';
 import { formatTime } from '../services/timer.js';
 import { isOrderRequired } from '../services/recall-validator.js';
+import { formatDrillName } from '../utils/drill-name-formatter.js';
 
 export function showScreen(screenId: string): void {
   const screens = document.querySelectorAll('.screen');
@@ -106,7 +107,7 @@ export function renderRatingScreen(metric: QualityMetric, pairCount: number, dri
       radio.id = `quality-${i}`;
       
       const text = document.createElement('span');
-      text.textContent = `${i} - ${getQualityScaleLabel(metric, i)}`;
+      text.textContent = getQualityScaleLabel(metric, i);
       
       label.appendChild(radio);
       label.appendChild(text);
@@ -405,22 +406,6 @@ function formatSessionDate(isoDate: string): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-function formatDrillName(type: DrillType): string {
-  const names: Record<DrillType, string> = {
-    [DrillType.FLASH_PAIRS]: 'Flash Pairs',
-    [DrillType.TWO_PAIR_FUSION]: '2-Pair Fusion',
-    [DrillType.THREE_PAIR_CHAIN]: '3-Pair Chain',
-    [DrillType.EIGHT_PAIR_CHAIN]: '8-Pair Chain',
-    [DrillType.JOURNEY_MODE]: 'Journey Mode',
-    [DrillType.FULL_CUBE_SIMULATION]: 'Full Cube',
-    [DrillType.EDGE_NOTATION_DRILL]: 'Edge Notation',
-    [DrillType.CORNER_NOTATION_DRILL]: 'Corner Notation',
-    [DrillType.CORNER_TRACING_DRILL]: 'Corner Tracing',
-    [DrillType.EDGE_TRACING_DRILL]: 'Edge Tracing'
-  };
-  return names[type] || type;
-}
-
 function getAccuracyClass(accuracy: number): string {
   if (accuracy >= 90) return 'accuracy-high';
   if (accuracy >= 70) return 'accuracy-medium';
@@ -508,7 +493,7 @@ export function renderSessionDetail(session: SessionData | NotationSessionData, 
   
   if (isNotation) {
     const notationSession = session as NotationSessionData;
-    const drillTypeName = notationSession.drillType === DrillType.EDGE_NOTATION_DRILL ? 'Edge Notation' : 'Corner Notation';
+    const drillTypeName = formatDrillName(notationSession.drillType);
     titleEl.textContent = `Session Details - ${drillTypeName}`;
     
     const totalTime = notationSession.attempts.reduce((sum, a) => sum + a.timeSeconds, 0);

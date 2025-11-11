@@ -8,12 +8,14 @@
     "serve": "python3 serve.py",
     "dev": "python3 serve.py",
     "watch": "tsc --watch",
-    "test": "npm run build && npm run test:edge && npm run test:corner && npm run test:scrambler && npm run test:wide && npm run test:sequence",
+    "test": "npm run build && npm run test:edge && npm run test:corner && npm run test:scrambler && npm run test:wide && npm run test:sequence && npm run test:onboarding",
     "test:edge": "npm run build && node dist/tests/edge-tracer.test.js",
     "test:corner": "npm run build && node dist/tests/corner-tracer.test.js",
     "test:scrambler": "npm run build && node dist/services/cube-scrambler-test.js",
     "test:wide": "npm run build && node dist/tests/wide-moves.test.js",
     "test:sequence": "npm run build && node dist/tests/sequence-validator.test.js",
+    "test:onboarding": "npm run build && node dist/tests/onboarding-data.test.js",
+    "test:e2e": "playwright test",
     "test:watch": "npm run watch & npm run test",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
@@ -23,6 +25,8 @@
     "firebase": "^10.14.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^20.11.17",
     "typescript": "^5.0.0",
     "vite": "^5.0.0"
   },
