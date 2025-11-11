@@ -1,8 +1,9 @@
 """Application configuration settings."""
 
+import json
 from pydantic_settings import BaseSettings
 from pydantic import field_validator
-from typing import Optional, List
+from typing import Optional, List, Union
 
 
 class Settings(BaseSettings):
@@ -30,11 +31,33 @@ class Settings(BaseSettings):
     
     @field_validator('ALLOWED_ORIGINS', mode='before')
     @classmethod
-    def parse_allowed_origins(cls, v):
-        """Parse ALLOWED_ORIGINS from comma-separated string or return default list."""
+    def parse_allowed_origins(cls, v: Union[str, List[str], None]) -> List[str]:
+        """Parse ALLOWED_ORIGINS from comma-separated string, JSON array, or return list."""
+        default_origins = [
+            "https://blindfoldcubing.com",
+            "https://www.blindfoldcubing.com",
+            "http://localhost:8000",
+            "http://localhost:3000"
+        ]
+        
+        if v is None:
+            return default_origins
+        if isinstance(v, list):
+            return v
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(',') if origin.strip()]
-        return v
+            # Try JSON first (e.g., '["origin1","origin2"]')
+            v_stripped = v.strip()
+            if v_stripped.startswith('[') and v_stripped.endswith(']'):
+                try:
+                    parsed = json.loads(v_stripped)
+                    if isinstance(parsed, list):
+                        return parsed
+                except json.JSONDecodeError:
+                    pass
+            # Fall back to comma-separated string
+            origins = [origin.strip() for origin in v.split(',') if origin.strip()]
+            return origins if origins else default_origins
+        return default_origins
     
     class Config:
         env_file = ".env"
