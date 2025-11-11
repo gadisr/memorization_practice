@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from .core.config import settings
 from .core.firebase import initialize_firebase
-from .api.routes import users, sessions, notation_sessions
+from .api.routes import users, sessions, notation_sessions, stats
 
 
 @asynccontextmanager
@@ -37,6 +37,7 @@ app.add_middleware(
 app.include_router(users.router, prefix=settings.API_V1_PREFIX)
 app.include_router(sessions.router, prefix=settings.API_V1_PREFIX)
 app.include_router(notation_sessions.router, prefix=settings.API_V1_PREFIX)
+app.include_router(stats.router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/health")

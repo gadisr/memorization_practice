@@ -21,6 +21,12 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         # Serve .ts files with JavaScript MIME type for development
         if self.path.endswith('.ts'):
             self.send_header('Content-Type', 'application/javascript')
+        # Serve XML files with proper MIME type for SEO
+        elif self.path.endswith('.xml'):
+            self.send_header('Content-Type', 'application/xml; charset=utf-8')
+        # Serve TXT files with proper MIME type for SEO
+        elif self.path.endswith('.txt'):
+            self.send_header('Content-Type', 'text/plain; charset=utf-8')
         super().end_headers()
     
     def do_GET(self):

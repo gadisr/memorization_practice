@@ -143,8 +143,25 @@ function updateAuthUI(isAuthenticated: boolean, user: any, elements: {
 
 async function refreshDashboard(): Promise<void> {
   // Reload dashboard data from API
-  // This will be implemented in existing dashboard code
+  // Dispatch event to notify app.ts to refresh dashboard
   const event = new CustomEvent('auth-state-changed');
   window.dispatchEvent(event);
+  
+  // Also directly refresh if we can import the function
+  // Use dynamic import to avoid circular dependencies
+  try {
+    // Check if we're on a screen that should show dashboard
+    const homeDashboardScreen = document.getElementById('home-dashboard-screen');
+    if (homeDashboardScreen && !homeDashboardScreen.classList.contains('hidden')) {
+      // Dynamically import and call the refresh function
+      const appModule = await import('../app.js');
+      if ((appModule as any).loadAndRenderHomeDashboard) {
+        await (appModule as any).loadAndRenderHomeDashboard();
+      }
+    }
+  } catch (error) {
+    // Function might not be available yet, that's okay
+    console.log('Dashboard will refresh via event listener');
+  }
 }
 

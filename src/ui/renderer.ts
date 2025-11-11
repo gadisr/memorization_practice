@@ -7,6 +7,10 @@ import { getQualityScaleLabel, getQualityScaleMax } from '../services/quality-ad
 import { formatTime } from '../services/timer.js';
 import { isOrderRequired } from '../services/recall-validator.js';
 import { formatDrillName } from '../utils/drill-name-formatter.js';
+import { calculateUserStats, UserStats, getUnderPracticedDrills } from '../services/stats-calculator.js';
+import { calculateUserPercentiles, getPerformanceBadge, generateValueIndicators, formatPercentile, compareToAverage, PopulationStats } from '../services/population-stats-service.js';
+import { getAllDrillConfigs } from '../config/drill-config.js';
+import { getAuthState } from '../services/auth-service.js';
 
 export function showScreen(screenId: string): void {
   const screens = document.querySelectorAll('.screen');
@@ -661,5 +665,458 @@ export function renderSessionDetail(session: SessionData | NotationSessionData, 
         </div>
       ` : ''}
     `;
+  }
+}
+
+/**
+ * Render home dashboard with stats, best performance, and drill access
+ */
+export function renderHomeDashboard(
+  sessions: SessionData[],
+  notationSessions: NotationSessionData[] = [],
+  populationStats: any = null
+): void {
+  const authState = getAuthState();
+  const isAuthenticated = authState.isAuthenticated;
+  
+  // Calculate user stats
+  const userStats = calculateUserStats(sessions, notationSessions);
+  
+  // Render navigation
+  renderNavigation();
+  
+  // Render registration prompt if not authenticated
+  if (!isAuthenticated) {
+    renderRegistrationPrompt();
+  }
+  
+  // Render primary CTA
+  renderPrimaryCTA(isAuthenticated);
+  
+  // Render key stats
+  renderKeyStats(userStats);
+  
+  // Render best performance
+  renderBestPerformance(userStats);
+  
+  // Render population comparison (available for all users if population stats available)
+  if (populationStats) {
+    if (isAuthenticated || userStats.totalSessions > 0) {
+      // Show comparison if user has sessions (even if not authenticated)
+      renderPopulationComparison(userStats, populationStats);
+      renderValueIndicators(userStats, populationStats);
+    } else {
+      // Show global stats overview for unauthenticated users with no sessions
+      renderGlobalStatsOverview(populationStats);
+    }
+  }
+  
+  // Render drill quick access
+  renderDrillQuickAccess(userStats, isAuthenticated);
+  
+  // Render encouragement section
+  renderEncouragementSection(userStats, isAuthenticated, populationStats);
+}
+
+/**
+ * Render navigation/footer with SEO page links
+ */
+export function renderNavigation(): void {
+  // Navigation is rendered in HTML, but we can update it if needed
+  // This function can be expanded to dynamically update navigation
+}
+
+/**
+ * Render registration prompt banner
+ */
+export function renderRegistrationPrompt(): void {
+  const container = document.getElementById('registration-prompt-container');
+  if (!container) return;
+  
+  // Check if user has dismissed the prompt
+  const dismissed = localStorage.getItem('registration-prompt-dismissed');
+  if (dismissed === 'true') {
+    container.classList.add('hidden');
+    return;
+  }
+  
+  container.classList.remove('hidden');
+  container.innerHTML = `
+    <div class="registration-prompt">
+      <div class="registration-prompt-content">
+        <div class="registration-prompt-text">
+          <strong>Join thousands of users improving their BLD skills!</strong>
+          <span class="registration-benefits">Sync across devices • Population stats • Cloud backup • Progress tracking</span>
+        </div>
+        <div class="registration-prompt-actions">
+          <button id="registration-signup-btn" class="btn btn-primary">Sign Up with Google</button>
+          <button id="registration-dismiss-btn" class="btn btn-text">Maybe later</button>
+        </div>
+      </div>
+      <button id="registration-close-btn" class="registration-close-btn">&times;</button>
+    </div>
+  `;
+  
+  // Add event listeners
+  const dismissBtn = document.getElementById('registration-dismiss-btn');
+  const closeBtn = document.getElementById('registration-close-btn');
+  
+  if (dismissBtn) {
+    dismissBtn.addEventListener('click', () => {
+      localStorage.setItem('registration-prompt-dismissed', 'true');
+      container.classList.add('hidden');
+    });
+  }
+  
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      localStorage.setItem('registration-prompt-dismissed', 'true');
+      container.classList.add('hidden');
+    });
+  }
+}
+
+/**
+ * Render primary CTA button
+ */
+export function renderPrimaryCTA(isAuthenticated: boolean): void {
+  const container = document.getElementById('primary-cta-container');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="primary-cta">
+      <button id="start-training-btn" class="btn btn-primary btn-large">
+        ${isAuthenticated ? '🚀 Start Training' : '🚀 Start Training (Sign up to track progress)'}
+      </button>
+    </div>
+  `;
+}
+
+/**
+ * Render key stats grid
+ */
+function renderKeyStats(userStats: UserStats): void {
+  const container = document.getElementById('home-stats-grid');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-value">${userStats.totalSessions}</div>
+      <div class="stat-label">Total Sessions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${userStats.totalPairs}</div>
+      <div class="stat-label">Total Pairs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${userStats.avgAccuracy.toFixed(1)}%</div>
+      <div class="stat-label">Avg Accuracy</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${formatTime(userStats.avgSpeed)}</div>
+      <div class="stat-label">Avg Speed/Pair</div>
+    </div>
+  `;
+}
+
+/**
+ * Render best performance section
+ */
+export function renderBestPerformance(userStats: UserStats): void {
+  const container = document.getElementById('best-performance-container');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <h2>🏆 Best Performance</h2>
+    <div class="best-performance-grid">
+      <div class="best-performance-card">
+        <div class="best-performance-label">Best Accuracy</div>
+        <div class="best-performance-value">${userStats.bestAccuracy > 0 ? userStats.bestAccuracy.toFixed(1) + '%' : 'N/A'}</div>
+      </div>
+      <div class="best-performance-card">
+        <div class="best-performance-label">Best Speed</div>
+        <div class="best-performance-value">${userStats.bestSpeed > 0 ? formatTime(userStats.bestSpeed) : 'N/A'}</div>
+      </div>
+      <div class="best-performance-card">
+        <div class="best-performance-label">Best Quality</div>
+        <div class="best-performance-value">${userStats.bestQuality > 0 ? userStats.bestQuality : 'N/A'}</div>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Render population comparison section
+ */
+export function renderPopulationComparison(userStats: UserStats, populationStats: any): void {
+  const container = document.getElementById('population-comparison-container');
+  if (!container) return;
+  
+  try {
+    // Normalize population stats structure (handle both snake_case and camelCase)
+    const normalizedStats: PopulationStats = {
+      avg_accuracy: populationStats.avg_accuracy || populationStats.avgAccuracy,
+      avg_speed: populationStats.avg_speed || populationStats.avgSpeed,
+      avg_quality: populationStats.avg_quality || populationStats.avgQuality,
+      percentiles: populationStats.percentiles || {
+        accuracy: {
+          p25: populationStats.percentiles?.accuracy?.p25 || 0,
+          p50: populationStats.percentiles?.accuracy?.p50 || 0,
+          p75: populationStats.percentiles?.accuracy?.p75 || 0,
+          p90: populationStats.percentiles?.accuracy?.p90 || 0
+        },
+        speed: {
+          p25: populationStats.percentiles?.speed?.p25 || 0,
+          p50: populationStats.percentiles?.speed?.p50 || 0,
+          p75: populationStats.percentiles?.speed?.p75 || 0,
+          p90: populationStats.percentiles?.speed?.p90 || 0
+        },
+        quality: {
+          p25: populationStats.percentiles?.quality?.p25 || 0,
+          p50: populationStats.percentiles?.quality?.p50 || 0,
+          p75: populationStats.percentiles?.quality?.p75 || 0,
+          p90: populationStats.percentiles?.quality?.p90 || 0
+        }
+      }
+    };
+    
+    if (!normalizedStats.percentiles) {
+      container.classList.add('hidden');
+      return;
+    }
+    
+    const percentiles = calculateUserPercentiles(userStats, normalizedStats);
+    
+    container.innerHTML = `
+      <h2>📊 How You Compare</h2>
+      <div class="population-comparison-grid">
+        <div class="population-card">
+          <div class="population-metric">Accuracy</div>
+          <div class="population-badge ${percentiles.accuracyBadge.toLowerCase().replace(/\s+/g, '-')}">${percentiles.accuracyBadge}</div>
+          <div class="population-percentile">${formatPercentile(percentiles.accuracyPercentile)}</div>
+        </div>
+        <div class="population-card">
+          <div class="population-metric">Speed</div>
+          <div class="population-badge ${percentiles.speedBadge.toLowerCase().replace(/\s+/g, '-')}">${percentiles.speedBadge}</div>
+          <div class="population-percentile">${formatPercentile(percentiles.speedPercentile)}</div>
+        </div>
+        <div class="population-card">
+          <div class="population-metric">Quality</div>
+          <div class="population-badge ${percentiles.qualityBadge.toLowerCase().replace(/\s+/g, '-')}">${percentiles.qualityBadge}</div>
+          <div class="population-percentile">${formatPercentile(percentiles.qualityPercentile)}</div>
+        </div>
+      </div>
+    `;
+    container.classList.remove('hidden');
+  } catch (error) {
+    console.error('Error rendering population comparison:', error);
+    container.classList.add('hidden');
+  }
+}
+
+/**
+ * Render value indicators
+ */
+export function renderValueIndicators(userStats: UserStats, populationStats: any): void {
+  const container = document.getElementById('value-indicators-container');
+  if (!container) return;
+  
+  try {
+    // Normalize population stats structure
+    const normalizedStats: PopulationStats = {
+      avg_accuracy: populationStats.avg_accuracy || populationStats.avgAccuracy,
+      avg_speed: populationStats.avg_speed || populationStats.avgSpeed,
+      avg_quality: populationStats.avg_quality || populationStats.avgQuality,
+      improvement_benchmarks: populationStats.improvement_benchmarks || populationStats.improvementBenchmarks || []
+    };
+    
+    const indicators = generateValueIndicators(userStats, normalizedStats);
+    
+    if (indicators.length === 0) {
+      container.classList.add('hidden');
+      return;
+    }
+    
+    container.innerHTML = `
+      <h2>💡 Insights</h2>
+      <div class="value-indicators-list">
+        ${indicators.map(indicator => `
+          <div class="value-indicator">${indicator}</div>
+        `).join('')}
+      </div>
+    `;
+    container.classList.remove('hidden');
+  } catch (error) {
+    console.error('Error rendering value indicators:', error);
+    container.classList.add('hidden');
+  }
+}
+
+/**
+ * Render drill quick access cards
+ */
+export function renderDrillQuickAccess(userStats: UserStats, isAuthenticated: boolean): void {
+  const container = document.getElementById('drill-quick-access-container');
+  if (!container) return;
+  
+  const allDrills = getAllDrillConfigs();
+  const underPracticed = getUnderPracticedDrills(userStats.drillStats, allDrills.map(d => d.type));
+  
+  container.innerHTML = `
+    <h2>🎯 Training Drills</h2>
+    <div class="drill-cards-grid">
+      ${allDrills.map(drill => {
+        const stats = userStats.drillStats.get(drill.type);
+        const isUnderPracticed = underPracticed.includes(drill.type);
+        
+        return `
+          <div class="drill-card ${isUnderPracticed ? 'under-practiced' : ''}" data-drill-type="${drill.type}">
+            <div class="drill-card-header">
+              <h3>${formatDrillName(drill.type)}</h3>
+              ${isUnderPracticed ? '<span class="drill-badge">New</span>' : ''}
+            </div>
+            <p class="drill-card-description">${drill.description}</p>
+            ${stats ? `
+              <div class="drill-card-stats">
+                <span>Best: ${stats.bestAccuracy.toFixed(0)}% accuracy</span>
+                <span>${stats.sessionCount} session${stats.sessionCount !== 1 ? 's' : ''}</span>
+              </div>
+            ` : '<div class="drill-card-stats"><span>Not tried yet</span></div>'}
+            <button class="btn btn-primary drill-start-btn" data-drill-type="${drill.type}">
+              Start Drill
+            </button>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+/**
+ * Render encouragement section
+ */
+export function renderEncouragementSection(
+  userStats: UserStats,
+  isAuthenticated: boolean,
+  populationStats: any
+): void {
+  const container = document.getElementById('encouragement-container');
+  if (!container) return;
+  
+  const messages: string[] = [];
+  
+  // Streak messages
+  if (userStats.currentStreak > 0) {
+    if (userStats.currentStreak >= 7) {
+      messages.push(`🔥 Amazing! ${userStats.currentStreak} day streak! You're on fire!`);
+    } else if (userStats.currentStreak >= 3) {
+      messages.push(`✨ Great streak! ${userStats.currentStreak} days in a row!`);
+    } else {
+      messages.push(`👍 ${userStats.currentStreak} day streak! Keep it up!`);
+    }
+  } else if (userStats.daysSinceLastSession > 0) {
+    if (userStats.daysSinceLastSession === 1) {
+      messages.push(`💪 Ready for another session?`);
+    } else if (userStats.daysSinceLastSession <= 3) {
+      messages.push(`📅 It's been ${userStats.daysSinceLastSession} days since your last session. Time to practice!`);
+    } else {
+      messages.push(`🎯 Welcome back! Let's get back to training!`);
+    }
+  }
+  
+  // Session count messages
+  if (userStats.totalSessions === 0) {
+    messages.push(`🚀 Ready to start your BLD training journey?`);
+  } else if (userStats.totalSessions < 5) {
+    messages.push(`💪 You're just getting started! Keep practicing to see improvement.`);
+  } else if (userStats.totalSessions < 10) {
+    messages.push(`🌟 Great progress! You're building a solid foundation.`);
+  }
+  
+  // Population comparison messages (available for all users if population stats available)
+  if (populationStats) {
+    try {
+      const normalizedStats: PopulationStats = {
+        avg_accuracy: populationStats.avg_accuracy || populationStats.avgAccuracy,
+        avg_speed: populationStats.avg_speed || populationStats.avgSpeed,
+        avg_quality: populationStats.avg_quality || populationStats.avgQuality,
+        percentiles: populationStats.percentiles
+      };
+      if (normalizedStats.percentiles) {
+        const percentiles = calculateUserPercentiles(userStats, normalizedStats);
+        if (percentiles.accuracyPercentile >= 75) {
+          messages.push(`🏆 You're performing better than ${100 - percentiles.accuracyPercentile}% of users!`);
+        }
+      }
+    } catch (error) {
+      // Ignore errors
+    }
+  }
+  
+  if (messages.length === 0) {
+    messages.push(`💪 Keep practicing to improve your BLD skills!`);
+  }
+  
+  container.innerHTML = `
+    <div class="encouragement-section">
+      <h2>💬 Motivation</h2>
+      <div class="encouragement-messages">
+        ${messages.map(msg => `<div class="encouragement-message">${msg}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Render global stats overview for unauthenticated users with no sessions
+ */
+function renderGlobalStatsOverview(populationStats: any): void {
+  const container = document.getElementById('population-comparison-container');
+  if (!container) return;
+  
+  try {
+    const avgAccuracy = populationStats.avg_accuracy || populationStats.avgAccuracy || 0;
+    const avgSpeed = populationStats.avg_speed || populationStats.avgSpeed || 0;
+    const avgQuality = populationStats.avg_quality || populationStats.avgQuality || 0;
+    
+    container.innerHTML = `
+      <h2>📊 Community Stats</h2>
+      <p style="margin-bottom: 1rem; color: var(--text-secondary);">
+        See how the community is performing! Sign up to track your progress and compare your stats.
+      </p>
+      <div class="population-comparison-grid">
+        <div class="population-card">
+          <div class="population-metric">Average Accuracy</div>
+          <div class="best-performance-value">${avgAccuracy.toFixed(1)}%</div>
+          <div class="population-percentile" style="margin-top: 0.5rem;">
+            Across all users
+          </div>
+        </div>
+        <div class="population-card">
+          <div class="population-metric">Average Speed</div>
+          <div class="best-performance-value">${formatTime(avgSpeed)}</div>
+          <div class="population-percentile" style="margin-top: 0.5rem;">
+            Per pair/piece
+          </div>
+        </div>
+        <div class="population-card">
+          <div class="population-metric">Average Quality</div>
+          <div class="best-performance-value">${avgQuality.toFixed(1)}</div>
+          <div class="population-percentile" style="margin-top: 0.5rem;">
+            Visualization rating
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-primary); border-radius: 8px; border-left: 4px solid var(--color-primary);">
+        <strong>💡 Want to see how you compare?</strong>
+        <p style="margin: 0.5rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">
+          Sign up to track your progress, compare your performance to the community, and see detailed statistics about your improvement over time.
+        </p>
+      </div>
+    `;
+    container.classList.remove('hidden');
+  } catch (error) {
+    console.error('Error rendering global stats overview:', error);
+    container.classList.add('hidden');
   }
 }

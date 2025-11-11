@@ -163,10 +163,10 @@ export function updateChartsWithFilters(
       // Show only flash drills
       filteredSessions = filteredSessions.filter(s => s.drillType === 'FLASH_PAIRS');
     } else if (drillFilter === 'chain') {
-      // Show only chain drills
+      // Show only memorization drills
       filteredSessions = filteredSessions.filter(s => 
-        s.drillType === 'THREE_PAIR_CHAIN' || 
-        s.drillType === 'EIGHT_PAIR_CHAIN'
+        s.drillType === 'EDGE_MEMORIZATION' || 
+        s.drillType === 'CORNER_MEMORIZATION'
       );
     }
   }

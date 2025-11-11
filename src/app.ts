@@ -9,6 +9,8 @@ import { startTimer, stopTimer } from './services/timer.js';
 import { getQualityMetric } from './services/quality-adapter.js';
 import { getAllSessions } from './storage/storage-adapter.js';
 import { getAllNotationSessions } from './storage/storage-adapter.js';
+import { getAuthState, waitForAuthInit } from './services/auth-service.js';
+import { getUserStats, getPopulationStats } from './services/api-client.js';
 import { clearAllSessions } from './storage/session-storage.js';
 import { generateCSV, downloadCSV } from './services/csv-exporter.js';
 import { initializeAuthUI } from './ui/auth-ui.js';
@@ -21,6 +23,7 @@ import {
   renderRatingScreen,
   renderRecallFeedback,
   renderDashboard,
+  renderHomeDashboard,
   showNotification,
   showPairCountWarning,
   clearPairCountWarning,
@@ -94,8 +97,8 @@ export async function initializeApp(): Promise<void> {
   // Show appropriate tutorial button based on onboarding status
   setupTutorialButtons();
   
-  // Always start with setup screen, let auth UI handle dashboard loading
-  showScreen('setup-screen');
+  // Load dashboard data and show home dashboard by default
+  await loadAndRenderHomeDashboard();
 }
 
 function attachEventListeners(): void {
@@ -123,21 +126,8 @@ function attachEventListeners(): void {
   
   if (viewDashboardBtn) {
     viewDashboardBtn.addEventListener('click', async () => {
-      try {
-        // Load Chart.js first
-        await loadChartJS();
-        
-        const sessions = await getAllSessions();
-        const notationSessions = await getAllNotationSessions();
-        console.log('Loaded sessions:', sessions.length, 'notation sessions:', notationSessions.length);
-        renderDashboard(sessions, notationSessions);
-        showScreen('dashboard-screen');
-      } catch (error) {
-        console.error('Error loading dashboard data:', error);
-        // Show empty dashboard if there's an error
-        renderDashboard([], []);
-        showScreen('dashboard-screen');
-      }
+      // Navigate to home dashboard instead of detailed dashboard
+      await loadAndRenderHomeDashboard();
     });
   }
   
@@ -308,6 +298,131 @@ function attachEventListeners(): void {
   
   if (drillFilterSelect) {
     drillFilterSelect.addEventListener('change', handleChartFilterChange);
+  }
+  
+  // Home dashboard event listeners
+  setupHomeDashboardListeners();
+  
+  // Back to dashboard button (from setup screen)
+  const backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
+  if (backToDashboardBtn) {
+    backToDashboardBtn.addEventListener('click', async () => {
+      await loadAndRenderHomeDashboard();
+    });
+  }
+  
+  // Listen for auth state changes to refresh dashboard
+  window.addEventListener('auth-state-changed', async () => {
+    // Refresh home dashboard when auth state changes
+    const homeDashboardScreen = document.getElementById('home-dashboard-screen');
+    if (homeDashboardScreen && !homeDashboardScreen.classList.contains('hidden')) {
+      await loadAndRenderHomeDashboard();
+    }
+  });
+}
+
+/**
+ * Setup event listeners for home dashboard
+ */
+function setupHomeDashboardListeners(): void {
+  // Primary CTA button - start training
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.id === 'start-training-btn' || target.closest('#start-training-btn')) {
+      e.preventDefault();
+      showScreen('setup-screen');
+    }
+    
+    // Drill card start buttons
+    if (target.classList.contains('drill-start-btn') || target.closest('.drill-start-btn')) {
+      e.preventDefault();
+      const btn = target.classList.contains('drill-start-btn') ? target : target.closest('.drill-start-btn') as HTMLElement;
+      const drillType = btn.getAttribute('data-drill-type');
+      if (drillType) {
+        startDrillFromCard(drillType as DrillType);
+      }
+    }
+    
+    // Registration signup button
+    if (target.id === 'registration-signup-btn' || target.closest('#registration-signup-btn')) {
+      e.preventDefault();
+      handleRegistrationSignup();
+    }
+  });
+}
+
+/**
+ * Load and render home dashboard
+ */
+async function loadAndRenderHomeDashboard(): Promise<void> {
+  try {
+    // Wait for auth to initialize
+    await waitForAuthInit();
+    const authState = getAuthState();
+    const isAuthenticated = authState.isAuthenticated;
+    
+    // Load sessions (from API if authenticated, from localStorage if not)
+    const sessions = await getAllSessions();
+    const notationSessions = await getAllNotationSessions();
+    
+    // Load population stats (available for all users - public endpoint)
+    let populationStats = null;
+    try {
+      populationStats = await getPopulationStats();
+    } catch (error) {
+      console.error('Error loading population stats:', error);
+      // Continue without population stats
+    }
+    
+    // Render home dashboard
+    renderHomeDashboard(sessions, notationSessions, populationStats);
+    
+    // Show home dashboard screen if we're not already on a session screen
+    const currentScreen = document.querySelector('.screen:not(.hidden)');
+    if (!currentScreen || currentScreen.id === 'home-dashboard-screen' || 
+        currentScreen.id === 'setup-screen' || currentScreen.id === 'dashboard-screen') {
+      showScreen('home-dashboard-screen');
+    }
+  } catch (error) {
+    console.error('Error loading dashboard:', error);
+    // Show dashboard with empty data
+    renderHomeDashboard([], [], null);
+    showScreen('home-dashboard-screen');
+  }
+}
+
+/**
+ * Start drill from drill card
+ */
+function startDrillFromCard(drillType: DrillType): void {
+  const config = getDrillConfig(drillType);
+  if (!config) return;
+  
+  // Navigate to setup screen
+  showScreen('setup-screen');
+  
+  // Pre-select the drill
+  const drillSelect = document.getElementById('drill-select') as HTMLSelectElement;
+  if (drillSelect) {
+    drillSelect.value = drillType;
+    updateDrillDescription(config);
+  }
+  
+  // Optionally auto-start the session (or just pre-select and let user start)
+  // For now, just pre-select and show setup screen
+}
+
+/**
+ * Handle registration signup from dashboard
+ */
+async function handleRegistrationSignup(): Promise<void> {
+  try {
+    const { signInWithGoogle } = await import('./services/auth-service.js');
+    await signInWithGoogle();
+    // Auth UI will handle the rest and refresh dashboard
+  } catch (error) {
+    console.error('Registration signup failed:', error);
+    showNotification('Failed to sign up. Please try again.', 'error');
   }
 }
 

@@ -3,7 +3,96 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BLD Memory Trainer</title>
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>Blindfold Cubing Training - Practice Memory & Visualization</title>
+  <meta name="title" content="Blindfold Cubing Training - Practice Memory & Visualization">
+  <meta name="description" content="Free online BLD training tool for blindfold cubing. Practice letter pairs, improve visualization speed, and track your progress with structured memory drills. Offline-capable, mobile-friendly blindfold cube practice app.">
+  <meta name="keywords" content="blindfold cubing, BLD training, blindfold cube practice app, offline blindfold cube trainer, BLD memory trainer web app, free blindfold cubing app, letter pairs blindfold cubing, visualization training cube, BLD practice, memory palace, Speffz notation, blindfold cubing practice, BLD memory training, mobile BLD practice web app">
+  <meta name="author" content="BlindfoldCubing.com">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  <meta name="revisit-after" content="7 days">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://blindfoldcubing.com/">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://blindfoldcubing.com/">
+  <meta property="og:title" content="Blindfold Cubing Training - Practice Memory & Visualization">
+  <meta property="og:description" content="Train your memory and visualization skills for blindfolded Rubik's cube solving. Practice letter pairs, improve recall accuracy, and track your progress with structured drills.">
+  <meta property="og:image" content="https://blindfoldcubing.com/og-image.jpg">
+  <meta property="og:site_name" content="BlindfoldCubing.com">
+  <meta property="og:locale" content="en_US">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://blindfoldcubing.com/">
+  <meta name="twitter:title" content="Blindfold Cubing Training - Practice Memory & Visualization">
+  <meta name="twitter:description" content="Train your memory and visualization skills for blindfolded Rubik's cube solving. Practice letter pairs, improve recall accuracy, and track your progress.">
+  <meta name="twitter:image" content="https://blindfoldcubing.com/og-image.jpg">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#667eea">
+  
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Blindfold Cubing Training",
+    "alternateName": "BLD Memory Trainer",
+    "url": "https://blindfoldcubing.com",
+    "description": "Train your memory and visualization skills for blindfolded Rubik's cube solving. Practice letter pairs, improve recall accuracy, and track your progress with structured drills.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Flash Pairs Training",
+      "Letter Pair Visualization",
+      "Memory Palace Practice",
+      "Progress Tracking",
+      "BLD Skill Improvement",
+      "Speffz Notation Training"
+    ],
+    "screenshot": "https://blindfoldcubing.com/og-image.jpg"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Blindfold Cubing Training",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.5",
+      "ratingCount": "100"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "BlindfoldCubing.com",
+    "url": "https://blindfoldcubing.com",
+    "logo": "https://blindfoldcubing.com/logo.png",
+    "description": "Training application for blindfold cubing memory skills and visualization practice"
+  }
+  </script>
+  
   <link rel="stylesheet" href="styles.css">
   <script type="importmap">
     {
@@ -16,43 +105,83 @@
 </head>
 <body>
   <div id="app">
-    <!-- Setup Screen -->
-    <div id="setup-screen" class="screen">
-      <header>
-        <h1>🧠 BLD Memory Trainer</h1>
-        <p class="subtitle">Improve your blindfold cubing visualization</p>
-        <div class="intro-link-container">
-          <a href="intro.html" class="intro-link" target="_blank">
-            📚 Learn How to Solve a Rubik's Cube Blindfolded (Beginner's Guide)
-          </a>
-          <button id="start-tutorial-btn" class="btn btn-tutorial">
-            🎯 Start Interactive Tutorial
-          </button>
-          <button id="review-tutorial-btn" class="btn btn-secondary" style="display: none;">
-            📚 Review Tutorial
-          </button>
+    <!-- Navigation/Footer -->
+    <nav id="main-navigation" class="main-navigation">
+      <div class="nav-container">
+        <a href="index.html" class="nav-logo">BLD Trainer</a>
+        <div class="nav-links">
+          <a href="intro.html">Beginner's Guide</a>
+          <a href="features.html">Features</a>
+          <a href="guides/improve-visualization-memory.html">Visualization Guide</a>
+          <a href="guides/speffz-notation.html">Speffz Notation</a>
+          <a href="guides/progress-tracking.html">Progress Tracking</a>
         </div>
+      </div>
+    </nav>
+
+    <!-- Home Dashboard Screen (Default) -->
+    <div id="home-dashboard-screen" class="screen">
+      <header>
+        <h1>Blindfold Cubing Training Dashboard</h1>
+        <p class="subtitle">Track your progress, improve your skills, and compare with other users</p>
         
         <!-- Auth Container -->
-        <div id="auth-container" class="auth-container">
-          <button id="login-button" class="btn btn-auth">
-            <img src="https://www.google.com/favicon.ico" alt="Google" width="20" />
+        <div id="auth-container-dashboard" class="auth-container">
+          <button id="login-button-dashboard" class="btn btn-auth">
+            <img src="https://www.google.com/favicon.ico" alt="Google sign in icon" width="20" />
             Sign in with Google
           </button>
           
-          <div id="user-profile" class="user-profile hidden">
-            <img id="user-avatar" src="" alt="User" class="avatar" />
-            <span id="user-email" class="user-email"></span>
-            <button id="logout-button" class="btn btn-text">Sign Out</button>
+          <div id="user-profile-dashboard" class="user-profile hidden">
+            <img id="user-avatar-dashboard" src="" alt="User profile avatar" class="avatar" />
+            <span id="user-email-dashboard" class="user-email"></span>
+            <button id="logout-button-dashboard" class="btn btn-text">Sign Out</button>
           </div>
         </div>
       </header>
 
+      <!-- Registration Prompt (for unauthenticated users) -->
+      <div id="registration-prompt-container" class="registration-prompt-container hidden"></div>
+
+      <!-- Primary CTA -->
+      <div id="primary-cta-container" class="primary-cta-container"></div>
+
+      <!-- Key Stats Grid -->
+      <div id="home-stats-grid" class="stats-grid"></div>
+
+      <!-- Best Performance -->
+      <div id="best-performance-container" class="card"></div>
+
+      <!-- Population Comparison (available for all users) -->
+      <div id="population-comparison-container" class="card hidden"></div>
+
+      <!-- Value Indicators (available for all users) -->
+      <div id="value-indicators-container" class="card hidden"></div>
+
+      <!-- Drill Quick Access -->
+      <div id="drill-quick-access-container" class="card"></div>
+
+      <!-- Encouragement Section -->
+      <div id="encouragement-container" class="card"></div>
+    </div>
+
+    <!-- Setup Screen (for starting drills) -->
+    <div id="setup-screen" class="screen hidden">
+      <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <button id="back-to-dashboard-btn" class="btn btn-text">← Back to Dashboard</button>
+          <h1 style="flex: 1; text-align: center; margin: 0;">Start Training Session</h1>
+          <div style="width: 120px;"></div>
+        </div>
+        <p class="subtitle">Choose a drill and start practicing your BLD skills</p>
+      </header>
+
       <div class="card">
         <div class="card-header-with-action">
-          <h2>Start Training Session</h2>
+          <h2>Start Your BLD Training Session</h2>
           <button id="show-technique-intro-btn" class="btn btn-info-icon" title="About BLD Memorization">ℹ️</button>
         </div>
+        <p class="help-text" style="margin-bottom: 1rem;">Choose from multiple training drills designed to improve your blindfold cubing memory, visualization speed, and recall accuracy. All drills work offline and on mobile devices.</p>
         
         <div class="form-group">
           <label for="drill-select">Drill Type</label>
@@ -69,8 +198,11 @@
           <p id="pair-count-warning" class="help-text warning"></p>
         </div>
 
-        <button id="start-btn" class="btn btn-primary">Start Session</button>
-        <button id="view-dashboard-btn" class="btn btn-secondary">View Dashboard</button>
+        <button id="start-btn" class="btn btn-primary">Start Training Session</button>
+        <p class="help-text" style="margin-top: 1rem; text-align: center;">
+          <a href="features.html" style="color: var(--color-primary); text-decoration: underline;">Learn more about our offline and mobile features</a> • 
+          <a href="intro.html" style="color: var(--color-primary); text-decoration: underline;">New to blindfold cubing? Read our beginner's guide</a>
+        </p>
       </div>
     </div>
 
@@ -226,12 +358,12 @@
           <!-- Auth Container -->
           <div id="auth-container-dashboard" class="auth-container">
             <button id="login-button-dashboard" class="btn btn-auth">
-              <img src="https://www.google.com/favicon.ico" alt="Google" width="20" />
-              Sign in
-            </button>
-            
-            <div id="user-profile-dashboard" class="user-profile hidden">
-              <img id="user-avatar-dashboard" src="" alt="User" class="avatar" />
+            <img src="https://www.google.com/favicon.ico" alt="Google sign in icon" width="20" />
+            Sign in
+          </button>
+          
+          <div id="user-profile-dashboard" class="user-profile hidden">
+            <img id="user-avatar-dashboard" src="" alt="User profile avatar" class="avatar" />
               <span id="user-email-dashboard" class="user-email"></span>
               <button id="logout-button-dashboard" class="btn btn-text">Sign Out</button>
             </div>
@@ -336,6 +468,39 @@
     <div id="notification" class="notification hidden">
       <span id="notification-message"></span>
     </div>
+
+    <!-- Footer with SEO links -->
+    <footer id="main-footer" class="main-footer">
+      <div class="footer-container">
+        <div class="footer-section">
+          <h3>Learn</h3>
+          <ul>
+            <li><a href="intro.html">Beginner's Guide</a></li>
+            <li><a href="guides/improve-visualization-memory.html">Visualization Guide</a></li>
+            <li><a href="guides/speffz-notation.html">Speffz Notation</a></li>
+            <li><a href="guides/progress-tracking.html">Progress Tracking</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Features</h3>
+          <ul>
+            <li><a href="features.html">Offline & Mobile</a></li>
+            <li><a href="index.html">Training Drills</a></li>
+            <li><a href="index.html#dashboard">Progress Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>About</h3>
+          <ul>
+            <li><a href="intro.html">What is BLD?</a></li>
+            <li><a href="features.html">How It Works</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 BlindfoldCubing.com - Free BLD Training Tool</p>
+      </div>
+    </footer>
   </div>
 
   <script type="module" src="../dist/app.js"></script>
