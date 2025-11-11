@@ -14,7 +14,7 @@ from ...repositories import notation_session_repository
 router = APIRouter(prefix="/notation-sessions", tags=["notation-sessions"])
 
 
-@router.post("/", response_model=NotationSessionResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=NotationSessionResponse, status_code=status.HTTP_201_CREATED)
 async def create_notation_session(
     session_data: NotationSessionCreate,
     current_user: User = Depends(get_current_user),
@@ -27,7 +27,7 @@ async def create_notation_session(
     return session
 
 
-@router.get("/", response_model=List[NotationSessionResponse])
+@router.get("", response_model=List[NotationSessionResponse])
 async def get_user_notation_sessions(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),

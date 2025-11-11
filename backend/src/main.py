@@ -21,7 +21,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
-    lifespan=lifespan
+    lifespan=lifespan,
+    redirect_slashes=False  # Prevent automatic redirects for trailing slashes
 )
 
 # CORS middleware

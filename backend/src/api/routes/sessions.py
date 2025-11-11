@@ -14,7 +14,7 @@ from ...repositories import session_repository
 router = APIRouter(prefix="/sessions", tags=["sessions"])
 
 
-@router.post("/", response_model=SessionResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=SessionResponse, status_code=status.HTTP_201_CREATED)
 async def create_session(
     session_data: SessionCreate,
     current_user: User = Depends(get_current_user),
@@ -25,7 +25,7 @@ async def create_session(
     return session
 
 
-@router.get("/", response_model=List[SessionResponse])
+@router.get("", response_model=List[SessionResponse])
 async def get_user_sessions(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
