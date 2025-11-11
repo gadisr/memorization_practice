@@ -6,7 +6,21 @@ import { getAuthToken } from './auth-service.js';
 import { SessionData, NotationSessionData } from '../types.js';
 
 // Get API base URL from global config or default
-const API_BASE_URL = (window as any).API_BASE_URL || 'http://localhost:8000/api/v1';
+// In production, this should be set by serve.py script injection
+const API_BASE_URL = (window as any).API_BASE_URL || 
+  (window.location.protocol === 'https:' ? 'https://blindfoldcubing.com/api/v1' : 'http://localhost:8000/api/v1');
+
+// Additional fallback: if we're on the production domain, always use HTTPS
+const isProductionDomain = window.location.hostname === 'blindfoldcubing.com' || window.location.hostname === 'www.blindfoldcubing.com';
+const finalApiBaseUrl = isProductionDomain && !(window as any).API_BASE_URL ? 'https://blindfoldcubing.com/api/v1' : API_BASE_URL;
+
+// Debug logging to help troubleshoot
+console.log('API_BASE_URL:', API_BASE_URL);
+console.log('finalApiBaseUrl:', finalApiBaseUrl);
+console.log('window.API_BASE_URL:', (window as any).API_BASE_URL);
+console.log('window.location.protocol:', window.location.protocol);
+console.log('window.location.hostname:', window.location.hostname);
+console.log('isProductionDomain:', isProductionDomain);
 
 async function getAuthHeaders(): Promise<HeadersInit> {
   const token = await getAuthToken();
@@ -18,7 +32,7 @@ async function getAuthHeaders(): Promise<HeadersInit> {
 
 export async function getCurrentUserProfile(): Promise<any> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/users/me`, { headers });
+  const response = await fetch(`${finalApiBaseUrl}/users/me`, { headers });
   
   if (!response.ok) throw new Error('Failed to fetch user profile');
   
@@ -45,7 +59,7 @@ export async function createSession(sessionData: SessionData): Promise<SessionDa
     notes: sessionData.notes
   };
   
-  const response = await fetch(`${API_BASE_URL}/sessions`, {
+  const response = await fetch(`${finalApiBaseUrl}/sessions`, {
     method: 'POST',
     headers,
     body: JSON.stringify(backendData)
@@ -86,7 +100,7 @@ export async function getUserSessions(
     ...(drillType ? { drill_type: drillType } : {})
   });
   
-  const response = await fetch(`${API_BASE_URL}/sessions/?${params}`, { headers });
+  const response = await fetch(`${finalApiBaseUrl}/sessions?${params}`, { headers });
   
   if (!response.ok) throw new Error('Failed to fetch sessions');
   
@@ -129,7 +143,7 @@ export async function createNotationSession(
     notes: sessionData.notes
   };
   
-  const response = await fetch(`${API_BASE_URL}/notation-sessions`, {
+  const response = await fetch(`${finalApiBaseUrl}/notation-sessions`, {
     method: 'POST',
     headers,
     body: JSON.stringify(backendData)
@@ -166,7 +180,7 @@ export async function getUserNotationSessions(
     ...(drillType ? { drill_type: drillType } : {})
   });
   
-  const response = await fetch(`${API_BASE_URL}/notation-sessions?${params}`, { headers });
+  const response = await fetch(`${finalApiBaseUrl}/notation-sessions?${params}`, { headers });
   
   if (!response.ok) throw new Error('Failed to fetch notation sessions');
   
@@ -185,5 +199,115 @@ export async function getUserNotationSessions(
     totalTime: session.total_time ? Number(session.total_time) : undefined,
     notes: session.notes
   }));
+}
+
+export interface UserStatsResponse {
+  total_sessions: number;
+  total_pairs: number;
+  avg_accuracy: number;
+  avg_speed: number;
+  best_accuracy: number;
+  best_speed: number;
+  best_quality: number;
+  current_streak: number;
+  last_session_date: string | null;
+  days_since_last_session: number;
+  drill_stats: Array<{
+    drill_type: string;
+    session_count: number;
+    best_accuracy: number;
+    best_speed: number;
+    avg_accuracy: number;
+    avg_speed: number;
+  }>;
+}
+
+export interface PopulationStatsResponse {
+  avg_accuracy: number;
+  avg_speed: number;
+  avg_quality: number;
+  percentiles: {
+    accuracy: {
+      p25: number;
+      p50: number;
+      p75: number;
+      p90: number;
+    };
+    speed: {
+      p25: number;
+      p50: number;
+      p75: number;
+      p90: number;
+    };
+    quality: {
+      p25: number;
+      p50: number;
+      p75: number;
+      p90: number;
+    };
+  };
+  improvement_benchmarks: Array<{
+    sessions: number;
+    avg_improvement: number;
+    description: string;
+  }>;
+  drill_popularity: Record<string, number>;
+}
+
+export async function getUserStats(): Promise<UserStatsResponse> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${finalApiBaseUrl}/stats`, { headers });
+  
+  if (!response.ok) throw new Error('Failed to fetch user stats');
+  
+  return await response.json();
+}
+
+export async function getPopulationStats(): Promise<PopulationStatsResponse | null> {
+  // Population stats endpoint is public (no auth required)
+  // Try with auth headers first, but fall back to no-auth request if not authenticated
+  try {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${finalApiBaseUrl}/stats/population`, { headers });
+    
+    if (!response.ok) {
+      // If population stats are not available (e.g., insufficient data), return null
+      if (response.status === 404 || response.status === 503) {
+        return null;
+      }
+      // If auth failed, try without auth (public endpoint)
+      if (response.status === 401 || response.status === 403) {
+        return await getPopulationStatsPublic();
+      }
+      throw new Error('Failed to fetch population stats');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    // If error, try public endpoint
+    return await getPopulationStatsPublic();
+  }
+}
+
+async function getPopulationStatsPublic(): Promise<PopulationStatsResponse | null> {
+  try {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    const response = await fetch(`${finalApiBaseUrl}/stats/population`, { headers });
+    
+    if (!response.ok) {
+      // If population stats are not available (e.g., insufficient data), return null
+      if (response.status === 404 || response.status === 503) {
+        return null;
+      }
+      throw new Error('Failed to fetch population stats');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching population stats:', error);
+    return null;
+  }
 }
 
