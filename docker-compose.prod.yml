@@ -5,17 +5,35 @@
 version: '3.8'
 
 services:
-  # Remove postgres service for production (use managed database)
+  # Include postgres service for testing (use managed database in real production)
   postgres:
-    profiles:
-      - local-only
+    image: postgres:15-alpine
+    container_name: bld_trainer_db
+    environment:
+      POSTGRES_USER: bld_user
+      POSTGRES_PASSWORD: bld_password
+      POSTGRES_DB: bld_trainer
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bld_user -d bld_trainer"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Update backend to not depend on postgres
+  # Update backend to depend on postgres for testing
   backend:
-    depends_on: []
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
       # Override with production environment variables
       DATABASE_URL: ${DATABASE_URL}
       FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
       FIREBASE_CREDENTIALS_PATH: ${FIREBASE_CREDENTIALS_PATH}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+
+volumes:
+  postgres_data:

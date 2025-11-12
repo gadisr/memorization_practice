@@ -1,0 +1,13 @@
+FROM nginx:alpine
+
+# Copy local nginx configuration (no SSL)
+COPY nginx-local.conf /etc/nginx/nginx.conf
+
+# Create necessary directories
+RUN mkdir -p /var/log/nginx
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

@@ -54,3 +54,5 @@ class PopulationStatsResponse(BaseModel):
     improvement_benchmarks: List[ImprovementBenchmark]
     drill_popularity: Dict[str, int]
 
+
+

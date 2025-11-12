@@ -46,7 +46,10 @@ fi
 
 # Load production environment variables
 if [ -f "production.env" ]; then
-    export $(cat production.env | grep -v '^#' | xargs)
+    # Source the environment file safely
+    set -a  # automatically export all variables
+    source production.env
+    set +a  # stop automatically exporting
     print_status 0 "Production environment variables loaded"
 else
     print_status 1 "production.env file not found"
@@ -78,11 +81,14 @@ else
     print_status 0 "FIREBASE_CREDENTIALS_PATH is set"
 fi
 
-# Check if Firebase credentials file exists
-if [ ! -f "$FIREBASE_CREDENTIALS_PATH" ]; then
-    print_warning "Firebase credentials file not found at: $FIREBASE_CREDENTIALS_PATH"
+# Check if Firebase credentials file exists (check host path, not container path)
+FIREBASE_CREDENTIALS_HOST_PATH="./backend/firebase-credentials.json"
+if [ ! -f "$FIREBASE_CREDENTIALS_HOST_PATH" ]; then
+    print_warning "Firebase credentials file not found at: $FIREBASE_CREDENTIALS_HOST_PATH"
     echo "Please ensure your Firebase credentials file is in the correct location."
     exit 1
+else
+    print_status 0 "Firebase credentials file found"
 fi
 
 echo ""

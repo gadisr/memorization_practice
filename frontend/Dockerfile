@@ -39,7 +39,7 @@ COPY public/ ./public/
 EXPOSE 3000
 
 # Set environment variable for API base URL (can be overridden by docker-compose)
-ENV API_BASE_URL=http://localhost:8000/api/v1
+ENV API_BASE_URL=https://blindfoldcubing.com/api/v1
 
 # Set the command to run the development server
 CMD ["python3", "serve.py"]

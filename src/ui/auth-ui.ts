@@ -127,8 +127,19 @@ function updateAuthUI(isAuthenticated: boolean, user: any, elements: {
       userAvatar.classList.add('hidden');
     }
   } else {
-    // User is logged out - show login button, hide profile
-    loginButton?.classList.remove('hidden');
+    // User is logged out - hide login button in header on home dashboard (registration prompt handles sign-in)
+    // Check if we're on the home dashboard by checking if the registration prompt container exists
+    const registrationPromptContainer = document.getElementById('registration-prompt-container');
+    const isHomeDashboard = registrationPromptContainer !== null;
+    
+    if (isHomeDashboard && loginButton?.id === 'login-button-dashboard') {
+      // Hide the header sign-in button on home dashboard for unregistered users
+      // The registration prompt provides a clearer sign-in option
+      loginButton?.classList.add('hidden');
+    } else {
+      // Show login button on other screens
+      loginButton?.classList.remove('hidden');
+    }
     userProfile?.classList.add('hidden');
     
     // Clear user information

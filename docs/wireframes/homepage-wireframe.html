@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage Wireframe - Sign-In CTAs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FAFAFA;
+            color: #212121;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .wireframe-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .wireframe-section {
+            margin-bottom: 60px;
+            padding: 20px;
+            border: 2px dashed #E0E0E0;
+            border-radius: 8px;
+            background: #FAFAFA;
+        }
+        
+        .wireframe-section h2 {
+            color: #1976D2;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .wireframe-section h3 {
+            color: #424242;
+            margin: 30px 0 15px 0;
+            font-size: 1.2rem;
+        }
+        
+        .note {
+            background: #FFF3E0;
+            border-left: 4px solid #FF9800;
+            padding: 12px 16px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+        
+        /* CTA Variations */
+        .cta-variation {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        .cta-variation h4 {
+            color: #1976D2;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .cta-box {
+            background: #F5F5F5;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #2196F3;
+            border: 2px solid #2196F3;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 1.1rem;
+        }
+        
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        
+        .benefits-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .benefits-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .progress-preview {
+            background: #E3F2FD;
+            border: 1px solid #90CAF9;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #BBDEFB;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #2196F3;
+            width: 65%;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2196F3;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #757575;
+            margin-top: 5px;
+        }
+        
+        .pdf-section {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .pdf-section h3 {
+            color: #F57C00;
+            margin-bottom: 15px;
+        }
+        
+        .lock-icon {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .modal-overlay {
+            background: rgba(0,0,0,0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .modal h3 {
+            margin-bottom: 15px;
+        }
+        
+        .modal p {
+            margin-bottom: 25px;
+            color: #757575;
+        }
+    </style>
+</head>
+<body>
+    <div class="wireframe-container">
+        <h1 style="text-align: center; color: #1976D2; margin-bottom: 40px;">
+            Homepage Wireframe - Sign-In CTAs & Layout
+        </h1>
+        
+        <!-- Hero Section -->
+        <div class="wireframe-section">
+            <h2>1. Hero Section (Above the Fold)</h2>
+            <div class="hero">
+                <h1>Train Your Mind. Solve Blind.</h1>
+                <p>Master memory and visualization drills for blindfold Rubik's cube solving</p>
+                <div style="margin-top: 30px;">
+                    <button class="btn-primary btn-large">🚀 Start Free Drill</button>
+                    <button class="btn-secondary btn-large">📺 Watch How It Works</button>
+                </div>
+                <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.9;">
+                    Track progress and unlock your memory stats
+                </p>
+            </div>
+        </div>
+        
+        <!-- CTA Variation 1: Progress Teaser -->
+        <div class="wireframe-section">
+            <h2>2. CTA Variation 1: Progress Teaser (High Conversion)</h2>
+            <div class="cta-variation">
+                <h4>Strategy: Show value before asking</h4>
+                <div class="cta-box">
+                    <h3 style="margin-top: 0;">📊 Your Progress Preview</h3>
+                    <div class="progress-preview">
+                        <div style="font-size: 0.9rem; color: #757575; margin-bottom: 10px;">
+                            You've completed <strong>12 drills</strong> today!
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: #757575;">
+                            Sign in to save your progress and unlock detailed stats
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="btn-primary btn-large">
+                            🔐 Sign in to Save Progress
+                        </button>
+                        <p style="margin-top: 10px; font-size: 0.85rem; color: #757575;">
+                            Free • No credit card • Takes 10 seconds
+                        </p>
+                    </div>
+                </div>
+                <div class="note">
+                    <strong>Why this works:</strong> Users see their activity first, creating a sense of investment. 
+                    The progress bar creates FOMO - they don't want to lose their work.
+                </div>
+            </div>
+        </div>
+        
+        <!-- CTA Variation 2: Social Proof -->
+        <div class="wireframe-section">
+            <h2>3. CTA Variation 2: Social Proof + Benefits</h2>
+            <div class="cta-variation">
+                <h4>Strategy: Show popularity and benefits</h4>
+                <div class="cta-box">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 2rem; font-weight: bold; color: #2196F3;">
+                            2,847
+                        </div>
+                        <div style="color: #757575; font-size: 0.9rem;">
+                            cubers tracking their progress
+                        </div>
+                    </div>
+                    <h3>Join them and unlock:</h3>
+                    <ul class="benefits-list">
+                        <li>Save all your drill results automatically</li>
+                        <li>Track progress over time with detailed charts</li>
+                        <li>Compare your stats with other cubers</li>
+                        <li>Access your data from any device</li>
+                        <li>Download the complete PDF tutorial (free)</li>
+                    </ul>
+                    <div style="margin-top: 25px; text-align: center;">
+                        <button class="btn-primary btn-large">
+                            <img src="https://www.google.com/favicon.ico" alt="Google" width="20" style="vertical-align: middle; margin-right: 8px;">
+                            Sign in with Google
+                        </button>
+                        <p style="margin-top: 10px; font-size: 0.85rem; color: #757575;">
+                            One click • No password needed
+                        </p>
+                    </div>
+                </div>
+                <div class="note">
+                    <strong>Why this works:</strong> Social proof (number of users) creates trust. 
+                    Clear benefits list shows immediate value. Google sign-in reduces friction.
+                </div>
+            </div>
+        </div>
+        
+        <!-- CTA Variation 3: Loss Aversion -->
+        <div class="wireframe-section">
+            <h2>4. CTA Variation 3: Loss Aversion (After First Drill)</h2>
+            <div class="cta-variation">
+                <h4>Strategy: Trigger after user completes first drill</h4>
+                <div class="cta-box">
+                    <div style="background: #FFEBEE; border: 2px solid #EF5350; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                        <h3 style="color: #C62828; margin-top: 0;">⚠️ Your Results Won't Be Saved</h3>
+                        <p style="color: #424242; margin-bottom: 0;">
+                            You just completed a great drill! Sign in now to save this session and track your improvement over time.
+                        </p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">15</div>
+                            <div class="stat-label">Pairs Today</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">92%</div>
+                            <div class="stat-label">Accuracy</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3.2s</div>
+                            <div class="stat-label">Avg Speed</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 25px; text-align: center;">
+                        <button class="btn-primary btn-large">
+                            💾 Save This Session
+                        </button>
+                        <button class="btn-secondary">
+                            Continue Without Saving
+                        </button>
+                    </div>
+                </div>
+                <div class="note">
+                    <strong>Why this works:</strong> Shows their actual results, making the loss tangible. 
+                    The warning creates urgency. Stats make it feel valuable.
+                </div>
+            </div>
+        </div>
+        
+        <!-- PDF Download Section -->
+        <div class="wireframe-section">
+            <h2>5. PDF Tutorial Download (Sign-In Gate)</h2>
+            <div class="pdf-section">
+                <h3>📚 Learn the Smart Way</h3>
+                <p style="margin-bottom: 20px;">
+                    Get the complete blindfold solving tutorial - step-by-step method, 
+                    memory techniques, and advanced strategies.
+                </p>
+                <div style="background: white; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <span class="lock-icon">🔒</span>
+                        <strong>Free Download Available</strong>
+                    </div>
+                    <ul class="benefits-list" style="margin: 15px 0;">
+                        <li>Complete step-by-step method</li>
+                        <li>Memory palace techniques</li>
+                        <li>Visualization exercises</li>
+                        <li>Common mistakes to avoid</li>
+                        <li>Advanced strategies</li>
+                    </ul>
+                    <div style="margin-top: 25px; text-align: center;">
+                        <button class="btn-primary btn-large">
+                            🔐 Sign in to Download PDF
+                        </button>
+                        <p style="margin-top: 10px; font-size: 0.85rem; color: #757575;">
+                            Free forever • No ads • Instant access after sign-in
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal Example -->
+            <div class="note" style="margin-top: 20px;">
+                <strong>Modal Flow:</strong> When user clicks "Download PDF" without being signed in, 
+                show a modal with sign-in prompt and benefits.
+            </div>
+            <div style="background: #F5F5F5; border-radius: 8px; padding: 20px; margin-top: 15px;">
+                <h4 style="color: #424242; margin-bottom: 15px;">Modal Content (when clicking download):</h4>
+                <div style="background: white; border-radius: 8px; padding: 25px;">
+                    <h3 style="margin-top: 0;">Get Your Free Tutorial</h3>
+                    <p>
+                        Sign in to download the complete blindfold solving tutorial PDF. 
+                        It's free, and you'll also unlock progress tracking for all your drills.
+                    </p>
+                    <ul class="benefits-list" style="margin: 20px 0;">
+                        <li>Instant PDF download</li>
+                        <li>Save all drill results</li>
+                        <li>Track your progress</li>
+                    </ul>
+                    <div style="text-align: center; margin-top: 25px;">
+                        <button class="btn-primary btn-large">
+                            <img src="https://www.google.com/favicon.ico" alt="Google" width="20" style="vertical-align: middle; margin-right: 8px;">
+                            Sign in with Google
+                        </button>
+                        <p style="margin-top: 10px; font-size: 0.85rem; color: #757575;">
+                            Takes 10 seconds • No password needed
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recommended Homepage Layout -->
+        <div class="wireframe-section">
+            <h2>6. Recommended Homepage Layout (Priority Order)</h2>
+            <div style="background: white; border-radius: 8px; padding: 25px;">
+                <ol style="line-height: 2.5;">
+                    <li><strong>Hero Section</strong> - Main value prop + "Start Free Drill" button</li>
+                    <li><strong>Quick Drill Interface</strong> - Let users try immediately (no sign-in required)</li>
+                    <li><strong>Progress Teaser CTA</strong> - Show their activity, prompt sign-in to save</li>
+                    <li><strong>Drill Modules Grid</strong> - Flash Pairs, Memory Palace, etc.</li>
+                    <li><strong>PDF Tutorial Section</strong> - Sign-in gate for download</li>
+                    <li><strong>Social Proof Section</strong> - Stats, testimonials, or user count</li>
+                    <li><strong>Features Overview</strong> - What they get when signed in</li>
+                </ol>
+            </div>
+            <div class="note" style="margin-top: 20px;">
+                <strong>Key Principle:</strong> Let users experience value first (free drill), 
+                then show them what they're missing (progress tracking), then make it easy to sign in.
+            </div>
+        </div>
+        
+        <!-- Implementation Notes -->
+        <div class="wireframe-section">
+            <h2>7. Implementation Notes</h2>
+            <div style="background: white; border-radius: 8px; padding: 25px;">
+                <h3>Best Practices:</h3>
+                <ul class="benefits-list" style="margin-top: 15px;">
+                    <li>Show progress teaser after user completes 1-2 drills (creates investment)</li>
+                    <li>Use the loss aversion CTA immediately after first drill completion</li>
+                    <li>Place PDF download section prominently but require sign-in</li>
+                    <li>Make sign-in buttons large, clear, and use Google OAuth (low friction)</li>
+                    <li>Show benefits clearly: "Save progress", "Track stats", "Download PDF"</li>
+                    <li>Use social proof numbers if available (e.g., "2,847 cubers tracking progress")</li>
+                    <li>Don't gate the initial drill experience - let them try first</li>
+                </ul>
+                
+                <h3 style="margin-top: 30px;">Conversion Funnel:</h3>
+                <div style="background: #E3F2FD; border-radius: 8px; padding: 20px; margin-top: 15px;">
+                    <div style="font-weight: bold; margin-bottom: 10px;">User Journey:</div>
+                    <div>1. Land on homepage → See hero + "Start Free Drill"</div>
+                    <div>2. Complete first drill → See results</div>
+                    <div>3. See "Save Progress" CTA → Sign in to save</div>
+                    <div>4. OR: Click "Download PDF" → Sign in to download</div>
+                    <div>5. After sign-in → Access saved progress + PDF</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+

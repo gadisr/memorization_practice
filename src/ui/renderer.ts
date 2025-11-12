@@ -745,12 +745,14 @@ export function renderRegistrationPrompt(): void {
     <div class="registration-prompt">
       <div class="registration-prompt-content">
         <div class="registration-prompt-text">
-          <strong>Join thousands of users improving their BLD skills!</strong>
-          <span class="registration-benefits">Sync across devices • Population stats • Cloud backup • Progress tracking</span>
+          <strong>Sign in to save your progress</strong>
+          <span class="registration-benefits">Your training data is only stored when you're logged in • Sync across devices • Cloud backup • Progress tracking</span>
         </div>
         <div class="registration-prompt-actions">
-          <button id="registration-signup-btn" class="btn btn-primary">Sign Up with Google</button>
-          <button id="registration-dismiss-btn" class="btn btn-text">Maybe later</button>
+          <button id="registration-signup-btn" class="btn btn-primary btn-large">
+            <img src="https://www.google.com/favicon.ico" alt="Google" width="20" style="margin-right: 8px;" />
+            Sign in to save progress
+          </button>
         </div>
       </div>
       <button id="registration-close-btn" class="registration-close-btn">&times;</button>
@@ -758,15 +760,7 @@ export function renderRegistrationPrompt(): void {
   `;
   
   // Add event listeners
-  const dismissBtn = document.getElementById('registration-dismiss-btn');
   const closeBtn = document.getElementById('registration-close-btn');
-  
-  if (dismissBtn) {
-    dismissBtn.addEventListener('click', () => {
-      localStorage.setItem('registration-prompt-dismissed', 'true');
-      container.classList.add('hidden');
-    });
-  }
   
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
@@ -783,13 +777,26 @@ export function renderPrimaryCTA(isAuthenticated: boolean): void {
   const container = document.getElementById('primary-cta-container');
   if (!container) return;
   
-  container.innerHTML = `
-    <div class="primary-cta">
-      <button id="start-training-btn" class="btn btn-primary btn-large">
-        ${isAuthenticated ? '🚀 Start Training' : '🚀 Start Training (Sign up to track progress)'}
-      </button>
-    </div>
-  `;
+  if (isAuthenticated) {
+    container.innerHTML = `
+      <div class="primary-cta">
+        <button id="start-training-btn" class="btn btn-primary btn-large">
+          🚀 Start Training
+        </button>
+      </div>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="primary-cta">
+        <button id="start-training-btn" class="btn btn-primary btn-large">
+          🚀 Start Training
+        </button>
+        <p class="primary-cta-note" style="margin-top: 0.75rem; color: var(--color-text-secondary, #666); font-size: 0.9rem; text-align: center;">
+          💡 <strong>Note:</strong> Your training data is only saved when you're logged in. You can still practice without signing in, but your progress won't be stored.
+        </p>
+      </div>
+    `;
+  }
 }
 
 /**

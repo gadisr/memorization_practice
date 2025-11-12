@@ -49,7 +49,9 @@ async def get_current_user(
             )
         
         return user
-        
+    except HTTPException:
+        # Re-raise HTTP exceptions (like 403)
+        raise
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

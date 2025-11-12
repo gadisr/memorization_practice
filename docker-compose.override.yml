@@ -1,0 +1,13 @@
+services:
+  nginx:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile.local
+    container_name: bld_trainer_nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
+    # Remove SSL volume mount for local development
+    volumes: []
