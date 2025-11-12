@@ -11,6 +11,7 @@ import { calculateUserStats, UserStats, getUnderPracticedDrills } from '../servi
 import { calculateUserPercentiles, getPerformanceBadge, generateValueIndicators, formatPercentile, compareToAverage, PopulationStats } from '../services/population-stats-service.js';
 import { getAllDrillConfigs } from '../config/drill-config.js';
 import { getAuthState } from '../services/auth-service.js';
+import { refreshAuthUI } from './auth-ui.js';
 
 export function showScreen(screenId: string): void {
   const screens = document.querySelectorAll('.screen');
@@ -19,6 +20,11 @@ export function showScreen(screenId: string): void {
   const targetScreen = document.getElementById(screenId);
   if (targetScreen) {
     targetScreen.classList.remove('hidden');
+    
+    // Refresh auth UI when showing dashboard screens (both training dashboard and home dashboard)
+    if (screenId === 'dashboard-screen' || screenId === 'home-dashboard-screen') {
+      refreshAuthUI();
+    }
   }
 }
 

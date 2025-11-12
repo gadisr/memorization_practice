@@ -2,7 +2,7 @@
  * Authentication UI components and handlers
  */
 
-import { signInWithGoogle, logOut, subscribeToAuthState, AuthState } from '../services/auth-service.js';
+import { signInWithGoogle, logOut, subscribeToAuthState, AuthState, getAuthState } from '../services/auth-service.js';
 import { migrateLocalDataToAPI } from '../storage/storage-adapter.js';
 
 export function initializeAuthUI(): void {
@@ -149,6 +149,54 @@ function updateAuthUI(isAuthenticated: boolean, user: any, elements: {
       (userAvatar as HTMLImageElement).alt = '';
       userAvatar.classList.add('hidden');
     }
+  }
+}
+
+/**
+ * Refresh auth UI based on current auth state
+ * This should be called when navigating to screens that display auth UI
+ */
+export function refreshAuthUI(): void {
+  const authState = getAuthState();
+  
+  // Get current elements (they might have been re-rendered)
+  const loginButton = document.getElementById('login-button');
+  const logoutButton = document.getElementById('logout-button');
+  const userProfile = document.getElementById('user-profile');
+  const userEmail = document.getElementById('user-email');
+  const userAvatar = document.getElementById('user-avatar');
+  
+  // Dashboard screen elements
+  const loginButtonDashboard = document.getElementById('login-button-dashboard');
+  const logoutButtonDashboard = document.getElementById('logout-button-dashboard');
+  const userProfileDashboard = document.getElementById('user-profile-dashboard');
+  const userEmailDashboard = document.getElementById('user-email-dashboard');
+  const userAvatarDashboard = document.getElementById('user-avatar-dashboard');
+  
+  if (authState.isAuthenticated && authState.user) {
+    // User is logged in - update both screens
+    updateAuthUI(true, authState.user, {
+      loginButton, logoutButton, userProfile, userEmail, userAvatar
+    });
+    updateAuthUI(true, authState.user, {
+      loginButton: loginButtonDashboard, 
+      logoutButton: logoutButtonDashboard, 
+      userProfile: userProfileDashboard, 
+      userEmail: userEmailDashboard, 
+      userAvatar: userAvatarDashboard
+    });
+  } else {
+    // User is logged out - update both screens
+    updateAuthUI(false, null, {
+      loginButton, logoutButton, userProfile, userEmail, userAvatar
+    });
+    updateAuthUI(false, null, {
+      loginButton: loginButtonDashboard, 
+      logoutButton: logoutButtonDashboard, 
+      userProfile: userProfileDashboard, 
+      userEmail: userEmailDashboard, 
+      userAvatar: userAvatarDashboard
+    });
   }
 }
 
