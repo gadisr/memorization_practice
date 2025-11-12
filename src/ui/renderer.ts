@@ -22,8 +22,11 @@ export function showScreen(screenId: string): void {
     targetScreen.classList.remove('hidden');
     
     // Refresh auth UI when showing dashboard screens (both training dashboard and home dashboard)
+    // Use setTimeout to ensure DOM is ready after screen is shown
     if (screenId === 'dashboard-screen' || screenId === 'home-dashboard-screen') {
-      refreshAuthUI();
+      setTimeout(() => {
+        refreshAuthUI();
+      }, 0);
     }
   }
 }
