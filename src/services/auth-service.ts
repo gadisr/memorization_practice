@@ -9,6 +9,7 @@ import {
   User as FirebaseUser 
 } from 'firebase/auth';
 import { auth, googleProvider } from '../config/firebase-config.js';
+import { trackEvent, setUserId } from './analytics.js';
 
 export interface AuthState {
   user: FirebaseUser | null;
@@ -45,6 +46,11 @@ function notifyAuthListeners(): void {
 export async function signInWithGoogle(): Promise<FirebaseUser> {
   try {
     const result = await signInWithPopup(auth, googleProvider);
+    // Track user sign in
+    trackEvent('user_sign_in', {
+      method: 'google'
+    });
+    setUserId(result.user.uid);
     return result.user;
   } catch (error) {
     console.error('Google sign-in error:', error);
@@ -55,6 +61,9 @@ export async function signInWithGoogle(): Promise<FirebaseUser> {
 export async function logOut(): Promise<void> {
   try {
     await signOut(auth);
+    // Track user sign out
+    trackEvent('user_sign_out', {});
+    setUserId(null);
   } catch (error) {
     console.error('Sign-out error:', error);
     throw error;
@@ -105,6 +114,8 @@ onAuthStateChanged(auth, async (user: FirebaseUser | null) => {
       isLoading: false
     };
     console.log('User authenticated:', user.email);
+    // Set user ID for analytics (only if not already set from signInWithGoogle)
+    setUserId(user.uid);
   } else {
     authState = {
       user: null,
@@ -113,6 +124,7 @@ onAuthStateChanged(auth, async (user: FirebaseUser | null) => {
       isLoading: false
     };
     console.log('User not authenticated');
+    setUserId(null);
   }
   
   authInitialized = true;

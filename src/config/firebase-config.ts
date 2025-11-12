@@ -11,10 +11,12 @@ const firebaseConfig = {
   projectId: "cube-trainer-ce95a",
   storageBucket: "cube-trainer-ce95a.firebasestorage.app",
   messagingSenderId: "977756255417",
-  appId: "1:977756255417:web:cb4cdf0f47dad78ac05768"
+  appId: "1:977756255417:web:cb4cdf0f47dad78ac05768",
+  measurementId: "G-0S54NJRN55"
 };
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+export const measurementId = firebaseConfig.measurementId;
 

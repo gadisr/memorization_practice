@@ -58,6 +58,8 @@ import {
   renderColorMemorizationSessionScreen,
   renderColorMemorizationRatingScreen
 } from './ui/color-memorization-renderer.js';
+import { initializeAnalytics, trackPageView, trackEvent } from './services/analytics.js';
+import { measurementId } from './config/firebase-config.js';
 
 // Application state
 let currentPairIndex = 0;
@@ -78,6 +80,12 @@ let currentColorMemorizationTimer = 0;
 
 // Initialize the application
 export async function initializeApp(): Promise<void> {
+  // Initialize Google Analytics
+  if (measurementId) {
+    initializeAnalytics(measurementId);
+    trackPageView(window.location.pathname, document.title);
+  }
+  
   // Check if user should see onboarding
   if (OnboardingManager.shouldShowOnboarding()) {
     // Redirect to onboarding
@@ -355,6 +363,10 @@ function setupHomeDashboardListeners(): void {
  * Load and render home dashboard
  */
 async function loadAndRenderHomeDashboard(): Promise<void> {
+  // Track dashboard view
+  trackEvent('dashboard_view', {
+    view_type: 'home_dashboard'
+  });
   try {
     // Wait for auth to initialize
     await waitForAuthInit();
@@ -439,6 +451,11 @@ function handleDrillChange(): void {
   if (config) {
     updateDrillDescription(config);
     clearPairCountWarning();
+    // Track drill selection
+    trackEvent('drill_selected', {
+      drill_type: drillType,
+      drill_name: config.name
+    });
   }
 }
 
@@ -504,6 +521,13 @@ async function handleStartSession(): Promise<void> {
     currentPairIndex = 0;
     furthestPairIndex = 0;
     currentTimer = 0; // Reset timer when starting new session
+    
+    // Track training session start
+    trackEvent('training_session_start', {
+      drill_type: drillType,
+      pair_count: pairCount,
+      session_id: session.id
+    });
     
     showScreen('session-screen');
     displayCurrentPair();
@@ -647,6 +671,16 @@ async function handleSaveSession(): Promise<void> {
   try {
     const completedSession = await finalizeSession(userRecall, quality, notes || undefined);
     
+    // Track training session completion
+    trackEvent('training_session_complete', {
+      drill_type: completedSession.drillType,
+      pair_count: completedSession.pairCount,
+      accuracy: completedSession.recallValidation?.accuracy || 0,
+      quality_rating: quality,
+      total_time: completedSession.totalTime,
+      session_id: completedSession.id
+    });
+    
     // Calculate and display ranking
     const rankInfo = await getSessionRank(completedSession);
     
@@ -688,7 +722,17 @@ function handleDiscardSession(): void {
 
 function handleCancelSession(): void {
   if (confirm('Are you sure you want to cancel this session?')) {
+    const session = getActiveSession();
+    const drillType = session?.drillType || 'unknown';
+    
     cancelSession();
+    
+    // Track training session cancellation
+    trackEvent('training_session_cancel', {
+      drill_type: drillType,
+      pair_count: session?.pairCount || 0
+    });
+    
     showScreen('setup-screen');
     clearKeyboardCallbacks();
   }
@@ -706,6 +750,12 @@ async function handleExportCSV(): Promise<void> {
     const csv = generateCSV(sessions);
     const date = new Date().toISOString().split('T')[0];
     const filename = `bld_training_log_${date}.csv`;
+    
+    // Track data export
+    trackEvent('data_export', {
+      session_count: sessions.length,
+      export_format: 'csv'
+    });
     downloadCSV(csv, filename);
     showNotification('CSV exported successfully!', 'success');
   } catch (error) {
@@ -727,8 +777,15 @@ function handleClearAll(): void {
 // Notation Training Handlers
 async function handleStartNotationSession(drillType: DrillType.EDGE_NOTATION_DRILL | DrillType.CORNER_NOTATION_DRILL): Promise<void> {
   try {
-    await createNotationSession(drillType);
+    const session = await createNotationSession(drillType);
     currentPieceIndex = 0;
+    
+    // Track training session start
+    trackEvent('training_session_start', {
+      drill_type: drillType,
+      session_type: 'notation',
+      session_id: session.id
+    });
     
     showScreen('notation-screen');
     
@@ -754,6 +811,12 @@ async function handleStartTracingSession(drillType: DrillType.CORNER_TRACING_DRI
     if (!tracingRenderer) {
       tracingRenderer = new TracingRenderer();
     }
+    
+    // Track training session start
+    trackEvent('training_session_start', {
+      drill_type: drillType,
+      session_type: 'tracing'
+    });
     
     // Render the tracing screen
     tracingRenderer.renderTracingScreen(drillType);
@@ -788,6 +851,14 @@ async function handleStartColorMemorizationSession(drillType: DrillType.EDGE_MEM
     const session = await createColorMemorizationSession(drillType, pieceCount);
     currentColorMemorizationPieceIndex = 0;
     currentColorMemorizationTimer = 0;
+    
+    // Track training session start
+    trackEvent('training_session_start', {
+      drill_type: drillType,
+      session_type: 'color_memorization',
+      piece_count: pieceCount,
+      session_id: session.id
+    });
     
     showScreen('session-screen');
     displayCurrentColorMemorizationPiece();
@@ -972,6 +1043,17 @@ async function handleSaveColorMemorizationSession(): Promise<void> {
   
   try {
     const completedSession = await finalizeColorMemorizationSession(userRecall, quality, notes || undefined);
+    
+    // Track training session completion
+    trackEvent('training_session_complete', {
+      drill_type: completedSession.drillType,
+      session_type: 'color_memorization',
+      accuracy: completedSession.recallValidation?.accuracy || 0,
+      quality_rating: quality,
+      total_time: completedSession.totalTime,
+      piece_count: completedSession.pieceCount,
+      session_id: completedSession.id
+    });
     
     // Calculate and display ranking
     const rankInfo = await getSessionRank(completedSession as any);
@@ -1170,6 +1252,16 @@ async function handleSaveNotation(): Promise<void> {
   
   try {
     const completedSession = await finalizeNotationSession(notes);
+    
+    // Track training session completion
+    trackEvent('training_session_complete', {
+      drill_type: completedSession.drillType,
+      session_type: 'notation',
+      accuracy: completedSession.accuracy || 0,
+      total_pieces: completedSession.totalPieces,
+      correct_count: completedSession.correctCount,
+      session_id: completedSession.id
+    });
     
     // Calculate and display ranking
     const rankInfo = await getNotationSessionRank(completedSession);

@@ -5,6 +5,14 @@
 import { OnboardingManager } from './onboarding-manager.js';
 import { showInfoModal, hideInfoModal } from './onboarding-ui.js';
 import { DrillType } from '../types.js';
+import { initializeAnalytics, trackPageView } from '../services/analytics.js';
+import { measurementId } from '../config/firebase-config.js';
+
+// Initialize Google Analytics
+if (measurementId) {
+  initializeAnalytics(measurementId);
+  trackPageView(window.location.pathname, document.title);
+}
 
 // Initialize onboarding manager
 const onboardingManager = new OnboardingManager();
