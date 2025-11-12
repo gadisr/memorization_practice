@@ -15,6 +15,7 @@ import { clearAllSessions } from './storage/session-storage.js';
 import { generateCSV, downloadCSV } from './services/csv-exporter.js';
 import { initializeAuthUI } from './ui/auth-ui.js';
 import { validatePairCount, validateRecallCount, validateQualityRating } from './utils/validators.js';
+import { formatDrillName } from './utils/drill-name-formatter.js';
 import {
   showScreen,
   renderSetupScreen,
@@ -454,7 +455,7 @@ function handleDrillChange(): void {
     // Track drill selection
     trackEvent('drill_selected', {
       drill_type: drillType,
-      drill_name: config.name
+      drill_name: formatDrillName(config.type)
     });
   }
 }
