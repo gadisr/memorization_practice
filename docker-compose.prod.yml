@@ -35,5 +35,19 @@ services:
       FIREBASE_CREDENTIALS_PATH: ${FIREBASE_CREDENTIALS_PATH}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
 
+  # Production nginx configuration with SSL support
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+      - frontend
+
 volumes:
   postgres_data:
