@@ -160,6 +160,9 @@ function updateAuthUI(isAuthenticated: boolean, user: any, elements: {
 export function refreshAuthUI(): void {
   const authState = getAuthState();
   
+  // Get current visible screen to scope element selection
+  const visibleScreen = document.querySelector('.screen:not(.hidden)') as HTMLElement;
+  
   // Get current elements (they might have been re-rendered)
   const loginButton = document.getElementById('login-button');
   const logoutButton = document.getElementById('logout-button');
@@ -167,12 +170,29 @@ export function refreshAuthUI(): void {
   const userEmail = document.getElementById('user-email');
   const userAvatar = document.getElementById('user-avatar');
   
-  // Dashboard screen elements
-  const loginButtonDashboard = document.getElementById('login-button-dashboard');
-  const logoutButtonDashboard = document.getElementById('logout-button-dashboard');
-  const userProfileDashboard = document.getElementById('user-profile-dashboard');
-  const userEmailDashboard = document.getElementById('user-email-dashboard');
-  const userAvatarDashboard = document.getElementById('user-avatar-dashboard');
+  // Dashboard screen elements - find within visible screen to avoid duplicate ID issues
+  // Since both home-dashboard-screen and dashboard-screen have elements with same IDs,
+  // we need to find them within the visible screen
+  let loginButtonDashboard: HTMLElement | null = null;
+  let logoutButtonDashboard: HTMLElement | null = null;
+  let userProfileDashboard: HTMLElement | null = null;
+  let userEmailDashboard: HTMLElement | null = null;
+  let userAvatarDashboard: HTMLElement | null = null;
+  
+  if (visibleScreen) {
+    loginButtonDashboard = visibleScreen.querySelector('#login-button-dashboard') as HTMLElement;
+    logoutButtonDashboard = visibleScreen.querySelector('#logout-button-dashboard') as HTMLElement;
+    userProfileDashboard = visibleScreen.querySelector('#user-profile-dashboard') as HTMLElement;
+    userEmailDashboard = visibleScreen.querySelector('#user-email-dashboard') as HTMLElement;
+    userAvatarDashboard = visibleScreen.querySelector('#user-avatar-dashboard') as HTMLElement;
+  }
+  
+  // Fallback to getElementById if not found in visible screen (for backwards compatibility)
+  if (!loginButtonDashboard) loginButtonDashboard = document.getElementById('login-button-dashboard');
+  if (!logoutButtonDashboard) logoutButtonDashboard = document.getElementById('logout-button-dashboard');
+  if (!userProfileDashboard) userProfileDashboard = document.getElementById('user-profile-dashboard');
+  if (!userEmailDashboard) userEmailDashboard = document.getElementById('user-email-dashboard');
+  if (!userAvatarDashboard) userAvatarDashboard = document.getElementById('user-avatar-dashboard');
   
   if (authState.isAuthenticated && authState.user) {
     // User is logged in - update both screens

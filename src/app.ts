@@ -13,7 +13,7 @@ import { getAuthState, waitForAuthInit } from './services/auth-service.js';
 import { getUserStats, getPopulationStats } from './services/api-client.js';
 import { clearAllSessions } from './storage/session-storage.js';
 import { generateCSV, downloadCSV } from './services/csv-exporter.js';
-import { initializeAuthUI } from './ui/auth-ui.js';
+import { initializeAuthUI, refreshAuthUI } from './ui/auth-ui.js';
 import { validatePairCount, validateRecallCount, validateQualityRating } from './utils/validators.js';
 import { formatDrillName } from './utils/drill-name-formatter.js';
 import {
@@ -320,6 +320,14 @@ function attachEventListeners(): void {
     });
   }
   
+  // Back to home dashboard button (from Training Dashboard)
+  const backToHomeDashboardBtn = document.getElementById('back-to-home-dashboard-btn');
+  if (backToHomeDashboardBtn) {
+    backToHomeDashboardBtn.addEventListener('click', async () => {
+      await loadAndRenderHomeDashboard();
+    });
+  }
+  
   // Listen for auth state changes to refresh dashboard
   window.addEventListener('auth-state-changed', async () => {
     // Refresh home dashboard when auth state changes
@@ -340,6 +348,12 @@ function setupHomeDashboardListeners(): void {
     if (target.id === 'start-training-btn' || target.closest('#start-training-btn')) {
       e.preventDefault();
       showScreen('setup-screen');
+    }
+    
+    // View detailed dashboard button
+    if (target.id === 'view-detailed-dashboard-btn' || target.closest('#view-detailed-dashboard-btn')) {
+      e.preventDefault();
+      loadAndRenderTrainingDashboard();
     }
     
     // Drill card start buttons
@@ -401,6 +415,43 @@ async function loadAndRenderHomeDashboard(): Promise<void> {
     // Show dashboard with empty data
     renderHomeDashboard([], [], null);
     showScreen('home-dashboard-screen');
+  }
+}
+
+/**
+ * Load and render Training Dashboard (with graphs and sessions)
+ */
+async function loadAndRenderTrainingDashboard(): Promise<void> {
+  // Track dashboard view
+  trackEvent('dashboard_view', {
+    view_type: 'training_dashboard'
+  });
+  try {
+    // Wait for auth to initialize
+    await waitForAuthInit();
+    
+    // Load sessions (from API if authenticated, from localStorage if not)
+    const sessions = await getAllSessions();
+    const notationSessions = await getAllNotationSessions();
+    
+    // Show Training Dashboard screen first (this will trigger refreshAuthUI via showScreen)
+    showScreen('dashboard-screen');
+    
+    // Render Training Dashboard (refreshAuthUI is already called by showScreen, but we call it again to be safe)
+    renderDashboard(sessions, notationSessions);
+    
+    // Ensure auth UI is refreshed after screen is shown and DOM is ready
+    setTimeout(() => {
+      refreshAuthUI();
+    }, 100);
+  } catch (error) {
+    console.error('Error loading Training Dashboard:', error);
+    // Show dashboard with empty data
+    showScreen('dashboard-screen');
+    renderDashboard([], []);
+    setTimeout(() => {
+      refreshAuthUI();
+    }, 100);
   }
 }
 

@@ -239,6 +239,9 @@ export function renderDashboard(sessions: SessionData[], notationSessions: any[]
   renderDashboardStats(sessions, notationSessions);
   renderSessionsTable(sessions, notationSessions);
   
+  // Refresh auth UI to ensure correct authentication state is displayed
+  refreshAuthUI();
+  
   // Initialize charts if Chart.js is available
   if (typeof window !== 'undefined' && (window as any).Chart) {
     import('./chart-renderer.js').then(({ initializeCharts }) => {
@@ -847,6 +850,11 @@ function renderKeyStats(userStats: UserStats): void {
     <div class="stat-card">
       <div class="stat-value">${formatTime(userStats.avgSpeed)}</div>
       <div class="stat-label">Avg Speed/Pair</div>
+    </div>
+    <div class="stat-card" style="grid-column: span 4; display: flex; justify-content: center; align-items: center; padding: 1.5rem;">
+      <button id="view-detailed-dashboard-btn" class="btn btn-secondary" style="width: auto; padding: 0.75rem 2rem;">
+        📊 View Detailed Dashboard with Graphs & Sessions
+      </button>
     </div>
   `;
 }
