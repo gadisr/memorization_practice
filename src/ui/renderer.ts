@@ -775,8 +775,24 @@ export function renderRegistrationPrompt(): void {
     closeBtn.addEventListener('click', () => {
       localStorage.setItem('registration-prompt-dismissed', 'true');
       container.classList.add('hidden');
+      // Refresh auth UI when prompt is dismissed to show header button
+      import('./auth-ui.js').then(({ refreshAuthUI }) => {
+        refreshAuthUI();
+      }).catch(() => {
+        // Auth UI might not be available, that's okay
+      });
     });
   }
+  
+  // Refresh auth UI after rendering prompt to ensure header button visibility is correct
+  // Use setTimeout to ensure auth UI is initialized
+  setTimeout(() => {
+    import('./auth-ui.js').then(({ refreshAuthUI }) => {
+      refreshAuthUI();
+    }).catch(() => {
+      // Auth UI might not be initialized yet, that's okay
+    });
+  }, 0);
 }
 
 /**
