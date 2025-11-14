@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>Blindfold Cubing Lettering System - Speffz Notation Guide</title>
+  <meta name="title" content="Blindfold Cubing Lettering System - Speffz Notation Guide">
+  <meta name="description" content="Interactive demonstration of the Speffz lettering system for blindfold cubing. Learn how each piece position is assigned a letter for BLD solving.">
+  <meta name="keywords" content="Speffz notation, blindfold cubing letters, BLD lettering system, cube letter notation, blindfold cubing tutorial">
+  <meta name="author" content="BlindfoldCubing.com">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://blindfoldcubing.com/lettering-system.html">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#667eea">
+  
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .lettering-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    .lettering-header {
+      text-align: center;
+      margin-bottom: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .lettering-header h1 {
+      font-size: 2.5em;
+      margin: 0 0 10px 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      color: white;
+    }
+    
+    .lettering-header p {
+      font-size: 1.2em;
+      margin: 0;
+      opacity: 0.9;
+    }
+    
+    .demo-section {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 30px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-left: 5px solid #667eea;
+    }
+    
+    .cube-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 30px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+    
+    #cube {
+      background: #fff;
+      border-radius: 8px;
+      width: 300px;
+      height: 300px;
+      min-width: 300px;
+      min-height: 300px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .toggle-button {
+      background: #667eea;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .toggle-button:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+    }
+    
+    .toggle-button:active {
+      transform: translateY(0);
+    }
+    
+    .diagram-section {
+      margin: 30px 0;
+      text-align: center;
+    }
+    
+    .diagram-section h3 {
+      color: #333;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    
+    .diagram-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin: 20px 0;
+    }
+    
+    .info-section {
+      background: #e6f3ff;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    .info-section h3 {
+      color: #667eea;
+      margin: 0 0 10px 0;
+    }
+    
+    .info-section ul {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+    
+    .info-section li {
+      margin: 8px 0;
+    }
+    
+    .back-link {
+      text-align: center;
+      margin: 40px 0;
+    }
+    
+    .btn-primary {
+      background: #667eea;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+    
+    @media (max-width: 768px) {
+      .lettering-container {
+        padding: 10px;
+      }
+      
+      .lettering-header h1 {
+        font-size: 2em;
+      }
+      
+      .demo-section {
+        padding: 20px;
+      }
+      
+      #cube {
+        width: 250px;
+        height: 250px;
+        min-width: 250px;
+        min-height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="lettering-container">
+    <header class="lettering-header">
+      <h1>🔤 Blindfold Cubing Lettering System</h1>
+      <p>Interactive demonstration of the Speffz notation system</p>
+    </header>
+
+    <section class="demo-section">
+      <h2>Interactive Cube with Letters</h2>
+      <p>This interactive cube demonstrates the lettering system used in blindfold cubing. Each sticker position on the cube is assigned a letter according to the Speffz notation system.</p>
+      
+      <div class="cube-wrapper">
+        <div id="cube"></div>
+        <button class="toggle-button" id="toggleLettersBtn" onclick="toggleLetters()">Hide Letters</button>
+      </div>
+      
+      <div class="info-section">
+        <h3>Understanding the Lettering System</h3>
+        <ul>
+          <li><strong>Edges</strong> use lowercase letters (a-x) - 24 edge stickers total</li>
+          <li><strong>Corners</strong> use uppercase letters (A-X) - 24 corner stickers total</li>
+          <li>The <strong>buffer position</strong> for edges is <strong>b*</strong> (UR position)</li>
+          <li>The <strong>buffer position</strong> for corners is <strong>A*</strong> (UBL position)</li>
+          <li>Each piece has a specific letter assigned to help you track and memorize piece movements during blindfold solving</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="diagram-section">
+      <h3>Complete Lettering Diagram</h3>
+      <p>Below is a visual reference showing all letter positions on the cube:</p>
+      <img src="media/letters-diagram.png" alt="Speffz lettering system diagram showing all letter positions on a Rubik's cube" class="diagram-image">
+    </section>
+
+    <nav class="back-link">
+      <a href="index.html" class="btn-primary">← Back to Training App</a>
+    </nav>
+  </main>
+
+  <script>
+    let cubeInitialized = false;
+    var acjs_removeListeners = [];
+    var acjs_toggleLetters = [];
+    var acjs_showLetters = [];
+    var acjs_setLetters = [];
+    var acjs_setShowLetters = [];
+    var acjs_letterOrientations = [];
+    
+    // Load AnimCubeJS script dynamically
+    function loadAnimCubeJS() {
+      return new Promise((resolve, reject) => {
+        // Check if already loaded
+        if (typeof AnimCube3 !== 'undefined') {
+          console.log('AnimCubeJS already loaded');
+          resolve();
+          return;
+        }
+
+        console.log('Loading AnimCubeJS script...');
+        const script = document.createElement('script');
+        script.src = 'AnimCube3.js';
+        script.async = true;
+        script.onload = () => {
+          console.log('AnimCubeJS script loaded successfully');
+          setTimeout(() => {
+            if (typeof AnimCube3 !== 'undefined') {
+              console.log('AnimCube3 is available');
+              resolve();
+            } else {
+              console.error('AnimCube3 not available after load');
+              reject(new Error('AnimCube3 not available'));
+            }
+          }, 200);
+        };
+        script.onerror = () => {
+          console.error('Failed to load AnimCubeJS script');
+          reject(new Error('Failed to load AnimCubeJS script'));
+        };
+        document.head.appendChild(script);
+      });
+    }
+
+    // Initialize the cube when the page loads
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        await loadAnimCubeJS();
+        initializeCube();
+      } catch (error) {
+        console.error('Failed to load AnimCubeJS:', error);
+        document.getElementById('cube').innerHTML = '<p style="color: red; padding: 20px;">Failed to load cube. Please refresh the page.</p>';
+      }
+    });
+
+    function initializeCube() {
+      const container = document.getElementById('cube');
+      if (!container) {
+        console.error('Cube container not found');
+        return;
+      }
+
+      // Ensure container is ready
+      if (typeof AnimCube3 === 'undefined') {
+        console.error('AnimCube3 not available');
+        setTimeout(initializeCube, 100);
+        return;
+      }
+
+      try {
+        const params = [
+          'id=cube',
+          'size=300',
+          'bgColor=#f5f5f5',
+          'scheme=WOBGRY',
+          'edit=0',
+          'buttons=1',
+          'sliders=1',
+          'colors=WOBGRY',
+          'speed=1',
+          'wca=1',
+          'facelets=wwwwwwwwwyyyyyyyyygggggggggbbbbbbbbbooooooooorrrrrrrrr',
+          'initmove='
+        ].join('&');
+        
+        console.log('Initializing cube with params:', params);
+        AnimCube3(params);
+        
+        // Wait a bit and check if cube was created
+        setTimeout(() => {
+          const cubeElement = document.getElementById('cube');
+          if (cubeElement && cubeElement.children.length > 0) {
+            cubeInitialized = true;
+            console.log('Cube initialized successfully');
+            // Load and apply letters from JSON after a delay to ensure AnimCube3 is fully initialized
+            setTimeout(() => {
+              // Retry a few times if setLetters isn't available yet
+              let retries = 0;
+              const maxRetries = 10;
+              const tryApply = () => {
+                if (acjs_setLetters && acjs_setLetters['cube'] && typeof acjs_setLetters['cube'] === 'function') {
+                  applyLettersFromJSON();
+                  // Show letters by default - try multiple methods to ensure they're visible
+                  setTimeout(() => {
+                    // Method 1: Use setShowLetters if available (most direct)
+                    if (acjs_setShowLetters && acjs_setShowLetters['cube'] && typeof acjs_setShowLetters['cube'] === 'function') {
+                      acjs_setShowLetters['cube'](true);
+                      // Set the state variable directly if it exists
+                      if (acjs_showLetters && acjs_showLetters['cube'] !== undefined) {
+                        acjs_showLetters['cube'] = true;
+                      }
+                      updateToggleButton();
+                    } 
+                    // Method 2: Use toggleLetters if setShowLetters not available
+                    // (assuming letters start hidden, so one toggle will show them)
+                    else if (acjs_toggleLetters && acjs_toggleLetters['cube'] && typeof acjs_toggleLetters['cube'] === 'function') {
+                      acjs_toggleLetters['cube']();
+                      // Set the state variable to true since we just toggled to show
+                      if (acjs_showLetters && acjs_showLetters['cube'] !== undefined) {
+                        acjs_showLetters['cube'] = true;
+                      }
+                      updateToggleButton();
+                    }
+                    // If neither is available, just update button to show "Hide Letters" 
+                    // (assuming letters are visible by default when set)
+                    else {
+                      if (acjs_showLetters && acjs_showLetters['cube'] !== undefined) {
+                        acjs_showLetters['cube'] = true;
+                      }
+                      updateToggleButton();
+                    }
+                  }, 300);
+                } else if (retries < maxRetries) {
+                  retries++;
+                  setTimeout(tryApply, 200);
+                } else {
+                  console.error('Failed to apply letters: setLetters function not available after retries');
+                }
+              };
+              tryApply();
+            }, 800);
+          } else {
+            console.warn('Cube container appears empty, retrying...');
+            setTimeout(initializeCube, 200);
+          }
+        }, 300);
+      } catch (error) {
+        console.error('Error initializing cube:', error);
+      }
+    }
+
+    /**
+     * Load letters from JSON data and convert to AnimCube3 format
+     * Based on the letter mapping logic from animcubejs-playground.html
+     */
+    function loadLettersFromJSON() {
+      try {
+        // Create array to hold all 54 letters, initialized with spaces (or empty strings)
+        // AnimCube3 face order: U=0, D=1, F=2, B=3, L=4, R=5
+        const lettersArray = new Array(54).fill('');
+        
+        // Create orientation settings object for each face (6 faces)
+        const orientationSettings = {
+          0: 'flip-vertical',  // U face (white) - upside down
+          1: 'flip-vertical',  // D face (yellow) - upside down
+          2: 'rotate-180',     // F face (green) - 180° rotation
+          3: 'flip-vertical',  // B face (blue) - upside down
+          4: 'flip-vertical',  // L face (orange) - upside down
+          5: 'flip-vertical'   // R face (red) - upside down
+        };
+        
+        function setFaceU(lettersArray, orientationSettings) {
+          // U face (white) - AnimCube3 index 0
+          lettersArray[0*9 + 6] = 'A';
+          lettersArray[0*9 + 7] = 'a';
+          lettersArray[0*9 + 8] = 'B';
+          lettersArray[0*9 + 3] = 'd';
+          lettersArray[0*9 + 4] = '*';
+          lettersArray[0*9 + 5] = 'b';
+          lettersArray[0*9 + 0] = 'D';
+          lettersArray[0*9 + 1] = 'c';
+          lettersArray[0*9 + 2] = 'C';
+          orientationSettings[0] = 'flip-vertical';
+        }
+        
+        function setFaceD(lettersArray, orientationSettings) {
+          // D face (yellow) - AnimCube3 index 1
+          lettersArray[1*9 + 0] = 'U';
+          lettersArray[1*9 + 1] = 'x';
+          lettersArray[1*9 + 2] = 'X';
+          lettersArray[1*9 + 3] = 'u';
+          lettersArray[1*9 + 4] = '*';
+          lettersArray[1*9 + 5] = 'w';
+          lettersArray[1*9 + 6] = 'V';
+          lettersArray[1*9 + 7] = 'v';
+          lettersArray[1*9 + 8] = 'W';
+          orientationSettings[1] = 'flip-vertical';
+        }
+        
+        function setFaceF(lettersArray, orientationSettings) {
+          // F face (green) - AnimCube3 index 2
+          lettersArray[2*9 + 0] = 'I';
+          lettersArray[2*9 + 3] = 'i';
+          lettersArray[2*9 + 6] = 'J';
+          lettersArray[2*9 + 1] = 'l';
+          lettersArray[2*9 + 4] = '*';
+          lettersArray[2*9 + 7] = 'j';
+          lettersArray[2*9 + 2] = 'L';
+          lettersArray[2*9 + 5] = 'k';
+          lettersArray[2*9 + 8] = 'K';
+        }
+        
+        function setFaceB(lettersArray, orientationSettings) {
+          // B face (blue) - AnimCube3 index 3
+          lettersArray[3*9 + 0] = 'Q';
+          lettersArray[3*9 + 1] = 't';
+          lettersArray[3*9 + 2] = 'T';
+          lettersArray[3*9 + 3] = 'q';
+          lettersArray[3*9 + 4] = '*';
+          lettersArray[3*9 + 5] = 's';
+          lettersArray[3*9 + 6] = 'R';
+          lettersArray[3*9 + 7] = 'r';
+          lettersArray[3*9 + 8] = 'S';
+          orientationSettings[3] = 'flip-vertical';
+        }
+        
+        function setFaceL(lettersArray, orientationSettings) {
+          // L face (orange) - AnimCube3 index 4
+          lettersArray[4*9 + 0] = 'F';
+          lettersArray[4*9 + 1] = 'e';
+          lettersArray[4*9 + 2] = 'E';
+          lettersArray[4*9 + 3] = 'f';
+          lettersArray[4*9 + 4] = '*';
+          lettersArray[4*9 + 5] = 'h';
+          lettersArray[4*9 + 6] = 'G';
+          lettersArray[4*9 + 7] = 'g';
+          lettersArray[4*9 + 8] = 'H';
+          orientationSettings[4] = 'custom-orange';
+        }
+        
+        function setFaceR(lettersArray, orientationSettings) {
+          // R face (red) - AnimCube3 index 5
+          lettersArray[5*9 + 0] = 'M';
+          lettersArray[5*9 + 1] = 'p';
+          lettersArray[5*9 + 2] = 'P';
+          lettersArray[5*9 + 3] = 'm';
+          lettersArray[5*9 + 4] = '*';
+          lettersArray[5*9 + 5] = 'o';
+          lettersArray[5*9 + 6] = 'N';
+          lettersArray[5*9 + 7] = 'n';
+          lettersArray[5*9 + 8] = 'O';
+          orientationSettings[5] = 'flip-vertical';
+        }
+        
+        // Call individual face functions
+        setFaceU(lettersArray, orientationSettings);
+        setFaceD(lettersArray, orientationSettings);
+        setFaceF(lettersArray, orientationSettings);
+        setFaceB(lettersArray, orientationSettings);
+        setFaceL(lettersArray, orientationSettings);
+        setFaceR(lettersArray, orientationSettings);
+        
+        // Store orientation settings globally
+        if (!acjs_letterOrientations['cube']) {
+          acjs_letterOrientations['cube'] = {};
+        }
+        Object.assign(acjs_letterOrientations['cube'], orientationSettings);
+        
+        // Convert to 54-character string
+        let lettersString = '';
+        for (let i = 0; i < 54; i++) {
+          lettersString += lettersArray[i] || ' ';
+        }
+        
+        console.log('Generated letters string:', lettersString);
+        
+        if (lettersString.length !== 54) {
+          console.error(`Invalid letters string length: ${lettersString.length}, expected 54`);
+          return null;
+        }
+        
+        return lettersString;
+      } catch (error) {
+        console.error('Error loading letters from JSON:', error);
+        return null;
+      }
+    }
+    
+    function applyLettersFromJSON() {
+      const lettersString = loadLettersFromJSON();
+      if (lettersString) {
+        console.log('Attempting to apply letters. String:', JSON.stringify(lettersString));
+        
+        if (acjs_setLetters && acjs_setLetters['cube'] && typeof acjs_setLetters['cube'] === 'function') {
+          acjs_setLetters['cube'](lettersString);
+          console.log('✓ Letters applied from lettering system');
+          return true;
+        } else {
+          console.warn('setLetters function not available yet');
+          return false;
+        }
+      } else {
+        console.error('Failed to load letters from embedded data');
+        return false;
+      }
+    }
+    
+    function toggleLetters() {
+      if (!cubeInitialized) {
+        alert('Cube is still loading. Please wait...');
+        return;
+      }
+      if (acjs_toggleLetters && acjs_toggleLetters['cube'] && typeof acjs_toggleLetters['cube'] === 'function') {
+        acjs_toggleLetters['cube']();
+        updateToggleButton();
+      }
+    }
+    
+    function updateToggleButton() {
+      const btn = document.getElementById('toggleLettersBtn');
+      if (btn && acjs_showLetters && acjs_showLetters['cube'] !== undefined) {
+        btn.textContent = acjs_showLetters['cube'] ? 'Hide Letters' : 'Show Letters';
+      } else if (btn) {
+        // Fallback: toggle the text
+        btn.textContent = btn.textContent === 'Show Letters' ? 'Hide Letters' : 'Show Letters';
+      }
+    }
+  </script>
+</body>
+</html>
+
