@@ -139,8 +139,7 @@
         <!-- Auth Container -->
         <div id="auth-container-dashboard" class="auth-container">
           <button id="login-button-dashboard" class="btn btn-auth">
-            <img src="https://www.google.com/favicon.ico" alt="Google sign in icon" width="20" />
-            Sign in with Google
+            Sign in
           </button>
           
           <div id="user-profile-dashboard" class="user-profile hidden">
@@ -245,6 +244,19 @@
         </div>
         <div class="modal-footer">
           <button id="session-detail-close-footer-btn" class="btn btn-primary">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="auth-modal-title">Sign In</h2>
+          <button id="close-auth-modal-btn" class="btn-close">&times;</button>
+        </div>
+        <div id="auth-modal-body" class="modal-body">
+          <!-- Auth options and forms will be dynamically inserted -->
         </div>
       </div>
     </div>
@@ -373,7 +385,6 @@
           <!-- Auth Container -->
           <div id="auth-container-dashboard" class="auth-container">
             <button id="login-button-dashboard" class="btn btn-auth">
-            <img src="https://www.google.com/favicon.ico" alt="Google sign in icon" width="20" />
             Sign in
           </button>
           

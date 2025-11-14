@@ -762,7 +762,6 @@ export function renderRegistrationPrompt(): void {
         </div>
         <div class="registration-prompt-actions">
           <button id="registration-signup-btn" class="btn btn-primary btn-large">
-            <img src="https://www.google.com/favicon.ico" alt="Google" width="20" style="margin-right: 8px;" />
             Sign in to save progress
           </button>
         </div>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>Sign In - Blindfold Cubing Training</title>
+  <meta name="title" content="Sign In - Blindfold Cubing Training">
+  <meta name="description" content="Sign in to your BLD Memory Trainer account to save your progress, sync across devices, and track your blindfold cubing training sessions.">
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://blindfoldcubing.com/login.html">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#667eea">
+  
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
+      }
+    }
+  </script>
+  
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0S54NJRN55"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0S54NJRN55', {
+      send_page_view: false
+    });
+  </script>
+</head>
+<body>
+  <div id="app">
+    <!-- Navigation -->
+    <nav id="main-navigation" class="main-navigation">
+      <div class="nav-container">
+        <a href="index.html" class="nav-logo">BLD Trainer</a>
+        <div class="nav-links">
+          <a href="intro.html">Beginner's Guide</a>
+          <a href="features.html">Features</a>
+          <a href="guides/improve-visualization-memory.html">Visualization Guide</a>
+          <a href="guides/speffz-notation.html">Speffz Notation</a>
+          <a href="guides/progress-tracking.html">Progress Tracking</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Login Page Content -->
+    <div class="auth-page-container">
+      <div class="auth-page-card">
+        <div class="auth-page-header">
+          <h1>Sign In</h1>
+          <p class="subtitle">Sign in to save your progress and sync across devices</p>
+        </div>
+
+        <div id="auth-content" class="auth-content">
+          <!-- Content will be populated by JavaScript -->
+        </div>
+
+        <div class="auth-page-footer">
+          <p>Don't have an account? <a href="register.html" class="auth-link">Create one</a></p>
+          <p><a href="index.html" class="auth-link">← Back to Home</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="main-footer" class="main-footer">
+      <div class="footer-container">
+        <div class="footer-section">
+          <h3>Learn</h3>
+          <ul>
+            <li><a href="intro.html">Beginner's Guide</a></li>
+            <li><a href="guides/improve-visualization-memory.html">Visualization Guide</a></li>
+            <li><a href="guides/speffz-notation.html">Speffz Notation</a></li>
+            <li><a href="guides/progress-tracking.html">Progress Tracking</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Features</h3>
+          <ul>
+            <li><a href="features.html">Offline & Mobile</a></li>
+            <li><a href="index.html">Training Drills</a></li>
+            <li><a href="index.html#dashboard">Progress Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>About</h3>
+          <ul>
+            <li><a href="intro.html">What is BLD?</a></li>
+            <li><a href="features.html">How It Works</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 BlindfoldCubing.com - Free BLD Training Tool</p>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="../dist/auth-pages.js"></script>
+</body>
+</html>
+
+

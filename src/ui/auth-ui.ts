@@ -4,6 +4,12 @@
 
 import { signInWithGoogle, logOut, subscribeToAuthState, AuthState, getAuthState } from '../services/auth-service.js';
 import { migrateLocalDataToAPI } from '../storage/storage-adapter.js';
+import { 
+  createLoginForm, 
+  createRegistrationForm, 
+  createPasswordResetForm,
+  type AuthFormMode 
+} from './auth-forms.js';
 
 export function initializeAuthUI(): void {
   // Setup screen elements
@@ -64,24 +70,18 @@ export function initializeAuthUI(): void {
     }
   });
   
+  // Initialize auth modal
+  initializeAuthModal();
+  setupAuthModalAutoClose();
+  
   // Setup screen login button handler
-  loginButton?.addEventListener('click', async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {
-      console.error('Login failed:', error);
-      alert('Login failed. Please try again.');
-    }
+  loginButton?.addEventListener('click', () => {
+    showAuthModal('login');
   });
   
   // Dashboard screen login button handler
-  loginButtonDashboard?.addEventListener('click', async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {
-      console.error('Login failed:', error);
-      alert('Login failed. Please try again.');
-    }
+  loginButtonDashboard?.addEventListener('click', () => {
+    showAuthModal('login');
   });
   
   // Setup screen logout button handler
@@ -243,5 +243,160 @@ async function refreshDashboard(): Promise<void> {
     // Function might not be available yet, that's okay
     console.log('Dashboard will refresh via event listener');
   }
+}
+
+/**
+ * Initialize auth modal with form switching
+ */
+function initializeAuthModal(): void {
+  const authModal = document.getElementById('auth-modal');
+  const closeAuthModalBtn = document.getElementById('close-auth-modal-btn');
+  const authModalBody = document.getElementById('auth-modal-body');
+  const authModalTitle = document.getElementById('auth-modal-title');
+
+  if (!authModal || !authModalBody || !authModalTitle) {
+    console.error('Auth modal elements not found');
+    return;
+  }
+
+  // Close modal handlers
+  closeAuthModalBtn?.addEventListener('click', () => {
+    hideAuthModal();
+  });
+
+  // Close modal when clicking outside
+  authModal.addEventListener('click', (e) => {
+    if (e.target === authModal) {
+      hideAuthModal();
+    }
+  });
+
+  // Close modal on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !authModal.classList.contains('hidden')) {
+      hideAuthModal();
+    }
+  });
+}
+
+/**
+ * Show auth modal with specified mode
+ */
+export function showAuthModal(mode: AuthFormMode = 'login'): void {
+  const authModal = document.getElementById('auth-modal');
+  const authModalBody = document.getElementById('auth-modal-body');
+  const authModalTitle = document.getElementById('auth-modal-title');
+
+  if (!authModal || !authModalBody || !authModalTitle) {
+    console.error('Auth modal elements not found');
+    return;
+  }
+
+  // Create container for auth options and forms
+  authModalBody.innerHTML = '';
+  
+  // Create auth options container
+  const authOptionsContainer = document.createElement('div');
+  authOptionsContainer.className = 'auth-options-container';
+  
+  // Show auth options (Google sign-in and Email/Password)
+  authOptionsContainer.innerHTML = `
+    <div class="auth-options">
+      <button id="auth-google-btn" class="btn btn-auth btn-full-width">
+        <img src="https://www.google.com/favicon.ico" alt="Google sign in icon" width="20" />
+        Continue with Google
+      </button>
+      <div class="auth-divider">
+        <span>or</span>
+      </div>
+    </div>
+    <div id="auth-form-container"></div>
+  `;
+  
+  authModalBody.appendChild(authOptionsContainer);
+  
+  // Set modal title
+  const titles: Record<AuthFormMode, string> = {
+    login: 'Sign In',
+    register: 'Create Account',
+    reset: 'Reset Password'
+  };
+  authModalTitle.textContent = titles[mode] || 'Sign In';
+  
+  // Get form container
+  const formContainer = document.getElementById('auth-form-container');
+  if (!formContainer) {
+    console.error('Auth form container not found');
+    return;
+  }
+  
+  // Render appropriate form
+  let formElements;
+  if (mode === 'login') {
+    formElements = createLoginForm(formContainer);
+  } else if (mode === 'register') {
+    formElements = createRegistrationForm(formContainer);
+  } else {
+    formElements = createPasswordResetForm(formContainer);
+  }
+  
+  // Setup Google sign-in button
+  const googleBtn = document.getElementById('auth-google-btn');
+  googleBtn?.addEventListener('click', async () => {
+    try {
+      await signInWithGoogle();
+      hideAuthModal();
+    } catch (error) {
+      console.error('Google sign-in failed:', error);
+      // Error will be shown by the auth service
+    }
+  });
+  
+  // Setup form toggle links
+  if (mode === 'login') {
+    formElements.toggleLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showAuthModal('register');
+    });
+    formElements.forgotPasswordLink?.addEventListener('click', (e) => {
+      e.preventDefault();
+      showAuthModal('reset');
+    });
+  } else if (mode === 'register') {
+    formElements.toggleLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showAuthModal('login');
+    });
+  } else if (mode === 'reset') {
+    formElements.toggleLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showAuthModal('login');
+    });
+  }
+  
+  // Show modal
+  authModal.classList.remove('hidden');
+}
+
+/**
+ * Hide auth modal
+ */
+function hideAuthModal(): void {
+  const authModal = document.getElementById('auth-modal');
+  if (authModal) {
+    authModal.classList.add('hidden');
+  }
+}
+
+/**
+ * Close auth modal when user successfully authenticates
+ * This is set up in initializeAuthUI to avoid duplicate subscriptions
+ */
+function setupAuthModalAutoClose(): void {
+  subscribeToAuthState((state: AuthState) => {
+    if (state.isAuthenticated) {
+      hideAuthModal();
+    }
+  });
 }
 

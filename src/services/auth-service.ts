@@ -6,7 +6,11 @@ import {
   signInWithPopup, 
   signOut, 
   onAuthStateChanged, 
-  User as FirebaseUser 
+  User as FirebaseUser,
+  UserCredential,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 import { auth, googleProvider } from '../config/firebase-config.js';
 import { trackEvent, setUserId } from './analytics.js';
@@ -56,6 +60,64 @@ export async function signInWithGoogle(): Promise<FirebaseUser> {
     console.error('Google sign-in error:', error);
     throw error;
   }
+}
+
+export async function signUpWithEmailAndPassword(email: string, password: string): Promise<FirebaseUser> {
+  try {
+    const result: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
+    // Track user sign up
+    trackEvent('user_sign_in', {
+      method: 'email'
+    });
+    setUserId(result.user.uid);
+    return result.user;
+  } catch (error: any) {
+    console.error('Email sign-up error:', error);
+    // Convert Firebase errors to user-friendly messages
+    throw new Error(getFirebaseErrorMessage(error.code));
+  }
+}
+
+export async function signInWithEmailAndPassword(email: string, password: string): Promise<FirebaseUser> {
+  try {
+    const result: UserCredential = await firebaseSignInWithEmailAndPassword(auth, email, password);
+    // Track user sign in
+    trackEvent('user_sign_in', {
+      method: 'email'
+    });
+    setUserId(result.user.uid);
+    return result.user;
+  } catch (error: any) {
+    console.error('Email sign-in error:', error);
+    // Convert Firebase errors to user-friendly messages
+    throw new Error(getFirebaseErrorMessage(error.code));
+  }
+}
+
+export async function sendPasswordResetEmailToUser(email: string): Promise<void> {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    trackEvent('password_reset_requested', {});
+  } catch (error: any) {
+    console.error('Password reset error:', error);
+    throw new Error(getFirebaseErrorMessage(error.code));
+  }
+}
+
+function getFirebaseErrorMessage(errorCode: string): string {
+  const errorMessages: Record<string, string> = {
+    'auth/email-already-in-use': 'This email is already registered. Please sign in instead.',
+    'auth/invalid-email': 'Please enter a valid email address.',
+    'auth/operation-not-allowed': 'Email/password authentication is not enabled.',
+    'auth/weak-password': 'Password should be at least 6 characters long.',
+    'auth/user-disabled': 'This account has been disabled.',
+    'auth/user-not-found': 'No account found with this email address.',
+    'auth/wrong-password': 'Incorrect password. Please try again.',
+    'auth/too-many-requests': 'Too many failed attempts. Please try again later.',
+    'auth/network-request-failed': 'Network error. Please check your connection.',
+  };
+  
+  return errorMessages[errorCode] || 'An error occurred. Please try again.';
 }
 
 export async function logOut(): Promise<void> {

@@ -481,12 +481,11 @@ function startDrillFromCard(drillType: DrillType): void {
  */
 async function handleRegistrationSignup(): Promise<void> {
   try {
-    const { signInWithGoogle } = await import('./services/auth-service.js');
-    await signInWithGoogle();
-    // Auth UI will handle the rest and refresh dashboard
+    const { showAuthModal } = await import('./ui/auth-ui.js');
+    showAuthModal('register');
   } catch (error) {
-    console.error('Registration signup failed:', error);
-    showNotification('Failed to sign up. Please try again.', 'error');
+    console.error('Failed to open auth modal:', error);
+    showNotification('Failed to open sign up. Please try again.', 'error');
   }
 }
 
