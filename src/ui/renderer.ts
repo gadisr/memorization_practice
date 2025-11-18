@@ -242,9 +242,13 @@ export function renderDashboard(sessions: SessionData[], notationSessions: any[]
   // Refresh auth UI to ensure correct authentication state is displayed
   refreshAuthUI();
   
-  // Initialize charts if Chart.js is available
-  if (typeof window !== 'undefined' && (window as any).Chart) {
-    import('./chart-renderer.js').then(({ initializeCharts }) => {
+  // Initialize charts - load Chart.js first if needed
+  if (typeof window !== 'undefined') {
+    import('./chart-renderer.js').then(async ({ initializeCharts, loadChartJS }) => {
+      // Load Chart.js if not already loaded
+      if (typeof (window as any).Chart === 'undefined') {
+        await loadChartJS();
+      }
       initializeCharts(sessions, notationSessions);
     }).catch(error => {
       console.error('Failed to load chart renderer:', error);

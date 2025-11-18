@@ -299,14 +299,9 @@ function attachEventListeners(): void {
   
   // Chart controls
   const timeRangeSelect = document.getElementById('time-range-select') as HTMLSelectElement;
-  const drillFilterSelect = document.getElementById('drill-filter-select') as HTMLSelectElement;
   
   if (timeRangeSelect) {
     timeRangeSelect.addEventListener('change', handleChartFilterChange);
-  }
-  
-  if (drillFilterSelect) {
-    drillFilterSelect.addEventListener('change', handleChartFilterChange);
   }
   
   // Home dashboard event listeners
@@ -1405,12 +1400,10 @@ function setupTutorialButtons(): void {
 async function handleChartFilterChange(): Promise<void> {
   try {
     const timeRangeSelect = document.getElementById('time-range-select') as HTMLSelectElement;
-    const drillFilterSelect = document.getElementById('drill-filter-select') as HTMLSelectElement;
     
-    if (!timeRangeSelect || !drillFilterSelect) return;
+    if (!timeRangeSelect) return;
     
     const timeRange = timeRangeSelect.value;
-    const drillFilter = drillFilterSelect.value;
     
     // Load sessions
     const sessions = await getAllSessions();
@@ -1418,7 +1411,7 @@ async function handleChartFilterChange(): Promise<void> {
     
     // Update charts with new filters
     const { updateChartsWithFilters } = await import('./ui/chart-renderer.js');
-    updateChartsWithFilters(timeRange, drillFilter, sessions, notationSessions);
+    await updateChartsWithFilters(timeRange, sessions, notationSessions);
     
   } catch (error) {
     console.error('Error updating charts with filters:', error);

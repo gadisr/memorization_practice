@@ -5,10 +5,10 @@
 import { SessionData, NotationSessionData } from '../types.js';
 import { ChartData, ChartConfig } from '../types/chart.js';
 import {
-  processAccuracyData,
-  processSpeedData,
-  processQualityData,
-  processDrillTypeComparison,
+  processFlashPairsData,
+  processNotationData,
+  processTracingData,
+  processMemorizationData,
   filterSessionsByDateRange,
   filterNotationSessionsByDateRange
 } from '../services/chart-data-processor.js';
@@ -16,10 +16,10 @@ import {
 // Chart.js will be loaded from CDN
 declare const Chart: any;
 
-let accuracyChart: any = null;
-let speedChart: any = null;
-let qualityChart: any = null;
-let comparisonChart: any = null;
+let flashPairsChart: any = null;
+let notationChart: any = null;
+let tracingChart: any = null;
+let memorizationChart: any = null;
 
 /**
  * Initialize all charts with session data
@@ -34,31 +34,33 @@ export function initializeCharts(
     return;
   }
 
-  renderAccuracyChart(sessions, notationSessions);
-  renderSpeedChart(sessions, notationSessions);
-  renderQualityChart(sessions);
-  renderDrillComparisonChart(sessions, notationSessions);
+  renderFlashPairsChart(sessions);
+  renderNotationChart(notationSessions);
+  renderTracingChart(sessions);
+  renderMemorizationChart(sessions);
 }
 
 /**
- * Render accuracy progress chart
+ * Render Flash Pairs chart
  */
-export function renderAccuracyChart(
-  sessions: SessionData[], 
-  notationSessions: NotationSessionData[]
-): void {
-  const canvas = document.getElementById('accuracy-chart') as HTMLCanvasElement;
+export function renderFlashPairsChart(sessions: SessionData[]): void {
+  if (typeof Chart === 'undefined') {
+    console.warn('Chart.js not loaded, skipping chart render');
+    return;
+  }
+
+  const canvas = document.getElementById('flash-pairs-chart') as HTMLCanvasElement;
   if (!canvas) return;
 
   // Destroy existing chart
-  if (accuracyChart) {
-    accuracyChart.destroy();
+  if (flashPairsChart) {
+    flashPairsChart.destroy();
   }
 
-  const chartData = processAccuracyData(sessions, notationSessions);
-  const config = getLineChartConfig('Accuracy Progress', '%');
+  const chartData = processFlashPairsData(sessions);
+  const config = getMultiLineChartConfig('Flash Pairs Progress');
 
-  accuracyChart = new Chart(canvas, {
+  flashPairsChart = new Chart(canvas, {
     type: 'line',
     data: chartData,
     options: config
@@ -66,24 +68,38 @@ export function renderAccuracyChart(
 }
 
 /**
- * Render speed progress chart
+ * Render merged Notation chart (Edge + Corner)
  */
-export function renderSpeedChart(
-  sessions: SessionData[], 
-  notationSessions: NotationSessionData[]
-): void {
-  const canvas = document.getElementById('speed-chart') as HTMLCanvasElement;
-  if (!canvas) return;
-
-  // Destroy existing chart
-  if (speedChart) {
-    speedChart.destroy();
+export function renderNotationChart(sessions: NotationSessionData[]): void {
+  if (typeof Chart === 'undefined') {
+    console.warn('Chart.js not loaded, skipping chart render');
+    return;
   }
 
-  const chartData = processSpeedData(sessions, notationSessions);
-  const config = getLineChartConfig('Speed Progress', 'seconds');
+  const canvas = document.getElementById('notation-chart') as HTMLCanvasElement;
+  if (!canvas) {
+    console.warn('Notation chart canvas not found');
+    return;
+  }
 
-  speedChart = new Chart(canvas, {
+  // Destroy existing chart
+  if (notationChart) {
+    notationChart.destroy();
+  }
+
+  const chartData = processNotationData(sessions);
+  
+  // Ensure we have at least empty structure if no data
+  if (chartData.labels.length === 0) {
+    chartData.labels = ['No data'];
+    chartData.datasets.forEach(dataset => {
+      dataset.data = [NaN];
+    });
+  }
+  
+  const config = getMultiLineChartConfig('Notation Progress');
+
+  notationChart = new Chart(canvas, {
     type: 'line',
     data: chartData,
     options: config
@@ -91,21 +107,38 @@ export function renderSpeedChart(
 }
 
 /**
- * Render quality trends chart
+ * Render merged Tracing chart (Edge + Corner)
  */
-export function renderQualityChart(sessions: SessionData[]): void {
-  const canvas = document.getElementById('quality-chart') as HTMLCanvasElement;
-  if (!canvas) return;
-
-  // Destroy existing chart
-  if (qualityChart) {
-    qualityChart.destroy();
+export function renderTracingChart(sessions: SessionData[]): void {
+  if (typeof Chart === 'undefined') {
+    console.warn('Chart.js not loaded, skipping chart render');
+    return;
   }
 
-  const chartData = processQualityData(sessions);
-  const config = getLineChartConfig('Quality Trends', 'score');
+  const canvas = document.getElementById('tracing-chart') as HTMLCanvasElement;
+  if (!canvas) {
+    console.warn('Tracing chart canvas not found');
+    return;
+  }
 
-  qualityChart = new Chart(canvas, {
+  // Destroy existing chart
+  if (tracingChart) {
+    tracingChart.destroy();
+  }
+
+  const chartData = processTracingData(sessions);
+  
+  // Ensure we have at least empty structure if no data
+  if (chartData.labels.length === 0) {
+    chartData.labels = ['No data'];
+    chartData.datasets.forEach(dataset => {
+      dataset.data = [NaN];
+    });
+  }
+  
+  const config = getMultiLineChartConfig('Tracing Progress');
+
+  tracingChart = new Chart(canvas, {
     type: 'line',
     data: chartData,
     options: config
@@ -113,25 +146,39 @@ export function renderQualityChart(sessions: SessionData[]): void {
 }
 
 /**
- * Render drill type comparison chart
+ * Render merged Memorization chart (Edge + Corner)
  */
-export function renderDrillComparisonChart(
-  sessions: SessionData[], 
-  notationSessions: NotationSessionData[]
-): void {
-  const canvas = document.getElementById('comparison-chart') as HTMLCanvasElement;
-  if (!canvas) return;
-
-  // Destroy existing chart
-  if (comparisonChart) {
-    comparisonChart.destroy();
+export function renderMemorizationChart(sessions: SessionData[]): void {
+  if (typeof Chart === 'undefined') {
+    console.warn('Chart.js not loaded, skipping chart render');
+    return;
   }
 
-  const chartData = processDrillTypeComparison(sessions, notationSessions);
-  const config = getBarChartConfig('Drill Type Comparison', '%');
+  const canvas = document.getElementById('memorization-chart') as HTMLCanvasElement;
+  if (!canvas) {
+    console.warn('Memorization chart canvas not found');
+    return;
+  }
 
-  comparisonChart = new Chart(canvas, {
-    type: 'bar',
+  // Destroy existing chart
+  if (memorizationChart) {
+    memorizationChart.destroy();
+  }
+
+  const chartData = processMemorizationData(sessions);
+  
+  // Ensure we have at least empty structure if no data
+  if (chartData.labels.length === 0) {
+    chartData.labels = ['No data'];
+    chartData.datasets.forEach(dataset => {
+      dataset.data = [NaN];
+    });
+  }
+  
+  const config = getMultiLineChartConfig('Memorization Progress');
+
+  memorizationChart = new Chart(canvas, {
+    type: 'line',
     data: chartData,
     options: config
   });
@@ -140,12 +187,16 @@ export function renderDrillComparisonChart(
 /**
  * Update all charts with new filters
  */
-export function updateChartsWithFilters(
-  timeRange: string, 
-  drillFilter: string,
+export async function updateChartsWithFilters(
+  timeRange: string,
   sessions: SessionData[], 
   notationSessions: NotationSessionData[]
-): void {
+): Promise<void> {
+  // Ensure Chart.js is loaded
+  if (typeof Chart === 'undefined') {
+    await loadChartJS();
+  }
+
   let filteredSessions = sessions;
   let filteredNotationSessions = notationSessions;
 
@@ -154,34 +205,17 @@ export function updateChartsWithFilters(
   filteredSessions = filterSessionsByDateRange(filteredSessions, days);
   filteredNotationSessions = filterNotationSessionsByDateRange(filteredNotationSessions, days);
 
-  // Apply drill type filter
-  if (drillFilter !== 'all') {
-    if (drillFilter === 'notation') {
-      // Show only notation drills
-      filteredSessions = [];
-    } else if (drillFilter === 'flash') {
-      // Show only flash drills
-      filteredSessions = filteredSessions.filter(s => s.drillType === 'FLASH_PAIRS');
-    } else if (drillFilter === 'chain') {
-      // Show only memorization drills
-      filteredSessions = filteredSessions.filter(s => 
-        s.drillType === 'EDGE_MEMORIZATION' || 
-        s.drillType === 'CORNER_MEMORIZATION'
-      );
-    }
-  }
-
   // Re-render all charts with filtered data
-  renderAccuracyChart(filteredSessions, filteredNotationSessions);
-  renderSpeedChart(filteredSessions, filteredNotationSessions);
-  renderQualityChart(filteredSessions);
-  renderDrillComparisonChart(filteredSessions, filteredNotationSessions);
+  renderFlashPairsChart(filteredSessions);
+  renderNotationChart(filteredNotationSessions);
+  renderTracingChart(filteredSessions);
+  renderMemorizationChart(filteredSessions);
 }
 
 /**
- * Get configuration for line charts
+ * Get configuration for multi-line charts with multiple datasets
  */
-function getLineChartConfig(title: string, yAxisLabel: string): ChartConfig {
+function getMultiLineChartConfig(title: string): ChartConfig {
   return {
     responsive: true,
     maintainAspectRatio: false,
@@ -204,49 +238,7 @@ function getLineChartConfig(title: string, yAxisLabel: string): ChartConfig {
         }
       },
       y: {
-        display: true,
-        title: {
-          display: true,
-          text: yAxisLabel
-        }
-      }
-    }
-  };
-}
-
-/**
- * Get configuration for bar charts
- */
-function getBarChartConfig(title: string, yAxisLabel: string): ChartConfig {
-  return {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top'
-      },
-      tooltip: {
-        enabled: true,
-        mode: 'index'
-      }
-    },
-    scales: {
-      x: {
-        display: true,
-        title: {
-          display: true,
-          text: 'Drill Type'
-        }
-      },
-      y: {
-        display: true,
-        title: {
-          display: true,
-          text: yAxisLabel
-        },
-        min: 0,
-        max: 100
+        display: true
       }
     }
   };
@@ -256,21 +248,21 @@ function getBarChartConfig(title: string, yAxisLabel: string): ChartConfig {
  * Destroy all charts (cleanup)
  */
 export function destroyAllCharts(): void {
-  if (accuracyChart) {
-    accuracyChart.destroy();
-    accuracyChart = null;
+  if (flashPairsChart) {
+    flashPairsChart.destroy();
+    flashPairsChart = null;
   }
-  if (speedChart) {
-    speedChart.destroy();
-    speedChart = null;
+  if (notationChart) {
+    notationChart.destroy();
+    notationChart = null;
   }
-  if (qualityChart) {
-    qualityChart.destroy();
-    qualityChart = null;
+  if (tracingChart) {
+    tracingChart.destroy();
+    tracingChart = null;
   }
-  if (comparisonChart) {
-    comparisonChart.destroy();
-    comparisonChart = null;
+  if (memorizationChart) {
+    memorizationChart.destroy();
+    memorizationChart = null;
   }
 }
 
