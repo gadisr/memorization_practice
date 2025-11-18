@@ -1370,10 +1370,15 @@ tr:hover {
 }
 
 .nav-logo {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--color-primary);
   text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo img {
+  height: 2rem;
+  max-height: 100%;
+  vertical-align: middle;
 }
 
 .nav-links {
