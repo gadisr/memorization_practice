@@ -23,7 +23,7 @@ export function showScreen(screenId: string): void {
     
     // Refresh auth UI when showing dashboard screens (both training dashboard and home dashboard)
     // Use setTimeout to ensure DOM is ready after screen is shown
-    if (screenId === 'dashboard-screen' || screenId === 'home-dashboard-screen') {
+    if (screenId === 'dashboard-screen' || screenId === 'home-dashboard-screen' || screenId === 'stats-screen') {
       setTimeout(() => {
         refreshAuthUI();
       }, 0);
@@ -253,6 +253,272 @@ export function renderDashboard(sessions: SessionData[], notationSessions: any[]
     }).catch(error => {
       console.error('Failed to load chart renderer:', error);
     });
+  }
+}
+
+/**
+ * Render Stats Page with filtering and pagination
+ */
+export function renderStatsPage(sessions: SessionData[], notationSessions: any[] = []): void {
+  renderDashboardStats(sessions, notationSessions);
+  renderStatsPageFilters();
+  renderStatsPageSessionsTable(sessions, notationSessions);
+  
+  // Refresh auth UI to ensure correct authentication state is displayed
+  refreshAuthUI();
+  
+  // Initialize charts - load Chart.js first if needed
+  if (typeof window !== 'undefined') {
+    import('./chart-renderer.js').then(async ({ initializeCharts, loadChartJS }) => {
+      // Load Chart.js if not already loaded
+      if (typeof (window as any).Chart === 'undefined') {
+        await loadChartJS();
+      }
+      initializeCharts(sessions, notationSessions);
+    }).catch(error => {
+      console.error('Failed to load chart renderer:', error);
+    });
+  }
+}
+
+/**
+ * Render filter controls for stats page
+ */
+function renderStatsPageFilters(): void {
+  const filterContainer = document.getElementById('stats-filter-container');
+  if (!filterContainer) return;
+  
+  const allDrills = getAllDrillConfigs();
+  
+  filterContainer.innerHTML = `
+    <div class="stats-filters">
+      <div class="filter-group">
+        <label for="drill-filter-select">Filter by Drill:</label>
+        <select id="drill-filter-select" class="input-field">
+          <option value="">All Drills</option>
+          ${allDrills.map(drill => `
+            <option value="${drill.type}">${formatDrillName(drill.type)}</option>
+          `).join('')}
+        </select>
+      </div>
+    </div>
+  `;
+  
+  // Add event listener for filter change
+  const filterSelect = document.getElementById('drill-filter-select') as HTMLSelectElement;
+  if (filterSelect) {
+    filterSelect.addEventListener('change', () => {
+      // Re-render sessions table with filter
+      const currentPage = parseInt(sessionStorage.getItem('stats-page') || '1');
+      const pageSize = parseInt(sessionStorage.getItem('stats-page-size') || '20');
+      const sessions = JSON.parse(sessionStorage.getItem('stats-sessions') || '[]');
+      const notationSessions = JSON.parse(sessionStorage.getItem('stats-notation-sessions') || '[]');
+      renderStatsPageSessionsTable(sessions, notationSessions, filterSelect.value || undefined, currentPage, pageSize);
+    });
+  }
+}
+
+/**
+ * Render sessions table with filtering and pagination
+ */
+function renderStatsPageSessionsTable(
+  sessions: SessionData[], 
+  notationSessions: any[] = [],
+  filterDrillType?: string,
+  currentPage: number = 1,
+  pageSize: number = 20
+): void {
+  // Store sessions in sessionStorage for filtering
+  sessionStorage.setItem('stats-sessions', JSON.stringify(sessions));
+  sessionStorage.setItem('stats-notation-sessions', JSON.stringify(notationSessions));
+  sessionStorage.setItem('stats-page', currentPage.toString());
+  sessionStorage.setItem('stats-page-size', pageSize.toString());
+  
+  const tbody = document.getElementById('stats-sessions-tbody');
+  const noSessionsMsg = document.getElementById('stats-no-sessions-message');
+  const table = document.getElementById('stats-sessions-table');
+  const paginationContainer = document.getElementById('stats-pagination-container');
+  
+  if (!tbody) return;
+  
+  tbody.innerHTML = '';
+  
+  // Combine all sessions and sort by date
+  let allSessions: any[] = [
+    ...sessions.map(s => ({ ...s, isNotation: false })),
+    ...notationSessions.map(s => ({ ...s, isNotation: true }))
+  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  
+  // Apply drill type filter
+  if (filterDrillType) {
+    allSessions = allSessions.filter(s => s.drillType === filterDrillType);
+  }
+  
+  const totalSessions = allSessions.length;
+  const totalPages = Math.ceil(totalSessions / pageSize);
+  
+  if (allSessions.length === 0) {
+    if (noSessionsMsg) noSessionsMsg.classList.remove('hidden');
+    if (table) table.classList.add('hidden');
+    if (paginationContainer) paginationContainer.innerHTML = '';
+    return;
+  }
+  
+  if (noSessionsMsg) noSessionsMsg.classList.add('hidden');
+  if (table) table.classList.remove('hidden');
+  
+  // Get sessions for current page
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const pageSessions = allSessions.slice(startIndex, endIndex);
+  
+  // Render sessions
+  pageSessions.forEach(session => {
+    const row = document.createElement('tr');
+    row.className = 'clickable-row';
+    row.style.cursor = 'pointer';
+    
+    // Store session data for click handler
+    (row as any).sessionData = session;
+    
+    const dateCell = document.createElement('td');
+    dateCell.textContent = formatSessionDate(session.date);
+    
+    const drillCell = document.createElement('td');
+    drillCell.textContent = formatDrillName(session.drillType);
+    
+    const pairsCell = document.createElement('td');
+    if (session.isNotation) {
+      pairsCell.textContent = session.totalPieces.toString();
+    } else {
+      pairsCell.textContent = session.pairCount.toString();
+    }
+    
+    const avgTimeCell = document.createElement('td');
+    avgTimeCell.textContent = formatTime(session.averageTime);
+    
+    const totalTimeCell = document.createElement('td');
+    let totalTime = session.totalTime;
+    
+    // Fallback: calculate from timings/attempts if totalTime not available
+    if (totalTime === undefined || totalTime === null) {
+      if (session.isNotation && session.attempts) {
+        totalTime = session.attempts.reduce((sum: number, attempt: any) => sum + attempt.timeSeconds, 0);
+      } else if (!session.isNotation && session.timings) {
+        totalTime = session.timings.reduce((sum: number, time: number) => sum + time, 0);
+      }
+    }
+    
+    if (totalTime !== undefined && totalTime !== null) {
+      totalTimeCell.textContent = formatTime(totalTime);
+    } else {
+      totalTimeCell.textContent = '-';
+    }
+    
+    const accuracyCell = document.createElement('td');
+    if (session.isNotation) {
+      accuracyCell.textContent = `${session.accuracy.toFixed(0)}%`;
+      accuracyCell.className = getAccuracyClass(session.accuracy);
+    } else {
+      accuracyCell.textContent = `${session.recallAccuracy.toFixed(0)}%`;
+      accuracyCell.className = getAccuracyClass(session.recallAccuracy);
+    }
+    
+    const qualityCell = document.createElement('td');
+    if (session.isNotation) {
+      qualityCell.textContent = '-';
+    } else if (session.vividness !== undefined) {
+      qualityCell.textContent = `V: ${session.vividness}`;
+    } else if (session.flow !== undefined) {
+      qualityCell.textContent = `F: ${session.flow}`;
+    } else {
+      qualityCell.textContent = '-';
+    }
+    
+    row.appendChild(dateCell);
+    row.appendChild(drillCell);
+    row.appendChild(pairsCell);
+    row.appendChild(avgTimeCell);
+    row.appendChild(totalTimeCell);
+    row.appendChild(accuracyCell);
+    row.appendChild(qualityCell);
+    
+    // Add click handler to open session detail modal
+    row.addEventListener('click', () => {
+      showSessionDetailModal(session);
+    });
+    
+    tbody.appendChild(row);
+  });
+  
+  // Render pagination controls
+  if (paginationContainer) {
+    const filterSelect = document.getElementById('drill-filter-select') as HTMLSelectElement;
+    const currentFilter = filterSelect?.value || '';
+    
+    paginationContainer.innerHTML = `
+      <div class="pagination-controls">
+        <div class="pagination-info">
+          Showing ${startIndex + 1}-${Math.min(endIndex, totalSessions)} of ${totalSessions} sessions
+        </div>
+        <div class="pagination-buttons">
+          <button 
+            id="stats-prev-page" 
+            class="btn btn-secondary" 
+            ${currentPage === 1 ? 'disabled' : ''}
+          >
+            Previous
+          </button>
+          <span class="pagination-page-info">
+            Page ${currentPage} of ${totalPages || 1}
+          </span>
+          <button 
+            id="stats-next-page" 
+            class="btn btn-secondary" 
+            ${currentPage >= totalPages ? 'disabled' : ''}
+          >
+            Next
+          </button>
+        </div>
+        <div class="pagination-size">
+          <label for="stats-page-size-select">Per page:</label>
+          <select id="stats-page-size-select" class="input-field">
+            <option value="10" ${pageSize === 10 ? 'selected' : ''}>10</option>
+            <option value="20" ${pageSize === 20 ? 'selected' : ''}>20</option>
+            <option value="50" ${pageSize === 50 ? 'selected' : ''}>50</option>
+            <option value="100" ${pageSize === 100 ? 'selected' : ''}>100</option>
+          </select>
+        </div>
+      </div>
+    `;
+    
+    // Add event listeners for pagination
+    const prevBtn = document.getElementById('stats-prev-page');
+    const nextBtn = document.getElementById('stats-next-page');
+    const pageSizeSelect = document.getElementById('stats-page-size-select') as HTMLSelectElement;
+    
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+          renderStatsPageSessionsTable(sessions, notationSessions, currentFilter || undefined, currentPage - 1, pageSize);
+        }
+      });
+    }
+    
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+          renderStatsPageSessionsTable(sessions, notationSessions, currentFilter || undefined, currentPage + 1, pageSize);
+        }
+      });
+    }
+    
+    if (pageSizeSelect) {
+      pageSizeSelect.addEventListener('change', () => {
+        const newPageSize = parseInt(pageSizeSelect.value);
+        renderStatsPageSessionsTable(sessions, notationSessions, currentFilter || undefined, 1, newPageSize);
+      });
+    }
   }
 }
 
@@ -712,25 +978,14 @@ export function renderHomeDashboard(
   // Render key stats
   renderKeyStats(userStats);
   
-  // Render best performance
-  renderBestPerformance(userStats);
-  
-  // Render population comparison (available for all users if population stats available)
-  if (populationStats) {
-    if (isAuthenticated || userStats.totalSessions > 0) {
-      // Show comparison if user has sessions (even if not authenticated)
-      renderPopulationComparison(userStats, populationStats);
-      renderValueIndicators(userStats, populationStats);
-    } else {
-      // Show global stats overview for unauthenticated users with no sessions
-      renderGlobalStatsOverview(populationStats);
-    }
-  }
-  
   // Render drill quick access
   renderDrillQuickAccess(userStats, isAuthenticated);
   
-  // Render encouragement section
+  // Render insights and motivation side by side
+  if (populationStats && (isAuthenticated || userStats.totalSessions > 0)) {
+    // Show insights if user has sessions
+    renderValueIndicators(userStats, populationStats);
+  }
   renderEncouragementSection(userStats, isAuthenticated, populationStats);
 }
 
@@ -810,20 +1065,30 @@ export function renderPrimaryCTA(isAuthenticated: boolean): void {
   
   if (isAuthenticated) {
     container.innerHTML = `
-      <div class="primary-cta">
-        <button id="start-training-btn" class="btn btn-primary btn-large">
-          🚀 Start Training
-        </button>
+      <div class="primary-cta compact">
+        <div class="cta-buttons-row">
+          <button id="start-training-btn" class="btn btn-primary">
+            🚀 Start Training
+          </button>
+          <button id="view-stats-btn" class="btn btn-secondary">
+            📊 View Stats
+          </button>
+        </div>
       </div>
     `;
   } else {
     container.innerHTML = `
-      <div class="primary-cta">
-        <button id="start-training-btn" class="btn btn-primary btn-large">
-          🚀 Start Training
-        </button>
-        <p class="primary-cta-note" style="margin-top: 0.75rem; color: var(--color-text-secondary, #666); font-size: 0.9rem; text-align: center;">
-          💡 <strong>Note:</strong> Your training data is only saved when you're logged in. You can still practice without signing in, but your progress won't be stored.
+      <div class="primary-cta compact">
+        <div class="cta-buttons-row">
+          <button id="start-training-btn" class="btn btn-primary">
+            🚀 Start Training
+          </button>
+          <button id="view-stats-btn" class="btn btn-secondary">
+            📊 View Stats
+          </button>
+        </div>
+        <p class="primary-cta-note" style="margin-top: 0.5rem; color: var(--text-secondary, #666); font-size: 0.85rem; text-align: center;">
+          💡 Your training data is only saved when you're logged in.
         </p>
       </div>
     `;
@@ -854,11 +1119,6 @@ function renderKeyStats(userStats: UserStats): void {
       <div class="stat-value">${formatTime(userStats.avgSpeed)}</div>
       <div class="stat-label">Avg Speed/Pair</div>
     </div>
-    <div class="stat-card" style="grid-column: span 4; display: flex; justify-content: center; align-items: center; padding: 1.5rem;">
-      <button id="view-detailed-dashboard-btn" class="btn btn-secondary" style="width: auto; padding: 0.75rem 2rem;">
-        📊 View Detailed Dashboard with Graphs & Sessions
-      </button>
-    </div>
   `;
 }
 
@@ -870,8 +1130,8 @@ export function renderBestPerformance(userStats: UserStats): void {
   if (!container) return;
   
   container.innerHTML = `
-    <h2>🏆 Best Performance</h2>
-    <div class="best-performance-grid">
+    <h3>🏆 Best Performance</h3>
+    <div class="best-performance-grid compact">
       <div class="best-performance-card">
         <div class="best-performance-label">Best Accuracy</div>
         <div class="best-performance-value">${userStats.bestAccuracy > 0 ? userStats.bestAccuracy.toFixed(1) + '%' : 'N/A'}</div>
@@ -931,8 +1191,8 @@ export function renderPopulationComparison(userStats: UserStats, populationStats
     const percentiles = calculateUserPercentiles(userStats, normalizedStats);
     
     container.innerHTML = `
-      <h2>📊 How You Compare</h2>
-      <div class="population-comparison-grid">
+      <h3>📊 How You Compare</h3>
+      <div class="population-comparison-grid compact">
         <div class="population-card">
           <div class="population-metric">Accuracy</div>
           <div class="population-badge ${percentiles.accuracyBadge.toLowerCase().replace(/\s+/g, '-')}">${percentiles.accuracyBadge}</div>
@@ -981,8 +1241,8 @@ export function renderValueIndicators(userStats: UserStats, populationStats: any
     }
     
     container.innerHTML = `
-      <h2>💡 Insights</h2>
-      <div class="value-indicators-list">
+      <h3>💡 Insights</h3>
+      <div class="value-indicators-list compact">
         ${indicators.map(indicator => `
           <div class="value-indicator">${indicator}</div>
         `).join('')}
@@ -1006,27 +1266,27 @@ export function renderDrillQuickAccess(userStats: UserStats, isAuthenticated: bo
   const underPracticed = getUnderPracticedDrills(userStats.drillStats, allDrills.map(d => d.type));
   
   container.innerHTML = `
-    <h2>🎯 Training Drills</h2>
-    <div class="drill-cards-grid">
+    <h3>🎯 Training Drills</h3>
+    <div class="drill-cards-grid compact">
       ${allDrills.map(drill => {
         const stats = userStats.drillStats.get(drill.type);
         const isUnderPracticed = underPracticed.includes(drill.type);
         
         return `
-          <div class="drill-card ${isUnderPracticed ? 'under-practiced' : ''}" data-drill-type="${drill.type}">
+          <div class="drill-card compact ${isUnderPracticed ? 'under-practiced' : ''}" data-drill-type="${drill.type}">
             <div class="drill-card-header">
-              <h3>${formatDrillName(drill.type)}</h3>
+              <h4>${formatDrillName(drill.type)}</h4>
               ${isUnderPracticed ? '<span class="drill-badge">New</span>' : ''}
             </div>
             <p class="drill-card-description">${drill.description}</p>
             ${stats ? `
               <div class="drill-card-stats">
-                <span>Best: ${stats.bestAccuracy.toFixed(0)}% accuracy</span>
+                <span>Best: ${stats.bestAccuracy.toFixed(0)}%</span>
                 <span>${stats.sessionCount} session${stats.sessionCount !== 1 ? 's' : ''}</span>
               </div>
             ` : '<div class="drill-card-stats"><span>Not tried yet</span></div>'}
-            <button class="btn btn-primary drill-start-btn" data-drill-type="${drill.type}">
-              Start Drill
+            <button class="btn btn-primary btn-small drill-start-btn" data-drill-type="${drill.type}">
+              Start
             </button>
           </div>
         `;
@@ -1101,8 +1361,8 @@ export function renderEncouragementSection(
   }
   
   container.innerHTML = `
-    <div class="encouragement-section">
-      <h2>💬 Motivation</h2>
+    <div class="encouragement-section compact">
+      <h3>💬 Motivation</h3>
       <div class="encouragement-messages">
         ${messages.map(msg => `<div class="encouragement-message">${msg}</div>`).join('')}
       </div>

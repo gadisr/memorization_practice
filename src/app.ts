@@ -25,6 +25,7 @@ import {
   renderRecallFeedback,
   renderDashboard,
   renderHomeDashboard,
+  renderStatsPage,
   showNotification,
   showPairCountWarning,
   clearPairCountWarning,
@@ -61,6 +62,7 @@ import {
 } from './ui/color-memorization-renderer.js';
 import { initializeAnalytics, trackPageView, trackEvent } from './services/analytics.js';
 import { measurementId } from './config/firebase-config.js';
+import { router } from './services/router.js';
 
 // Application state
 let currentPairIndex = 0;
@@ -106,8 +108,11 @@ export async function initializeApp(): Promise<void> {
   // Show appropriate tutorial button based on onboarding status
   setupTutorialButtons();
   
-  // Load dashboard data and show home dashboard by default
-  await loadAndRenderHomeDashboard();
+  // Set up routes
+  setupRoutes();
+  
+  // Initialize router (this will handle the initial route)
+  router.init();
 }
 
 function attachEventListeners(): void {
@@ -246,21 +251,16 @@ function attachEventListeners(): void {
     discardBtn.addEventListener('click', handleDiscardSession);
   }
   
-  // Dashboard screen
-  const newSessionBtn = document.getElementById('new-session-btn');
-  const exportBtn = document.getElementById('export-btn');
-  const clearAllBtn = document.getElementById('clear-all-btn');
+  // Stats screen event listeners
+  const exportBtnStats = document.getElementById('export-btn-stats');
+  const clearAllBtnStats = document.getElementById('clear-all-btn-stats');
   
-  if (newSessionBtn) {
-    newSessionBtn.addEventListener('click', () => showScreen('setup-screen'));
+  if (exportBtnStats) {
+    exportBtnStats.addEventListener('click', handleExportCSV);
   }
   
-  if (exportBtn) {
-    exportBtn.addEventListener('click', handleExportCSV);
-  }
-  
-  if (clearAllBtn) {
-    clearAllBtn.addEventListener('click', handleClearAll);
+  if (clearAllBtnStats) {
+    clearAllBtnStats.addEventListener('click', handleClearAll);
   }
   
   // Notation training screen
@@ -310,16 +310,16 @@ function attachEventListeners(): void {
   // Back to dashboard button (from setup screen)
   const backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
   if (backToDashboardBtn) {
-    backToDashboardBtn.addEventListener('click', async () => {
-      await loadAndRenderHomeDashboard();
+    backToDashboardBtn.addEventListener('click', () => {
+      router.navigate('/');
     });
   }
   
-  // Back to home dashboard button (from Training Dashboard)
+  // Back to home dashboard button (from Stats page)
   const backToHomeDashboardBtn = document.getElementById('back-to-home-dashboard-btn');
   if (backToHomeDashboardBtn) {
-    backToHomeDashboardBtn.addEventListener('click', async () => {
-      await loadAndRenderHomeDashboard();
+    backToHomeDashboardBtn.addEventListener('click', () => {
+      router.navigate('/');
     });
   }
   
@@ -342,13 +342,19 @@ function setupHomeDashboardListeners(): void {
     const target = e.target as HTMLElement;
     if (target.id === 'start-training-btn' || target.closest('#start-training-btn')) {
       e.preventDefault();
-      showScreen('setup-screen');
+      router.navigate('/drill');
     }
     
-    // View detailed dashboard button
+    // View stats page button
+    if (target.id === 'view-stats-btn' || target.closest('#view-stats-btn')) {
+      e.preventDefault();
+      router.navigate('/stats');
+    }
+    
+    // View detailed dashboard button (legacy)
     if (target.id === 'view-detailed-dashboard-btn' || target.closest('#view-detailed-dashboard-btn')) {
       e.preventDefault();
-      loadAndRenderTrainingDashboard();
+      router.navigate('/stats');
     }
     
     // Drill card start buttons
@@ -414,12 +420,12 @@ async function loadAndRenderHomeDashboard(): Promise<void> {
 }
 
 /**
- * Load and render Training Dashboard (with graphs and sessions)
+ * Load and render Stats Page (with graphs, filtering, and pagination)
  */
-async function loadAndRenderTrainingDashboard(): Promise<void> {
+async function loadAndRenderStatsPage(): Promise<void> {
   // Track dashboard view
   trackEvent('dashboard_view', {
-    view_type: 'training_dashboard'
+    view_type: 'stats_page'
   });
   try {
     // Wait for auth to initialize
@@ -429,25 +435,47 @@ async function loadAndRenderTrainingDashboard(): Promise<void> {
     const sessions = await getAllSessions();
     const notationSessions = await getAllNotationSessions();
     
-    // Show Training Dashboard screen first (this will trigger refreshAuthUI via showScreen)
-    showScreen('dashboard-screen');
+    // Show Stats screen first (this will trigger refreshAuthUI via showScreen)
+    showScreen('stats-screen');
     
-    // Render Training Dashboard (refreshAuthUI is already called by showScreen, but we call it again to be safe)
-    renderDashboard(sessions, notationSessions);
+    // Render Stats Page (refreshAuthUI is already called by showScreen, but we call it again to be safe)
+    renderStatsPage(sessions, notationSessions);
     
     // Ensure auth UI is refreshed after screen is shown and DOM is ready
     setTimeout(() => {
       refreshAuthUI();
     }, 100);
   } catch (error) {
-    console.error('Error loading Training Dashboard:', error);
-    // Show dashboard with empty data
-    showScreen('dashboard-screen');
-    renderDashboard([], []);
+    console.error('Error loading Stats Page:', error);
+    // Show stats page with empty data
+    showScreen('stats-screen');
+    renderStatsPage([], []);
     setTimeout(() => {
       refreshAuthUI();
     }, 100);
   }
+}
+
+/**
+ * Set up route handlers
+ */
+function setupRoutes(): void {
+  // Home route
+  router.register('/', async () => {
+    await loadAndRenderHomeDashboard();
+  });
+
+  // Stats route
+  router.register('/stats', async () => {
+    await loadAndRenderStatsPage();
+  });
+
+  // Drill route
+  router.register('/drill', async () => {
+    const configs = getAllDrillConfigs();
+    renderSetupScreen(configs);
+    showScreen('setup-screen');
+  });
 }
 
 /**
@@ -457,18 +485,17 @@ function startDrillFromCard(drillType: DrillType): void {
   const config = getDrillConfig(drillType);
   if (!config) return;
   
-  // Navigate to setup screen
-  showScreen('setup-screen');
+  // Navigate to drill page
+  router.navigate('/drill');
   
   // Pre-select the drill
-  const drillSelect = document.getElementById('drill-select') as HTMLSelectElement;
-  if (drillSelect) {
-    drillSelect.value = drillType;
-    updateDrillDescription(config);
-  }
-  
-  // Optionally auto-start the session (or just pre-select and let user start)
-  // For now, just pre-select and show setup screen
+  setTimeout(() => {
+    const drillSelect = document.getElementById('drill-select') as HTMLSelectElement;
+    if (drillSelect) {
+      drillSelect.value = drillType;
+      updateDrillDescription(config);
+    }
+  }, 100);
 }
 
 /**
@@ -737,19 +764,13 @@ async function handleSaveSession(): Promise<void> {
       // Delay navigation to let user see results
       setTimeout(async () => {
         showNotification(`Session saved successfully! ${rankInfo.message}`, 'success');
-        const sessions = await getAllSessions();
-        const notationSessions = await getAllNotationSessions();
-        renderDashboard(sessions, notationSessions);
-        showScreen('dashboard-screen');
+        router.navigate('/stats');
         clearKeyboardCallbacks();
       }, 3000);
     } else {
       // Fallback if validation not available
       showNotification(`Session saved successfully! ${rankInfo.message}`, 'success');
-      const sessions = await getAllSessions();
-      const notationSessions = await getAllNotationSessions();
-      renderDashboard(sessions, notationSessions);
-      showScreen('dashboard-screen');
+      router.navigate('/stats');
       clearKeyboardCallbacks();
     }
   } catch (error) {
@@ -761,7 +782,7 @@ async function handleSaveSession(): Promise<void> {
 function handleDiscardSession(): void {
   if (confirm('Are you sure you want to discard this session?')) {
     cancelSession();
-    showScreen('setup-screen');
+    router.navigate('/drill');
     clearKeyboardCallbacks();
   }
 }
@@ -779,7 +800,7 @@ function handleCancelSession(): void {
       pair_count: session?.pairCount || 0
     });
     
-    showScreen('setup-screen');
+    router.navigate('/drill');
     clearKeyboardCallbacks();
   }
 }
@@ -884,8 +905,8 @@ function handleCancelTracing(): void {
   // Clear keyboard callbacks
   clearKeyboardCallbacks();
   
-  // Go back to setup screen
-  showScreen('setup-screen');
+  // Go back to drill page
+  router.navigate('/drill');
 }
 
 // Color Memorization Handlers
@@ -1112,17 +1133,12 @@ async function handleSaveColorMemorizationSession(): Promise<void> {
       setTimeout(async () => {
         showNotification(`Session saved successfully! ${rankInfo.message}`, 'success');
         const sessions = await getAllSessions();
-        const notationSessions = await getAllNotationSessions();
-        renderDashboard(sessions, notationSessions);
-        showScreen('dashboard-screen');
+        router.navigate('/stats');
         clearKeyboardCallbacks();
       }, 3000);
     } else {
       showNotification(`Session saved successfully! ${rankInfo.message}`, 'success');
-      const sessions = await getAllSessions();
-      const notationSessions = await getAllNotationSessions();
-      renderDashboard(sessions, notationSessions);
-      showScreen('dashboard-screen');
+      router.navigate('/stats');
       clearKeyboardCallbacks();
     }
   } catch (error) {
@@ -1134,7 +1150,7 @@ async function handleSaveColorMemorizationSession(): Promise<void> {
 function handleDiscardColorMemorizationSession(): void {
   if (confirm('Are you sure you want to discard this session?')) {
     cancelColorMemorizationSession();
-    showScreen('setup-screen');
+    router.navigate('/drill');
     clearKeyboardCallbacks();
   }
 }
@@ -1142,7 +1158,7 @@ function handleDiscardColorMemorizationSession(): void {
 function handleCancelColorMemorizationSession(): void {
   if (confirm('Are you sure you want to cancel this session?')) {
     cancelColorMemorizationSession();
-    showScreen('setup-screen');
+    router.navigate('/drill');
     clearKeyboardCallbacks();
   }
 }
@@ -1315,9 +1331,7 @@ async function handleSaveNotation(): Promise<void> {
     
     // Navigate to dashboard
     const sessions = await getAllSessions();
-    const notationSessions = await getAllNotationSessions();
-    renderDashboard(sessions, notationSessions);
-    showScreen('dashboard-screen');
+    router.navigate('/stats');
   } catch (error) {
     console.error('Error saving notation session:', error);
     showNotification('Error saving notation session', 'error');
@@ -1327,7 +1341,7 @@ async function handleSaveNotation(): Promise<void> {
 function handleDiscardNotation(): void {
   if (confirm('Are you sure you want to discard this notation training session?')) {
     cancelNotationSession();
-    showScreen('setup-screen');
+    router.navigate('/drill');
     clearKeyboardCallbacks();
   }
 }
@@ -1339,7 +1353,7 @@ function handleCancelNotation(): void {
       timerInterval = null;
     }
     cancelNotationSession();
-    showScreen('setup-screen');
+    router.navigate('/drill');
     clearKeyboardCallbacks();
   }
 }

@@ -124,7 +124,9 @@
     <!-- Navigation/Footer -->
     <nav id="main-navigation" class="main-navigation">
       <div class="nav-container">
-        <a href="index.html" class="nav-logo"><img src="media/logo.svg" alt="BLD Trainer" /></a>
+        <a href="/" class="nav-logo">
+          <img src="media/logo.png" alt="BLD Trainer" class="nav-logo-image" />
+        </a>
         <div class="nav-links">
           <a href="intro.html">Beginner's Guide</a>
           <a href="features.html">Features</a>
@@ -165,20 +167,17 @@
       <!-- Key Stats Grid -->
       <div id="home-stats-grid" class="stats-grid"></div>
 
-      <!-- Best Performance -->
-      <div id="best-performance-container" class="card"></div>
-
-      <!-- Population Comparison (available for all users) -->
-      <div id="population-comparison-container" class="card hidden"></div>
-
-      <!-- Value Indicators (available for all users) -->
-      <div id="value-indicators-container" class="card hidden"></div>
-
       <!-- Drill Quick Access -->
       <div id="drill-quick-access-container" class="card"></div>
 
-      <!-- Encouragement Section -->
-      <div id="encouragement-container" class="card"></div>
+      <!-- Insights and Motivation Row -->
+      <div class="insights-motivation-row">
+        <!-- Value Indicators (available for all users) -->
+        <div id="value-indicators-container" class="card hidden"></div>
+
+        <!-- Encouragement Section -->
+        <div id="encouragement-container" class="card"></div>
+      </div>
     </div>
 
     <!-- Setup Screen (for starting drills) -->
@@ -380,30 +379,27 @@
       </div>
     </div>
 
-    <!-- Dashboard Screen -->
-    <div id="dashboard-screen" class="screen hidden">
+    <!-- Stats Screen -->
+    <div id="stats-screen" class="screen hidden">
       <header>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div class="stats-header-top">
           <button id="back-to-home-dashboard-btn" class="btn btn-text">← Back to Home</button>
-          <h1 style="flex: 1; text-align: center; margin: 0;">📊 Training Dashboard</h1>
-          <div style="width: 150px;"></div>
-        </div>
-        <div class="header-actions">
-          <!-- Auth Container -->
-          <div id="auth-container-dashboard" class="auth-container">
-            <button id="login-button-dashboard" class="btn btn-auth">
-            Sign in
-          </button>
-          
-          <div id="user-profile-dashboard" class="user-profile hidden">
-            <img id="user-avatar-dashboard" src="" alt="User profile avatar" class="avatar" />
-              <span id="user-email-dashboard" class="user-email"></span>
-              <button id="logout-button-dashboard" class="btn btn-text">Sign Out</button>
+          <h1>📊 Stats</h1>
+          <div class="stats-header-right">
+            <!-- Auth Container -->
+            <div id="auth-container-stats" class="auth-container">
+              <button id="login-button-stats" class="btn btn-auth">
+                Sign in
+              </button>
+              
+              <div id="user-profile-stats" class="user-profile hidden">
+                <img id="user-avatar-stats" src="" alt="User profile avatar" class="avatar" />
+                <span id="user-email-stats" class="user-email"></span>
+                <button id="logout-button-stats" class="btn btn-text">Sign Out</button>
+              </div>
             </div>
+            <button id="export-btn-stats" class="btn btn-secondary btn-small">Export CSV</button>
           </div>
-          <a href="intro.html" class="btn btn-info" target="_blank">📚 Learn BLD</a>
-          <button id="new-session-btn" class="btn btn-primary">New Session</button>
-          <button id="export-btn" class="btn btn-secondary">Export CSV</button>
         </div>
       </header>
 
@@ -461,9 +457,10 @@
       </div>
 
       <div class="card">
-        <h2>Recent Sessions</h2>
-        <div id="sessions-table-container">
-          <table id="sessions-table">
+        <h2>Sessions</h2>
+        <div id="stats-filter-container"></div>
+        <div id="stats-sessions-table-container">
+          <table id="stats-sessions-table">
             <thead>
               <tr>
                 <th>Date</th>
@@ -475,16 +472,16 @@
                 <th>Quality</th>
               </tr>
             </thead>
-            <tbody id="sessions-tbody">
+            <tbody id="stats-sessions-tbody">
               <!-- Sessions will be dynamically populated -->
             </tbody>
           </table>
-          <p id="no-sessions-message" class="empty-state hidden">
+          <p id="stats-no-sessions-message" class="empty-state hidden">
             No sessions yet. Start your first training session!
           </p>
         </div>
-        
-        <button id="clear-all-btn" class="btn btn-danger-text">Clear All Data</button>
+        <div id="stats-pagination-container"></div>
+        <button id="clear-all-btn-stats" class="btn btn-danger-text">Clear All Data</button>
       </div>
     </div>
 

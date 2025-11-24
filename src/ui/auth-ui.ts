@@ -170,8 +170,8 @@ export function refreshAuthUI(): void {
   const userEmail = document.getElementById('user-email');
   const userAvatar = document.getElementById('user-avatar');
   
-  // Dashboard screen elements - find within visible screen to avoid duplicate ID issues
-  // Since both home-dashboard-screen and dashboard-screen have elements with same IDs,
+  // Dashboard/stats screen elements - find within visible screen to avoid duplicate ID issues
+  // Since home-dashboard-screen, stats-screen have elements with same IDs,
   // we need to find them within the visible screen
   let loginButtonDashboard: HTMLElement | null = null;
   let logoutButtonDashboard: HTMLElement | null = null;
@@ -180,11 +180,11 @@ export function refreshAuthUI(): void {
   let userAvatarDashboard: HTMLElement | null = null;
   
   if (visibleScreen) {
-    loginButtonDashboard = visibleScreen.querySelector('#login-button-dashboard') as HTMLElement;
-    logoutButtonDashboard = visibleScreen.querySelector('#logout-button-dashboard') as HTMLElement;
-    userProfileDashboard = visibleScreen.querySelector('#user-profile-dashboard') as HTMLElement;
-    userEmailDashboard = visibleScreen.querySelector('#user-email-dashboard') as HTMLElement;
-    userAvatarDashboard = visibleScreen.querySelector('#user-avatar-dashboard') as HTMLElement;
+    loginButtonDashboard = visibleScreen.querySelector('#login-button-dashboard, #login-button-stats') as HTMLElement;
+    logoutButtonDashboard = visibleScreen.querySelector('#logout-button-dashboard, #logout-button-stats') as HTMLElement;
+    userProfileDashboard = visibleScreen.querySelector('#user-profile-dashboard, #user-profile-stats') as HTMLElement;
+    userEmailDashboard = visibleScreen.querySelector('#user-email-dashboard, #user-email-stats') as HTMLElement;
+    userAvatarDashboard = visibleScreen.querySelector('#user-avatar-dashboard, #user-avatar-stats') as HTMLElement;
   }
   
   // Fallback to getElementById if not found in visible screen (for backwards compatibility)
@@ -232,6 +232,7 @@ async function refreshDashboard(): Promise<void> {
   try {
     // Check if we're on a screen that should show dashboard
     const homeDashboardScreen = document.getElementById('home-dashboard-screen');
+    const statsScreen = document.getElementById('stats-screen');
     if (homeDashboardScreen && !homeDashboardScreen.classList.contains('hidden')) {
       // Dynamically import and call the refresh function
       const appModule = await import('../app.js');
