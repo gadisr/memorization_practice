@@ -1,0 +1,2344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>3×3 Rubik's Cube Blindfolded - Complete Solution Guide</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --page-bg: #f1f5f9;
+      --page-color: #0f172a;
+      --accent: #06b6d4;
+      --accent-soft: #e0f2fe;
+      --accent-strong: #0ea5e9;
+      --heading-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --body-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 2rem 1rem;
+      background: radial-gradient(circle at top, #e0f2fe 0, #f9fafb 40%, #e2e8f0 100%);
+      font-family: var(--body-font);
+      color: var(--page-color);
+    }
+
+    .guide-shell {
+      max-width: 960px;
+      margin: 0 auto 3rem;
+    }
+
+    .page {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+      padding: 2.75rem 3rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18);
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .page-header-strip {
+      width: 6px;
+      border-radius: 999px;
+      align-self: stretch;
+      background: linear-gradient(180deg, var(--accent-strong), #22c55e, #f97316);
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--heading-font);
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 3vw, 2.8rem);
+      line-height: 1.05;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 0.4rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      margin-top: 1.6rem;
+      margin-bottom: 0.4rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+      margin-top: 1.2rem;
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #64748b;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      margin-top: 0.75rem;
+      color: #475569;
+    }
+
+    p {
+      margin: 0 0 0.75rem;
+      line-height: 1.6;
+      font-size: 0.98rem;
+    }
+
+    ul, ol {
+      margin: 0 0 0.85rem 1.4rem;
+      padding: 0;
+      font-size: 0.96rem;
+      line-height: 1.55;
+    }
+
+    .muted { color: #6b7280; }
+
+    /* guide body */
+    .guide-body h1 {
+      margin-top: 0;
+      font-size: 1.8rem;
+    }
+
+    .guide-body h2 {
+      font-size: 1.4rem;
+      margin-top: 2rem;
+    }
+
+    .guide-body h3 {
+      font-size: 1.05rem;
+      text-transform: none;
+    }
+
+    /* image placeholders */
+
+    .image-page-title {
+      margin-bottom: 0.25rem;
+    }
+
+    .image-page-subtitle {
+      font-size: 0.95rem;
+      color: #6b7280;
+    }
+
+    .image-grid {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.2rem;
+    }
+
+    figure.image-placeholder {
+      margin: 0;
+      padding: 1.1rem 1.25rem;
+      border-radius: 14px;
+      border: 2px dashed #cbd5e1;
+      background: #f8fafc;
+      display: grid;
+      grid-template-columns: minmax(120px, 180px) 1fr;
+      gap: 1.1rem;
+      align-items: center;
+    }
+
+    .image-box {
+      width: 100%;
+      height: 120px;
+      border-radius: 10px;
+      background-image: repeating-linear-gradient(
+        135deg,
+        #e2e8f0,
+        #e2e8f0 10px,
+        #f8fafc 10px,
+        #f8fafc 20px
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+    }
+
+    figure.image-placeholder figcaption {
+      font-size: 0.86rem;
+      color: #64748b;
+    }
+
+    figure.image-placeholder .img-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #0f172a;
+      margin-bottom: 0.15rem;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 1.9rem 1.6rem 2.1rem;
+        border-radius: 16px;
+      }
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .page-header-strip {
+        display: none;
+      }
+      figure.image-placeholder {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+      .page {
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+      .page::after { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-shell">
+
+    <!-- Cover "page" -->
+    <section class="page">
+      <div class="page-header">
+        <div class="page-header-strip"></div>
+        <div>
+          <h1>3×3 Rubik's Cube Blindfolded - Complete Solution Guide</h1>
+          <div class="subtitle">A Beginner's Guide to Blindfold Solving Using the Old Pochmann Method</div>
+          <p class="muted" style="margin-top:0.8rem;">
+            Generated from <code>blindfold_solving_complete_guide.md</code> · Version: 1.0
+          </p>
+        </div>
+      </div>
+      <p class="muted">
+        This HTML is styled to export nicely to PDF (via browser Print → Save as PDF).
+        The next page contains the full guide content, followed by a page with
+        image placeholders you can replace with actual images.
+      </p>
+    </section>
+
+    <!-- Guide content -->
+    <section class="page">
+      <div class="guide-body">
+<h1 id="33-rubiks-cube-blindfolded">3×3 RUBIK'S CUBE BLINDFOLDED</h1>
+<h2 id="complete-solution-guide-for-beginners">Complete Solution Guide for Beginners</h2>
+<hr />
+<h2 id="table-of-contents">TABLE OF CONTENTS</h2>
+<h3 id="part-i-introduction">PART I: INTRODUCTION</h3>
+<ol>
+<li>Welcome to Blindfold Solving</li>
+<li>How Blindfold Solving Works</li>
+<li>Prerequisites &amp; What You Need</li>
+</ol>
+<h3 id="part-ii-fundamentals">PART II: FUNDAMENTALS</h3>
+<ol start="4">
+<li>Understanding the Cube</li>
+<li>Orientation &amp; Holding the Cube</li>
+<li>The Buffer System</li>
+<li>The Lettering Scheme</li>
+</ol>
+<h3 id="part-iii-the-three-phases">PART III: THE THREE PHASES</h3>
+<ol start="8">
+<li>
+<p><strong>Phase 1: Tracing</strong>
+   - 8.1 Edge Tracing
+   - 8.2 Edge Tracing Examples
+   - 8.3 Closing Cycles &amp; Circuit Breaking
+   - 8.4 Corner Tracing
+   - 8.5 Complete Tracing Example</p>
+</li>
+<li>
+<p><strong>Phase 2: Memorization</strong>
+   - 9.1 Why Letter Pairs?
+   - 9.2 Chunking Your Memo
+   - 9.3 Memory Techniques (PAO System)
+   - 9.4 Building Memory Stories
+   - 9.5 Parity Detection</p>
+</li>
+<li>
+<p><strong>Phase 3: Execution</strong></p>
+<ul>
+<li>10.1 Execution Overview</li>
+<li>10.2 Safe Execution Rules</li>
+<li>10.3 Edge Execution (T-Perm)</li>
+<li>10.4 Edge Setup Moves</li>
+<li>10.5 Parity Fix (R-Perm)</li>
+<li>10.6 Corner Execution (Y-Perm)</li>
+<li>10.7 Corner Setup Moves</li>
+<li>10.8 Complete Solve Walkthrough</li>
+</ul>
+</li>
+</ol>
+<h3 id="part-iv-practice-improvement">PART IV: PRACTICE &amp; IMPROVEMENT</h3>
+<ol start="11">
+<li>Practice Strategy</li>
+<li>Common Mistakes &amp; Troubleshooting</li>
+<li>Tips for Success</li>
+</ol>
+<h3 id="appendices">APPENDICES</h3>
+<ul>
+<li><strong>Appendix A:</strong> Complete Lettering Maps</li>
+<li><strong>Appendix B:</strong> Edge Setup Move Reference</li>
+<li><strong>Appendix C:</strong> Corner Setup Move Reference</li>
+<li><strong>Appendix D:</strong> Algorithm Quick Reference</li>
+<li><strong>Appendix E:</strong> Blindfold Solve Checklist</li>
+<li><strong>Appendix F:</strong> Practice Drills</li>
+</ul>
+<hr />
+<h1 id="part-i-introduction_1">PART I: INTRODUCTION</h1>
+<h2 id="1-welcome-to-blindfold-solving">1. WELCOME TO BLINDFOLD SOLVING</h2>
+<p>Solving a Rubik's Cube blindfolded may seem impossible, but it is a <strong>logical, learnable process</strong> that anyone can master with patience and practice. This guide will teach you exactly how to do it, step by step.</p>
+<h3 id="what-you-will-learn">What You Will Learn</h3>
+<p>This guide uses the <strong>Old Pochmann Method</strong>, a beginner-friendly approach that requires learning only:
+- ✅ <strong>One algorithm for edges</strong> (T-Perm)
+- ✅ <strong>One algorithm for corners</strong> (Modified Y-Perm)
+- ✅ <strong>One parity algorithm</strong> (R-Perm - used only when needed)
+- ✅ <strong>Setup moves</strong> for each letter position</p>
+<h3 id="the-core-concept">The Core Concept</h3>
+<p>Blindfold solving is <strong>not about memorizing algorithms</strong>. It's about:
+1. <strong>Understanding</strong> where each piece needs to go
+2. <strong>Memorizing</strong> that information as a sequence of letters
+3. <strong>Executing</strong> moves blindfolded using a fixed buffer system</p>
+<h3 id="mindset-for-success">Mindset for Success</h3>
+<p><strong>You CAN do this!</strong> Blindfold solving requires:
+- ✅ Patience and persistence
+- ✅ Willingness to practice
+- ✅ Trust in the process
+- ✅ Acceptance that mistakes are part of learning</p>
+<p>Even if your first attempts don't succeed, each try builds your understanding. Most cubers succeed within their first 10-20 attempts.</p>
+<hr />
+<h2 id="2-how-blindfold-solving-works">2. HOW BLINDFOLD SOLVING WORKS</h2>
+<p>Unlike traditional layer-by-layer solving, blindfold solving happens in <strong>three distinct phases</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>What You Do</th>
+<th>Key Concept</th>
+<th>Time Spent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Tracing</strong></td>
+<td>Look at the scrambled cube and determine where every piece belongs</td>
+<td>Convert the cube state into a sequence of letters</td>
+<td>40-50%</td>
+</tr>
+<tr>
+<td><strong>2. Memorization</strong></td>
+<td>Store the letter sequence in your memory using techniques</td>
+<td>Create memorable stories or images from letter pairs</td>
+<td>30-40%</td>
+</tr>
+<tr>
+<td><strong>3. Execution</strong></td>
+<td>Put on blindfold and solve the cube using your memorized sequence</td>
+<td>Swap pieces through a fixed buffer using algorithms</td>
+<td>20-30%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-big-picture">The Big Picture</h3>
+<p>Instead of solving the cube <strong>layer by layer</strong>, we:
+1. Track where <strong>each individual piece</strong> needs to go (Tracing)
+2. Remember that information as <strong>letters</strong> (Memorization)
+3. Move pieces <strong>one at a time</strong> to their correct positions (Execution)</p>
+<p>This approach works because:
+- We solve <strong>piece by piece</strong> in a controlled order
+- We use a <strong>fixed starting point</strong> (buffer) for all swaps
+- We never disturb <strong>already-solved</strong> pieces
+- We follow a <strong>predetermined sequence</strong> rather than reacting to the cube</p>
+<hr />
+<h2 id="3-prerequisites-what-you-need">3. PREREQUISITES &amp; WHAT YOU NEED</h2>
+<h3 id="before-you-begin">Before You Begin</h3>
+<p>To learn blindfold solving, you should:</p>
+<p>✅ <strong>Know how to solve a 3×3 cube normally</strong> (any method)
+- You need to understand what corners, edges, and centers are
+- You should be comfortable holding and turning the cube
+- You don't need to be fast—just consistent</p>
+<p>✅ <strong>Understand basic cube notation</strong>
+- R, U, F, L, D, B (face turns)
+- Prime notation (R', U', etc. for counterclockwise)
+- Double moves (R2, U2, etc.)
+- Wide moves (Rw, Uw, Dw, etc.)</p>
+<p>✅ <strong>Be willing to practice regularly</strong>
+- Expect 5-10 hours of practice to get your first success
+- Consistent 20-30 minute sessions work better than marathon sessions</p>
+<h3 id="what-youll-need">What You'll Need</h3>
+<p><strong>Physical Items:</strong>
+- A 3×3 Rubik's Cube (any standard cube works)
+- A blindfold, sleeping mask, or towel to cover your eyes
+- This guide (printed or on screen)
+- Paper and pencil for practice</p>
+<p><strong>Optional But Helpful:</strong>
+- Printout of lettering scheme (Appendix A)
+- Setup moves reference sheet (Appendices B &amp; C)
+- Timer (for tracking progress, not speed)</p>
+<hr />
+<h1 id="part-ii-fundamentals_1">PART II: FUNDAMENTALS</h1>
+<h2 id="4-understanding-the-cube">4. UNDERSTANDING THE CUBE</h2>
+<h3 id="cube-anatomy">Cube Anatomy</h3>
+<p>A 3×3 Rubik's Cube has three types of pieces:</p>
+<table>
+<thead>
+<tr>
+<th>Piece Type</th>
+<th>Count</th>
+<th>Stickers Each</th>
+<th>Total Stickers</th>
+<th>Movement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Centers</strong></td>
+<td>6</td>
+<td>1</td>
+<td>6</td>
+<td>Fixed position (define cube faces)</td>
+</tr>
+<tr>
+<td><strong>Edges</strong></td>
+<td>12</td>
+<td>2</td>
+<td>24</td>
+<td>Can move to any edge position</td>
+</tr>
+<tr>
+<td><strong>Corners</strong></td>
+<td>8</td>
+<td>3</td>
+<td>24</td>
+<td>Can move to any corner position</td>
+</tr>
+</tbody>
+</table>
+<h3 id="important-concepts">Important Concepts</h3>
+<p><strong>1. Piece Identity vs. Position</strong>
+- Each piece has a <strong>fixed identity</strong> (the colors it has)
+- But pieces can be in <strong>different positions</strong>
+- Blindfold solving is about returning each piece to its correct position</p>
+<p><strong>2. Pieces Move Together</strong>
+- When you turn a face, multiple pieces move
+- But pieces maintain their orientation relative to each other
+- Understanding piece movement is crucial for tracing</p>
+<p><strong>3. Centers Never Move</strong>
+- The center pieces define which color belongs to which face
+- In this guide, we use <strong>white up, green front</strong> as standard
+- Centers provide reference points for all other pieces</p>
+<hr />
+<h2 id="5-orientation-holding-the-cube">5. ORIENTATION &amp; HOLDING THE CUBE</h2>
+<h3 id="the-golden-rule-consistent-orientation">The Golden Rule: Consistent Orientation</h3>
+<p><strong>CRITICAL:</strong> For blindfold solving to work, you must <strong>ALWAYS</strong> hold the cube the same way.</p>
+<p><strong>Standard Orientation:</strong></p>
+<pre><code>WHITE center on UP (U) face
+GREEN center on FRONT (F) face
+</code></pre>
+<p>This means:
+- <strong>Yellow</strong> is on the bottom (D face)
+- <strong>Blue</strong> is on the back (B face)
+- <strong>Red</strong> and <strong>Orange</strong> are on the sides (R and L faces)</p>
+<h3 id="why-orientation-matters">Why Orientation Matters</h3>
+<ol>
+<li><strong>Letter assignments are position-based</strong> - Each letter refers to a specific physical location</li>
+<li><strong>Setup moves assume fixed orientation</strong> - They only work if the cube stays oriented</li>
+<li><strong>Muscle memory depends on consistency</strong> - Your fingers learn where positions are</li>
+<li><strong>No rotations during execution</strong> - We never rotate the cube (no x, y, or z moves)</li>
+</ol>
+<h3 id="checking-your-orientation">Checking Your Orientation</h3>
+<p>Before every solve (and throughout execution):
+1. Feel for the <strong>UP face</strong> - should have the center color you designated as up
+2. Feel for the <strong>FRONT face</strong> - should have the center color you designated as front
+3. If you lose track, <strong>stop and reorient</strong> before continuing</p>
+<hr />
+<h2 id="6-the-buffer-system">6. THE BUFFER SYSTEM</h2>
+<h3 id="what-is-a-buffer">What is a Buffer?</h3>
+<p>The <strong>buffer</strong> is a fixed position on the cube where all solving begins and returns. Think of it as a "home base" or "hub" through which all pieces pass during the solve.</p>
+<p><strong>Key Buffer Principle:</strong>
+- The buffer <strong>position never moves</strong>
+- We repeatedly <strong>swap pieces through the buffer</strong>
+- Each swap solves one piece and brings a new piece to the buffer
+- This continues until all pieces are solved</p>
+<h3 id="our-buffer-positions">Our Buffer Positions</h3>
+<table>
+<thead>
+<tr>
+<th>Piece Type</th>
+<th>Buffer Position</th>
+<th>Buffer Letter</th>
+<th>Target Swap Position</th>
+<th>Target Letter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Edges</strong></td>
+<td>UR (Up-Right edge)</td>
+<td><strong>b*</strong></td>
+<td>DF position</td>
+<td><strong>d</strong></td>
+</tr>
+<tr>
+<td><strong>Corners</strong></td>
+<td>UBL (Up-Back-Left corner)</td>
+<td><strong>A*</strong></td>
+<td>DFR position</td>
+<td><strong>P</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Diagram Description Needed:</strong>
+- Image showing 3D cube with UR edge highlighted and labeled "b<em>"
+- Image showing 3D cube with UBL corner highlighted and labeled "A</em>"</p>
+<h3 id="how-the-buffer-system-works">How the Buffer System Works</h3>
+<p><strong>Example - Edge Solving:</strong>
+1. Start: A piece is at buffer position <strong>b</strong><em> (UR)
+2. We identify where that piece belongs (let's say position </em><em>m</em><em>)
+3. We swap buffer piece with the piece at position </em><em>m</em><em>
+4. Result: The first piece is now solved, and position </em><em>m</em>*'s piece is now at buffer
+5. Repeat: We now swap the new buffer piece with the next target
+6. Continue until all pieces are solved</p>
+<p><strong>Why This Works:</strong>
+- Each swap <strong>solves exactly one piece</strong> (the piece that was at buffer)
+- Each swap <strong>brings the next unsolved piece</strong> to buffer
+- We never disturb <strong>already-solved pieces</strong>
+- The buffer position itself gets solved last (automatically)</p>
+<hr />
+<h2 id="7-the-lettering-scheme">7. THE LETTERING SCHEME</h2>
+<h3 id="why-we-use-letters">Why We Use Letters</h3>
+<p>To blindfold solve, we need a way to <strong>refer to each sticker position</strong> without looking at the cube. We assign each sticker a unique letter.</p>
+<h3 id="letter-assignment-system">Letter Assignment System</h3>
+<p>We use a modified <strong>Speffz lettering scheme</strong>:</p>
+<p><strong>For Edges:</strong>
+- Use <strong>lowercase letters: a, b, c, d, ... x</strong> (24 letters for 24 edge stickers)
+- Buffer position UR = <strong>b*</strong>
+- Letters assigned clockwise around each face</p>
+<p><strong>For Corners:</strong>
+- Use <strong>UPPERCASE letters: A, B, C, D, ... X</strong> (24 letters for 24 corner stickers)
+- Buffer position UBL = <strong>A*</strong>
+- Letters assigned clockwise around each face</p>
+<p><strong>Diagram Description Needed:</strong>
+- 2D net layout of cube showing all lowercase edge letters (a-x)
+- 2D net layout of cube showing all UPPERCASE corner letters (A-X)
+- Both diagrams with buffer positions highlighted</p>
+<h3 id="letter-pairs-and-groups">Letter Pairs and Groups</h3>
+<p><strong>Edge Pairs:</strong>
+Every edge piece has <strong>two stickers</strong> (on opposite sides of the piece). These stickers are assigned <strong>paired letters</strong>.</p>
+<p>Example edge pairs:
+- a ↔ q (same physical piece, different stickers)
+- b ↔ m (same physical piece, different stickers)
+- c ↔ i (same physical piece, different stickers)</p>
+<p><strong>Corner Triplets:</strong>
+Every corner piece has <strong>three stickers</strong>. These stickers form a <strong>letter triplet group</strong>.</p>
+<p>Example corner groups:
+- A–E–R (same physical corner, three different stickers)
+- B–Q–N (same physical corner, three different stickers)
+- C–J–M (same physical corner, three different stickers)</p>
+<p><strong>Why Pairs/Groups Matter:</strong>
+- They tell us when a <strong>cycle is complete</strong> during tracing
+- When tracing returns to a paired/grouped letter, that cycle ends
+- This is crucial for correctly building your memorization sequence</p>
+<p><strong>Diagram Description Needed:</strong>
+- One edge piece shown with both stickers labeled (e.g., 'a' and 'q')
+- One corner piece shown with all three stickers labeled (e.g., 'A', 'E', 'R')</p>
+<hr />
+<h1 id="part-iii-the-three-phases_1">PART III: THE THREE PHASES</h1>
+<h2 id="8-phase-1-tracing">8. PHASE 1: TRACING</h2>
+<p>Tracing is the process of <strong>converting the scrambled cube into a sequence of letters</strong> that tells you where each piece needs to go.</p>
+<h3 id="the-tracing-process">The Tracing Process</h3>
+<p><strong>Tracing means:</strong>
+1. Start at the buffer position
+2. Look at which piece is currently there
+3. Identify where that piece <strong>belongs</strong> on a solved cube
+4. Note the letter of that target position
+5. Go to that target position and repeat steps 2-4
+6. Continue until you return to the buffer (or its paired letter)</p>
+<p><strong>Think of tracing like following a trail:</strong>
+- Each piece tells you where to look next
+- You're building a map of where pieces need to go
+- The trail eventually leads back to where you started</p>
+<hr />
+<h2 id="81-edge-tracing">8.1 EDGE TRACING</h2>
+<p>Edge tracing creates your <strong>edge memorization sequence</strong> using lowercase letters.</p>
+<h3 id="step-by-step-edge-tracing">Step-by-Step Edge Tracing</h3>
+<p><strong>Setup:</strong>
+- Hold cube with <strong>white up, green front</strong>
+- Start at edge buffer position: <strong>UR = b*</strong></p>
+<p><strong>Tracing Steps:</strong></p>
+<p><strong>1. Look at the buffer piece</strong>
+   - Identify the two stickers on the piece currently at UR position
+   - Ask: "Where does this piece belong on a solved cube?"</p>
+<p><strong>2. Note the target letter</strong>
+   - Find where this piece belongs
+   - Write down the <strong>letter of that target position</strong>
+   - This is your first memo letter</p>
+<p><strong>3. Follow the chain</strong>
+   - Go to that target position
+   - Look at the piece currently there
+   - Where does <strong>that</strong> piece belong?
+   - Note its target letter</p>
+<p><strong>4. Continue tracing</strong>
+   - Keep following the chain
+   - Each piece tells you where to go next
+   - Keep writing down target letters</p>
+<p><strong>5. Recognize cycle completion</strong>
+   - Stop when the chain leads back to:
+     - The buffer position (<strong>b</strong>)
+     - OR the buffer's paired letter (<strong>m</strong>)
+   - This completes one cycle</p>
+<hr />
+<h2 id="82-edge-tracing-examples">8.2 EDGE TRACING EXAMPLES</h2>
+<h3 id="example-1-simple-single-cycle">Example 1: Simple Single Cycle</h3>
+<p><strong>Scenario:</strong> Scrambled cube with edges displaced</p>
+<p><strong>Tracing:</strong>
+1. Buffer (b<em>) piece belongs at position </em><em>m</em><em>
+   - Write: m
+2. Position </em><em>m</em><em> piece belongs at position </em><em>f</em><em>
+   - Write: m f
+3. Position </em><em>f</em><em> piece belongs at position </em><em>j</em><em>
+   - Write: m f j
+4. Position </em><em>j</em><em> piece belongs back at buffer (</em><em>b</em><em>)
+   - Cycle complete! Don't write </em><em>b</em>*</p>
+<p><strong>Edge Memo:</strong> <code>m f j</code></p>
+<p><strong>Cycle Writing Rule 1:</strong>
+For the <strong>first cycle</strong>, do NOT write the buffer letter at the end. The cycle completion is implied.</p>
+<hr />
+<h3 id="example-2-multiple-cycles">Example 2: Multiple Cycles</h3>
+<p><strong>Scenario:</strong> First cycle doesn't solve all edges</p>
+<p><strong>First Cycle:</strong>
+- Trace: b → m → f → j → back to b
+- Write: <code>m f j</code></p>
+<p><strong>Check:</strong> Are all edges solved?
+- No! Some edges are still unsolved
+- Need to start a new cycle (called "circuit breaking")</p>
+<p><strong>Second Cycle:</strong>
+1. Find the <strong>first unsolved edge</strong> (alphabetically): suppose it's <strong>r</strong>
+2. Start tracing from <strong>r</strong>
+   - Position <strong>r</strong> piece belongs at <strong>k</strong>
+   - Position <strong>k</strong> piece belongs at <strong>e</strong>
+   - Position <strong>e</strong> piece belongs back at <strong>r</strong>
+3. Write the complete cycle: <code>r k e r</code></p>
+<p><strong>Cycle Writing Rule 2:</strong>
+For the <strong>second cycle onward</strong>, DO write the closing letter (the letter you return to).</p>
+<p><strong>Complete Edge Memo:</strong> <code>m f j | r k e r</code>
+- Total: 7 letters
+- Two separate cycles</p>
+<hr />
+<h2 id="83-closing-cycles-circuit-breaking">8.3 CLOSING CYCLES &amp; CIRCUIT BREAKING</h2>
+<h3 id="when-does-a-cycle-end">When Does a Cycle End?</h3>
+<p>A cycle is complete when tracing returns to:
+1. The starting position of <strong>that cycle</strong> (for cycles 2+)
+2. The <strong>paired letter</strong> of the starting position
+3. For first cycle: when it returns to buffer (<strong>b</strong> or <strong>m</strong>)</p>
+<h3 id="circuit-breaking-starting-new-cycles">Circuit Breaking (Starting New Cycles)</h3>
+<p><strong>When to circuit break:</strong>
+- After completing a cycle, check if all pieces are solved
+- If unsolved pieces remain, start a new cycle</p>
+<p><strong>How to circuit break:</strong>
+1. Scan the cube for <strong>unsolved edges</strong>
+2. Find the <strong>first unsolved edge alphabetically</strong> (a, then c, then d, etc.)
+   - Skip <strong>b</strong> and <strong>m</strong> (these are buffer positions)
+3. Begin tracing from that letter
+4. Continue until returning to that letter or its pair
+5. Write the complete cycle including the closing letter</p>
+<p><strong>Why This Works:</strong>
+- Circuit breaking "forces" a new swap chain
+- It ensures we eventually solve all pieces
+- The order (alphabetical) keeps it systematic</p>
+<p><strong>Example:</strong></p>
+<pre><code>First cycle:   m f j         (returns to buffer - don't write b)
+Second cycle:  r k e r       (returns to r - write closing r)
+Third cycle:   n t           (returns to n's pair t - write t)
+</code></pre>
+<hr />
+<h2 id="84-corner-tracing">8.4 CORNER TRACING</h2>
+<p>Corner tracing works <strong>identically to edge tracing</strong>, but with these differences:</p>
+<h3 id="key-differences">Key Differences</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Edges</th>
+<th>Corners</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Letters</strong></td>
+<td>lowercase (a-x)</td>
+<td>UPPERCASE (A-X)</td>
+</tr>
+<tr>
+<td><strong>Buffer</strong></td>
+<td>UR = b*</td>
+<td>UBL = A*</td>
+</tr>
+<tr>
+<td><strong>Pairs/Groups</strong></td>
+<td>2-letter pairs</td>
+<td>3-letter triplets</td>
+</tr>
+<tr>
+<td><strong>Cycle End</strong></td>
+<td>Return to buffer or pair</td>
+<td>Return to buffer or any letter in its triplet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="corner-tracing-steps">Corner Tracing Steps</h3>
+<p><strong>Setup:</strong>
+- <strong>After completing all edge tracing</strong>
+- Still holding: white up, green front
+- Start at corner buffer: <strong>UBL = A*</strong></p>
+<p><strong>Tracing:</strong>
+1. Look at the piece at buffer corner (A<em>)
+2. Identify where this corner belongs
+3. Note the target letter (first corner memo letter)
+4. Go to that position, repeat
+5. Stop when returning to:
+   - Buffer position </em><em>A</em><em>
+   - OR any letter in the A-group: </em><em>E</em><em> or </em><em>R</em>*</p>
+<p><strong>Cycle Completion Example:</strong></p>
+<pre><code>Trace: A → F → U → C → J → back to buffer (A)
+Write: F U C J     (don't write A at end)
+</code></pre>
+<p><strong>Corner Circuit Breaking:</strong>
+Same as edges:
+1. If corners remain unsolved after first cycle
+2. Find first unsolved corner alphabetically
+3. Start tracing from there
+4. Write complete cycle including closing letter</p>
+<hr />
+<h2 id="85-complete-tracing-example">8.5 COMPLETE TRACING EXAMPLE</h2>
+<h3 id="full-solve-tracing">Full Solve Tracing</h3>
+<p><strong>Given:</strong> A scrambled cube (specific scramble)</p>
+<p><strong>Step 1: Edge Tracing</strong></p>
+<pre><code>Orientation: White up, Green front
+Buffer: UR = b*
+
+Cycle 1:
+- Buffer piece belongs at: m
+- Piece at m belongs at: f
+- Piece at f belongs at: j
+- Piece at j belongs at: b (buffer)
+Edge memo so far: m f j
+
+Check: Unsolved edges remain (including r, k, e)
+
+Cycle 2:
+- Start at first unsolved: r
+- Piece at r belongs at: k
+- Piece at k belongs at: e
+- Piece at e belongs at: r
+Edge memo complete: m f j | r k e r
+</code></pre>
+<p><strong>Step 2: Corner Tracing</strong></p>
+<pre><code>Buffer: UBL = A*
+
+Cycle 1:
+- Buffer piece belongs at: F
+- Piece at F belongs at: U
+- Piece at U belongs at: C
+- Piece at C belongs at: P
+- Piece at P belongs at: J
+- Piece at J belongs at: M
+- Piece at M belongs at: A (buffer)
+Corner memo: F U C P J M
+</code></pre>
+<p><strong>Final Memo:</strong></p>
+<pre><code>Edges:   m f j | r k e r     (7 letters)
+Corners: F U C P J M         (6 letters)
+</code></pre>
+<hr />
+<h2 id="9-phase-2-memorization">9. PHASE 2: MEMORIZATION</h2>
+<p>Now that tracing is complete, we have a sequence of letters to memorize. Memorization converts these abstract letters into <strong>memorable images and stories</strong>.</p>
+<hr />
+<h2 id="91-why-letter-pairs">9.1 WHY LETTER PAIRS?</h2>
+<h3 id="the-problem-with-single-letters">The Problem with Single Letters</h3>
+<p>Memorizing single letters is:
+- ❌ Difficult to recall under pressure
+- ❌ Easy to forget the order
+- ❌ Hard to distinguish similar letters
+- ❌ Provides no meaningful structure</p>
+<h3 id="the-solution-chunking">The Solution: Chunking</h3>
+<p><strong>Chunking</strong> means grouping letters into <strong>2-letter pairs</strong> (chunks). This:
+- ✅ Reduces cognitive load
+- ✅ Creates meaningful units
+- ✅ Enables story-based memory
+- ✅ Follows how memory naturally works</p>
+<p><strong>Example:</strong></p>
+<pre><code>Raw:     m f j r k e r
+Chunked: [mf] [jr] [ke] [r]
+</code></pre>
+<p>Notice: 7 letters become 3 pairs + 1 single (much easier!)</p>
+<hr />
+<h2 id="92-chunking-your-memo">9.2 CHUNKING YOUR MEMO</h2>
+<h3 id="how-to-chunk">How to Chunk</h3>
+<p><strong>Step 1: Break into pairs</strong>
+Take your traced letter sequence and group into consecutive pairs</p>
+<p><strong>Example - Edges:</strong></p>
+<pre><code>Traced:  m f j | r k e r
+Remove separator: m f j r k e r
+Pair up: (mf) (jr) (ke) (r)
+</code></pre>
+<p><strong>Step 2: Handle odd-length sequences</strong>
+If you have an <strong>odd number of letters</strong>, the last letter stands alone</p>
+<pre><code>7 letters: (mf) (jr) (ke) (r)  — r is alone
+8 letters: (mf) (jr) (ke) (rt) — all paired
+</code></pre>
+<p><strong>Step 3: Separate edges and corners</strong>
+- Chunk edges separately
+- Chunk corners separately
+- You'll have two memory sequences</p>
+<p><strong>Example:</strong></p>
+<pre><code>Edges:   (mf) (jr) (ke) (r)
+Corners: (FU) (CP) (JM)
+</code></pre>
+<hr />
+<h2 id="93-memory-techniques-pao-system">9.3 MEMORY TECHNIQUES (PAO SYSTEM)</h2>
+<p>The most effective technique for blindfold solving is the <strong>Person-Action-Object (PAO)</strong> system, simplified to <strong>Person + Object</strong> for beginners.</p>
+<h3 id="person-object-system">Person + Object System</h3>
+<p><strong>Concept:</strong>
+- First letter of pair = <strong>Person/Character</strong>
+- Second letter of pair = <strong>Object</strong>
+- Create an <strong>image</strong> of that person holding/using that object</p>
+<h3 id="building-your-system">Building Your System</h3>
+<p><strong>Step 1: Create letter-to-person associations</strong></p>
+<p>Example person assignments:</p>
+<pre><code>a = Alice          n = Ninja
+b = Batman         o = Optimus Prime
+c = Clown          p = Pirate
+d = Doctor         q = Queen
+e = Einstein       r = Robot
+f = Firefighter    s = Superman
+g = Gandhi         t = Teacher
+h = Hero           u = Uncle
+i = Iron Man       v = Vampire
+j = Joker          w = Wizard
+k = King           x = X-Man
+l = Lion           y = Yogi
+m = Magician       z = Zombie
+</code></pre>
+<p><strong>Step 2: Create letter-to-object associations</strong></p>
+<p>Example object assignments:</p>
+<pre><code>a = Apple          n = Nail
+b = Ball           o = Orange
+c = Cat            p = Piano
+d = Door           q = Quilt
+e = Egg            r = Rope
+f = Flag           s = Sword
+g = Guitar         t = Table
+h = Hammer         u = Umbrella
+i = Ice cream      v = Violin
+j = Jar            w = Watch
+k = Kite           x = Xylophone
+l = Ladder         y = Yo-yo
+m = Mirror         z = Zebra
+</code></pre>
+<p><strong>Step 3: Combine into images</strong></p>
+<p>For pair <strong>"mf":</strong>
+- m = Magician (person)
+- f = Flag (object)
+- <strong>Image:</strong> A magician waving a flag</p>
+<p>For pair <strong>"jr":</strong>
+- j = Joker (person)
+- r = Rope (object)
+- <strong>Image:</strong> Joker tangled in rope</p>
+<hr />
+<h2 id="94-building-memory-stories">9.4 BUILDING MEMORY STORIES</h2>
+<h3 id="creating-a-story">Creating a Story</h3>
+<p>Once you have images for each pair, link them into a <strong>single flowing story</strong>.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Memo: (mf) (jr) (ke)
+
+Images:
+- mf = Magician waving Flag
+- jr = Joker tangled in Rope
+- ke = King holding Egg
+
+Story:
+&quot;A MAGICIAN waved a FLAG while the JOKER got tangled in ROPE,
+then a KING carefully held an EGG.&quot;
+</code></pre>
+<h3 id="story-building-tips">Story-Building Tips</h3>
+<p>✅ <strong>Make it vivid</strong> - Use strong sensory details
+✅ <strong>Make it unusual</strong> - Bizarre images stick better than normal ones
+✅ <strong>Use action</strong> - Things happening are more memorable
+✅ <strong>Keep it flowing</strong> - Each image should lead naturally to the next
+✅ <strong>Personalize it</strong> - Use places and people you know
+✅ <strong>Practice it</strong> - Rehearse the story several times before executing</p>
+<h3 id="journey-method-alternative">Journey Method (Alternative)</h3>
+<p>Instead of a story, place your images along a <strong>familiar route</strong>:</p>
+<ol>
+<li>Choose a route you know well (your home, school, etc.)</li>
+<li>Place each pair's image at successive locations</li>
+<li>During execution, mentally walk the route</li>
+<li>"Pick up" each image as you pass it</li>
+</ol>
+<p><strong>Example:</strong></p>
+<pre><code>mf = Front door: Magician waving Flag
+jr = Living room: Joker in Rope
+ke = Kitchen: King with Egg
+</code></pre>
+<hr />
+<h2 id="95-parity-detection">9.5 PARITY DETECTION</h2>
+<h3 id="what-is-parity">What is Parity?</h3>
+<p><strong>Parity</strong> is a special case that occurs when edge tracing produces an <strong>odd number of letters</strong>. When this happens, you need to apply an extra algorithm during execution.</p>
+<h3 id="detecting-parity">Detecting Parity</h3>
+<p><strong>Simple Rule:</strong></p>
+<pre><code>Count your edge memo letters:
+- EVEN number (2, 4, 6, 8, ...) = NO parity
+- ODD number (3, 5, 7, 9, ...) = PARITY!
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>Edge memo: m f j | r k e r
+Count: 7 letters
+7 is odd → PARITY!
+</code></pre>
+<h3 id="when-to-check">When to Check</h3>
+<p>Check for parity <strong>after completing your edge tracing</strong>, before you start memorizing.</p>
+<h3 id="what-parity-means">What Parity Means</h3>
+<p>If you have parity:
+- ✅ Trace normally
+- ✅ Memorize normally
+- ✅ <strong>During execution:</strong> Apply R-Perm algorithm after all edge swaps
+- ✅ Corner memo will ALSO be odd (edges and corners have opposite parity)</p>
+<h3 id="remembering-parity">Remembering Parity</h3>
+<p><strong>Add parity to your story:</strong>
+- If odd edges: Add a <strong>flag</strong> or <strong>marker</strong> to your story
+- Example: "Everything happened during a RED sunset" (red = parity)
+- Or: Remember the last single letter as your parity reminder</p>
+<hr />
+<h2 id="10-phase-3-execution">10. PHASE 3: EXECUTION</h2>
+<p>Execution is where you <strong>solve the cube blindfolded</strong> using your memorized sequence. This phase requires precision, calmness, and trust in your preparation.</p>
+<hr />
+<h2 id="101-execution-overview">10.1 EXECUTION OVERVIEW</h2>
+<h3 id="the-execution-sequence">The Execution Sequence</h3>
+<pre><code>1. Complete tracing and memorization (eyes open)
+2. Put on blindfold
+3. Execute all edges (one letter at a time)
+4. Apply parity fix (if edge count was odd)
+5. Execute all corners (one letter at a time)
+6. Remove blindfold
+7. Cube is solved! ✅
+</code></pre>
+<h3 id="the-execution-formula">The Execution Formula</h3>
+<p>For <strong>each letter</strong> in your memo, you perform:</p>
+<pre><code>SETUP MOVE → ALGORITHM → UNDO SETUP
+</code></pre>
+<p>This formula:
+- Brings the target piece to the swap position
+- Swaps it with the buffer
+- Returns everything else to where it was</p>
+<p><strong>Key principle:</strong> Each letter solves exactly one piece.</p>
+<hr />
+<h2 id="102-safe-execution-rules">10.2 SAFE EXECUTION RULES</h2>
+<p>Follow these rules to avoid breaking your solve:</p>
+<h3 id="rule-1-never-rotate-the-cube">Rule 1: Never Rotate the Cube</h3>
+<ul>
+<li>❌ No x, y, or z rotations</li>
+<li>❌ No reorienting to "make moves easier"</li>
+<li>✅ Keep white up, green front <strong>always</strong></li>
+</ul>
+<h3 id="rule-2-always-undo-setup-moves">Rule 2: Always Undo Setup Moves</h3>
+<ul>
+<li>Every setup move <strong>must</strong> be undone</li>
+<li>Undo in <strong>reverse order</strong></li>
+<li>If setup was <code>D F</code>, undo is <code>F' D'</code></li>
+</ul>
+<h3 id="rule-3-never-execute-buffer-letters">Rule 3: Never Execute Buffer Letters</h3>
+<ul>
+<li>❌ Don't execute <strong>b</strong> or <strong>m</strong> for edges</li>
+<li>❌ Don't execute <strong>A</strong>, <strong>E</strong>, or <strong>R</strong> for corners</li>
+<li>These are buffer positions—they get solved automatically</li>
+</ul>
+<h3 id="rule-4-maintain-orientation-awareness">Rule 4: Maintain Orientation Awareness</h3>
+<ul>
+<li>Use your <strong>fingers</strong> to feel the cube</li>
+<li>Locate the centers to verify orientation</li>
+<li>If unsure, <strong>stop and check</strong> (better to peek than to DNF)</li>
+</ul>
+<h3 id="rule-5-stay-calm-and-methodical">Rule 5: Stay Calm and Methodical</h3>
+<ul>
+<li>✅ One letter at a time</li>
+<li>✅ Say the letter out loud or in your head</li>
+<li>✅ Complete the full formula for each letter</li>
+<li>✅ Don't rush—accuracy over speed</li>
+</ul>
+<hr />
+<h2 id="103-edge-execution-t-perm">10.3 EDGE EXECUTION (T-PERM)</h2>
+<h3 id="edge-algorithm-t-perm">Edge Algorithm: T-Perm</h3>
+<pre><code>R U R' U' R' F R2 U' R' U' R U R' F'
+</code></pre>
+<p><strong>What it does:</strong>
+- Swaps the piece at <strong>UR (buffer)</strong> with the piece at <strong>UF</strong>
+- After setup moves, effectively swaps buffer with target position <strong>d</strong></p>
+<h3 id="edge-execution-steps">Edge Execution Steps</h3>
+<p><strong>For each letter in your edge memo:</strong></p>
+<p><strong>1. Identify the target letter</strong>
+   - Get the next letter from your memorized sequence
+   - Example: First letter is <strong>m</strong></p>
+<p><strong>2. Perform setup moves</strong>
+   - Look up setup moves for that letter (see Appendix B)
+   - Bring target position to the <strong>d</strong> position
+   - Example: For letter <strong>j</strong>, setup is <code>Dw2 L</code></p>
+<p><strong>3. Execute T-Perm</strong>
+   - Perform the full T-Perm algorithm
+   - This swaps buffer with target</p>
+<p><strong>4. Undo setup moves</strong>
+   - Reverse the setup moves in reverse order
+   - Example: Undo for <strong>j</strong> is <code>L' Dw2</code></p>
+<p><strong>5. Move to next letter</strong>
+   - Repeat steps 1-4 for each edge letter</p>
+<h3 id="example-solving-letter-j">Example: Solving Letter "j"</h3>
+<pre><code>Letter: j
+Setup: Dw2 L
+Algorithm: R U R' U' R' F R2 U' R' U' R U R' F'
+Undo: L' Dw2
+</code></pre>
+<p><strong>Result:</strong> The piece that was at buffer is now solved, and the next piece is now at buffer.</p>
+<hr />
+<h2 id="104-edge-setup-moves">10.4 EDGE SETUP MOVES</h2>
+<p>Setup moves bring the target position to location <strong>d</strong> (where the algorithm expects it).</p>
+<h3 id="setup-move-principles">Setup Move Principles</h3>
+<p><strong>Safe moves for edges:</strong>
+- ✅ D, D', D2 (bottom face)
+- ✅ F, F', F2 (front face)
+- ✅ L, L', L2 (left face)
+- ✅ Dw, Dw', Dw2 (wide bottom)
+- ✅ Lw, Lw', Lw2 (wide left)</p>
+<p><strong>Unsafe moves for edges:</strong>
+- ❌ Avoid U, U', U2 (disturbs buffer)
+- ❌ Avoid R, R', R2 (disturbs buffer)</p>
+<h3 id="common-edge-setups">Common Edge Setups</h3>
+<p>See <strong>Appendix B</strong> for complete setup move table.</p>
+<p><strong>Quick reference:</strong></p>
+<pre><code>d = (no setup needed)
+e = L' Dw L'
+f = Dw' L
+j = Dw2 L
+l = L'
+r = L
+</code></pre>
+<hr />
+<h2 id="105-parity-fix-r-perm">10.5 PARITY FIX (R-PERM)</h2>
+<h3 id="when-to-apply-parity">When to Apply Parity</h3>
+<p>Apply the parity algorithm if:
+- ✅ Your edge memo had an <strong>odd</strong> number of letters
+- ✅ You've finished executing all edge letters
+- ✅ Before starting corner execution</p>
+<h3 id="parity-algorithm-r-perm">Parity Algorithm: R-Perm</h3>
+<pre><code>R U R' F' R U2 R' U2 R' F R U R U2 R' U'
+</code></pre>
+<p><strong>What it does:</strong>
+- Fixes the parity misalignment between edges and corners
+- Allows corners to solve correctly</p>
+<h3 id="when-to-execute">When to Execute</h3>
+<pre><code>1. Execute all edges
+2. Count edge letters (if odd, continue)
+3. Apply R-Perm once (no setup/undo needed)
+4. Proceed to corners
+</code></pre>
+<h3 id="no-setup-needed">No Setup Needed</h3>
+<p>The parity algorithm is applied <strong>directly</strong> without setup moves:
+- Just execute the algorithm
+- No undo needed
+- Only do it <strong>once</strong></p>
+<hr />
+<h2 id="106-corner-execution-y-perm">10.6 CORNER EXECUTION (Y-PERM)</h2>
+<h3 id="corner-algorithm-modified-y-perm">Corner Algorithm: Modified Y-Perm</h3>
+<pre><code>R U' R' U' R U R' F' R U R' U' R' F R
+</code></pre>
+<p><strong>What it does:</strong>
+- Swaps the piece at <strong>UBL (buffer)</strong> with the piece at <strong>DFR</strong>
+- After setup moves, effectively swaps buffer with target position <strong>P</strong></p>
+<h3 id="corner-execution-steps">Corner Execution Steps</h3>
+<p><strong>For each letter in your corner memo:</strong></p>
+<p><strong>1. Identify the target letter</strong>
+   - Get the next letter from your memorized corner sequence
+   - Example: First letter is <strong>F</strong></p>
+<p><strong>2. Perform setup moves</strong>
+   - Look up setup moves for that letter (see Appendix C)
+   - Bring target position to the <strong>P</strong> position
+   - Example: For letter <strong>K</strong>, setup is <code>D R</code></p>
+<p><strong>3. Execute Modified Y-Perm</strong>
+   - Perform the full Y-Perm algorithm
+   - This swaps buffer with target</p>
+<p><strong>4. Undo setup moves</strong>
+   - Reverse the setup moves in reverse order
+   - Example: Undo for <strong>K</strong> is <code>R' D'</code></p>
+<p><strong>5. Move to next letter</strong>
+   - Repeat steps 1-4 for each corner letter</p>
+<h3 id="example-solving-letter-k">Example: Solving Letter "K"</h3>
+<pre><code>Letter: K
+Setup: D R
+Algorithm: R U' R' U' R U R' F' R U R' U' R' F R
+Undo: R' D'
+</code></pre>
+<hr />
+<h2 id="107-corner-setup-moves">10.7 CORNER SETUP MOVES</h2>
+<p>Setup moves bring the target corner to position <strong>P</strong> (where the algorithm expects it).</p>
+<h3 id="setup-move-principles_1">Setup Move Principles</h3>
+<p><strong>Safe moves for corners:</strong>
+- ✅ R, R', R2 (right face)
+- ✅ F, F', F2 (front face)
+- ✅ D, D', D2 (bottom face)</p>
+<p><strong>Unsafe moves for corners:</strong>
+- ❌ Avoid U, U', U2 (disturbs buffer)
+- ❌ Avoid L, L', L2 (disturbs buffer)
+- ❌ Avoid B, B', B2 (disturbs buffer)</p>
+<h3 id="common-corner-setups">Common Corner Setups</h3>
+<p>See <strong>Appendix C</strong> for complete setup move table.</p>
+<p><strong>Quick reference:</strong></p>
+<pre><code>P = (no setup needed)
+C = F
+F = F2
+K = D R
+M = R'
+O = R
+U = F'
+</code></pre>
+<h3 id="corner-orientation">Corner Orientation</h3>
+<p><strong>Good news:</strong> With this method, corner orientation is handled <strong>automatically</strong>!</p>
+<p>As long as you:
+- ✅ Maintain cube orientation (white up, green front)
+- ✅ Undo all setup moves correctly
+- ✅ Don't rotate the cube</p>
+<p>Then <strong>all corners will be correctly oriented</strong> at the end.</p>
+<hr />
+<h2 id="108-complete-solve-walkthrough">10.8 COMPLETE SOLVE WALKTHROUGH</h2>
+<h3 id="full-example-execution">Full Example Execution</h3>
+<p><strong>Given Memo:</strong></p>
+<pre><code>Edges:   (mf) (jr) (ke) (r)     — 7 letters (ODD → PARITY!)
+Corners: (FU) (CP) (JM)         — 6 letters
+</code></pre>
+<h3 id="execution-flow">Execution Flow</h3>
+<p><strong>Phase 1: Put on Blindfold</strong>
+- Ensure white is up, green is front
+- Cover your eyes
+- Take a breath—you've got this!</p>
+<p><strong>Phase 2: Execute Edges</strong></p>
+<pre><code>Letter m:
+- Setup: (look up m setup)
+- T-Perm: R U R' U' R' F R2 U' R' U' R U R' F'
+- Undo setup
+
+Letter f:
+- Setup: (look up f setup)
+- T-Perm
+- Undo setup
+
+Letter j:
+- Setup: Dw2 L
+- T-Perm
+- Undo: L' Dw2
+
+Letter r:
+- Setup: L
+- T-Perm
+- Undo: L'
+
+Letter k:
+- Setup: (look up k setup)
+- T-Perm
+- Undo setup
+
+Letter e:
+- Setup: L' Dw L'
+- T-Perm
+- Undo: L Dw' L
+
+Letter r:
+- Setup: L
+- T-Perm
+- Undo: L'
+</code></pre>
+<p><strong>Phase 3: Parity Fix</strong></p>
+<pre><code>Edge count was 7 (odd) → Apply parity!
+Execute once: R U R' F' R U2 R' U2 R' F R U R U2 R' U'
+</code></pre>
+<p><strong>Phase 4: Execute Corners</strong></p>
+<pre><code>Letter F:
+- Setup: F2
+- Y-Perm: R U' R' U' R U R' F' R U R' U' R' F R
+- Undo: F2
+
+Letter U:
+- Setup: F'
+- Y-Perm
+- Undo: F
+
+Letter C:
+- Setup: F
+- Y-Perm
+- Undo: F'
+
+Letter P:
+- Setup: (none needed)
+- Y-Perm
+- Undo: (none)
+
+Letter J:
+- Setup: F2 D
+- Y-Perm
+- Undo: D' F2
+
+Letter M:
+- Setup: R'
+- Y-Perm
+- Undo: R
+</code></pre>
+<p><strong>Phase 5: Remove Blindfold</strong>
+- All pieces solved!
+- Cube is complete!</p>
+<hr />
+<h1 id="part-iv-practice-improvement_1">PART IV: PRACTICE &amp; IMPROVEMENT</h1>
+<h2 id="11-practice-strategy">11. PRACTICE STRATEGY</h2>
+<h3 id="your-first-solves">Your First Solves</h3>
+<p><strong>Expectations:</strong>
+- First successful solve typically happens within 5-20 attempts
+- Early solves may take 10-30 minutes
+- Mistakes are part of the learning process</p>
+<h3 id="recommended-practice-path">Recommended Practice Path</h3>
+<p><strong>Stage 1: Learn the Pieces (Days 1-3)</strong>
+- Memorize the letter scheme
+- Practice identifying where pieces belong
+- Use the cube to follow pieces without tracing</p>
+<p><strong>Stage 2: Tracing Practice (Days 4-7)</strong>
+- Trace edges only (write down sequences)
+- Trace corners only
+- Practice circuit breaking
+- Verify your tracing by checking where pieces actually are</p>
+<p><strong>Stage 3: Memorization Practice (Days 8-12)</strong>
+- Practice converting letters to images
+- Build short stories (start with 6-8 letters)
+- Practice recalling sequences without the cube</p>
+<p><strong>Stage 4: Execution Practice (Days 13-20)</strong>
+- Execute edges only (with memo written down)
+- Execute corners only
+- Practice setup moves for each letter
+- Learn algorithms to muscle memory</p>
+<p><strong>Stage 5: Full Attempts (Days 21+)</strong>
+- Complete blindfolded solves
+- Trace → Memorize → Execute
+- Don't worry about speed yet
+- Focus on success rate</p>
+<h3 id="daily-practice-routine">Daily Practice Routine</h3>
+<p><strong>20-30 minutes per day:</strong></p>
+<pre><code>5 min:  Letter scheme review
+10 min: Tracing practice (2-3 scrambles)
+10 min: Memorization practice
+5 min:  Algorithm practice
+</code></pre>
+<hr />
+<h2 id="12-common-mistakes-troubleshooting">12. COMMON MISTAKES &amp; TROUBLESHOOTING</h2>
+<h3 id="issue-cube-almost-solved-but-a-few-pieces-wrong">Issue: Cube Almost Solved But a Few Pieces Wrong</h3>
+<p><strong>Possible Causes:</strong>
+- ❌ Missed a circuit break during tracing
+- ❌ Forgot to apply parity
+- ❌ Executed a letter twice or skipped a letter
+- ❌ Did setup but forgot undo (or vice versa)</p>
+<p><strong>Solutions:</strong>
+- ✅ Double-check tracing: are all pieces accounted for?
+- ✅ Count edge letters: odd = parity needed
+- ✅ During execution, mark off letters as you complete them
+- ✅ Practice setup/undo as one unit</p>
+<h3 id="issue-many-pieces-wrong-after-solve">Issue: Many Pieces Wrong After Solve</h3>
+<p><strong>Possible Causes:</strong>
+- ❌ Lost cube orientation during execution
+- ❌ Performed algorithm incorrectly
+- ❌ Used wrong setup moves</p>
+<p><strong>Solutions:</strong>
+- ✅ Practice maintaining orientation: feel centers frequently
+- ✅ Practice algorithms separately until muscle memory
+- ✅ Print setup move reference sheet
+- ✅ Go slower—accuracy over speed</p>
+<h3 id="issue-cant-remember-memo-during-execution">Issue: Can't Remember Memo During Execution</h3>
+<p><strong>Possible Causes:</strong>
+- ❌ Story not vivid enough
+- ❌ Too many letters at once
+- ❌ Didn't rehearse enough before blindfold</p>
+<p><strong>Solutions:</strong>
+- ✅ Make images more unusual and exaggerated
+- ✅ Start with shorter sequences
+- ✅ Rehearse story 3-5 times before execution
+- ✅ Practice memory techniques separately</p>
+<h3 id="issue-getting-lost-during-tracing">Issue: Getting Lost During Tracing</h3>
+<p><strong>Possible Causes:</strong>
+- ❌ Confusion about letter pairs/triplets
+- ❌ Not sure where pieces belong on solved cube
+- ❌ Tracing from wrong position</p>
+<p><strong>Solutions:</strong>
+- ✅ Keep solved cube nearby for reference
+- ✅ Review letter scheme daily
+- ✅ Practice "where does this piece go?" drill
+- ✅ Write down each step as you trace</p>
+<hr />
+<h2 id="13-tips-for-success">13. TIPS FOR SUCCESS</h2>
+<h3 id="mindset-tips">Mindset Tips</h3>
+<p>✅ <strong>Be patient with yourself</strong> - This is a complex skill
+✅ <strong>Celebrate small wins</strong> - Correct tracing is progress!
+✅ <strong>Learn from failures</strong> - Each mistake teaches you something
+✅ <strong>Stay consistent</strong> - 20 min daily beats 3-hour marathons
+✅ <strong>Don't compare</strong> - Everyone learns at their own pace</p>
+<h3 id="tracing-tips">Tracing Tips</h3>
+<p>✅ <strong>Write everything down</strong> - Don't rely on memory during tracing
+✅ <strong>Say letters out loud</strong> - Verbal reinforcement helps
+✅ <strong>Use different colors</strong> - Color-code cycles
+✅ <strong>Verify cycles</strong> - Check that pieces form actual cycles
+✅ <strong>Start with easy scrambles</strong> - Build confidence before harder ones</p>
+<h3 id="memorization-tips">Memorization Tips</h3>
+<p>✅ <strong>Create your own associations</strong> - Personal images stick better
+✅ <strong>Make it ridiculous</strong> - Weird stories are more memorable
+✅ <strong>Use locations you know</strong> - Journey method with familiar places
+✅ <strong>Practice without the cube</strong> - Pure memorization drills
+✅ <strong>Rehearse immediately</strong> - Review memo right after creating it</p>
+<h3 id="execution-tips">Execution Tips</h3>
+<p>✅ <strong>Go slow</strong> - Speed comes with time, accuracy is everything
+✅ <strong>Verbalize letters</strong> - Say each letter before executing
+✅ <strong>Feel the cube</strong> - Use tactile feedback
+✅ <strong>Pause between letters</strong> - Complete one before starting next
+✅ <strong>Trust your preparation</strong> - If memo was solid, execution will work</p>
+<h3 id="setup-move-tips">Setup Move Tips</h3>
+<p>✅ <strong>Learn in groups</strong> - Similar letters often have similar setups
+✅ <strong>Practice without blindfold first</strong> - Build muscle memory
+✅ <strong>Always undo immediately</strong> - Make it one smooth motion
+✅ <strong>Create flashcards</strong> - Letter on front, setup on back
+✅ <strong>Start with common letters</strong> - Master a, d, e, f, j, k, l, r first</p>
+<hr />
+<h1 id="appendices_1">APPENDICES</h1>
+<h2 id="appendix-a-complete-lettering-maps">APPENDIX A: COMPLETE LETTERING MAPS</h2>
+<h3 id="a1-edge-lettering-map-lowercase">A.1 Edge Lettering Map (Lowercase)</h3>
+<p><strong>Net Layout Description:</strong></p>
+<pre><code>        [i][c][a]
+        [h][U][b]
+        [g][r][q]
+
+[d][e][b][m][q][a][i][c]
+[x][L][f][F][n][R][t][B]
+[w][l][j][p][v][o][s][u]
+
+        [j][p][m]
+        [n][D][f]
+        [t][o][l]
+</code></pre>
+<p><strong>Buffer:</strong> b* (UR edge)</p>
+<h3 id="a2-edge-letter-pairs">A.2 Edge Letter Pairs</h3>
+<p>Every edge piece has two stickers. These are the pairs:</p>
+<table>
+<thead>
+<tr>
+<th>Pair</th>
+<th>Pair</th>
+<th>Pair</th>
+<th>Pair</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a ↔ q</td>
+<td>d ↔ e</td>
+<td>g ↔ x</td>
+<td>j ↔ p</td>
+</tr>
+<tr>
+<td>b ↔ m</td>
+<td>f ↔ l</td>
+<td>h ↔ r</td>
+<td>k ↔ u</td>
+</tr>
+<tr>
+<td>c ↔ i</td>
+<td>n ↔ t</td>
+<td>o ↔ v</td>
+<td>s ↔ w</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a3-corner-lettering-map-uppercase">A.3 Corner Lettering Map (UPPERCASE)</h3>
+<p><strong>Net Layout Description:</strong></p>
+<pre><code>        [D][I][C]
+        [F][U][J]
+        [E][A][M]
+
+[E][A][M][Q][M][C][D][I]
+[R][L][B][F][N][R][J][B]
+[L][U][G][P][V][O][W][X]
+
+        [G][P][N]
+        [K][D][V]
+        [H][T][S]
+</code></pre>
+<p><strong>Buffer:</strong> A* (UBL corner)</p>
+<h3 id="a4-corner-letter-groups-triplets">A.4 Corner Letter Groups (Triplets)</h3>
+<p>Every corner piece has three stickers. These are the triplet groups:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Group</th>
+<th>Group</th>
+<th>Group</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A–E–R</td>
+<td>B–Q–N</td>
+<td>C–J–M</td>
+<td>D–I–F</td>
+</tr>
+<tr>
+<td>G–L–U</td>
+<td>H–S–X</td>
+<td>K–P–V</td>
+<td>O–T–W</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> When tracing returns to <strong>any letter</strong> in the starting group, that cycle is complete.</p>
+<hr />
+<h2 id="appendix-b-edge-setup-move-reference">APPENDIX B: EDGE SETUP MOVE REFERENCE</h2>
+<p>Setup moves bring target edge to position <strong>d</strong> for T-Perm swap.</p>
+<table>
+<thead>
+<tr>
+<th>Letter</th>
+<th>Setup to d</th>
+<th>Undo Setup</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>a</strong></td>
+<td>Lw2 D' L2</td>
+<td>L2 D Lw2</td>
+<td>Complex</td>
+</tr>
+<tr>
+<td><strong>b</strong></td>
+<td>(buffer)</td>
+<td>(buffer)</td>
+<td>Never execute</td>
+</tr>
+<tr>
+<td><strong>c</strong></td>
+<td>Lw2 D L2</td>
+<td>L2 D' Lw2</td>
+<td>Complex</td>
+</tr>
+<tr>
+<td><strong>d</strong></td>
+<td>—</td>
+<td>—</td>
+<td>Already at d</td>
+</tr>
+<tr>
+<td><strong>e</strong></td>
+<td>L' Dw L'</td>
+<td>L Dw' L</td>
+<td>Common</td>
+</tr>
+<tr>
+<td><strong>f</strong></td>
+<td>Dw' L</td>
+<td>L' Dw</td>
+<td>Simple</td>
+</tr>
+<tr>
+<td><strong>g</strong></td>
+<td>L Dw L'</td>
+<td>L Dw' L'</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>h</strong></td>
+<td>Dw L'</td>
+<td>L Dw'</td>
+<td>Simple</td>
+</tr>
+<tr>
+<td><strong>i</strong></td>
+<td>Lw D' L2</td>
+<td>L2 D Lw'</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>j</strong></td>
+<td>Dw2 L</td>
+<td>L' Dw2</td>
+<td>Common</td>
+</tr>
+<tr>
+<td><strong>k</strong></td>
+<td>Lw D L2</td>
+<td>L2 D' Lw'</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>l</strong></td>
+<td>L'</td>
+<td>L</td>
+<td>Very simple</td>
+</tr>
+<tr>
+<td><strong>m</strong></td>
+<td>(buffer pair)</td>
+<td>(buffer pair)</td>
+<td>Never execute</td>
+</tr>
+<tr>
+<td><strong>n</strong></td>
+<td>Dw L</td>
+<td>L' Dw'</td>
+<td>Simple</td>
+</tr>
+<tr>
+<td><strong>o</strong></td>
+<td>D' Lw D L2</td>
+<td>L2 D' Lw' D</td>
+<td>Complex</td>
+</tr>
+<tr>
+<td><strong>p</strong></td>
+<td>Dw' L'</td>
+<td>L Dw</td>
+<td>Simple</td>
+</tr>
+<tr>
+<td><strong>q</strong></td>
+<td>Lw' D L2</td>
+<td>L2 D' Lw</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>r</strong></td>
+<td>L</td>
+<td>L'</td>
+<td>Very simple</td>
+</tr>
+<tr>
+<td><strong>s</strong></td>
+<td>Lw' D' L2</td>
+<td>L2 D Lw</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>t</strong></td>
+<td>Dw2 L'</td>
+<td>L Dw2</td>
+<td>Common</td>
+</tr>
+<tr>
+<td><strong>u</strong></td>
+<td>D' L2</td>
+<td>L2 D</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>v</strong></td>
+<td>D2 L2</td>
+<td>L2 D2</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>w</strong></td>
+<td>D L2</td>
+<td>L2 D'</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>x</strong></td>
+<td>L2</td>
+<td>L2</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Legend:</strong>
+- <strong>Dw</strong> = Wide D move (D + E slice)
+- <strong>Lw</strong> = Wide L move (L + M slice)
+- <strong>—</strong> = No setup needed</p>
+<hr />
+<h2 id="appendix-c-corner-setup-move-reference">APPENDIX C: CORNER SETUP MOVE REFERENCE</h2>
+<p>Setup moves bring target corner to position <strong>P</strong> for Y-Perm swap.</p>
+<table>
+<thead>
+<tr>
+<th>Letter</th>
+<th>Setup to P</th>
+<th>Undo Setup</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A</strong></td>
+<td>(buffer)</td>
+<td>(buffer)</td>
+<td>Never execute</td>
+</tr>
+<tr>
+<td><strong>B</strong></td>
+<td>R D'</td>
+<td>D R'</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>C</strong></td>
+<td>F</td>
+<td>F'</td>
+<td>Simple</td>
+</tr>
+<tr>
+<td><strong>D</strong></td>
+<td>F R'</td>
+<td>R F'</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>E</strong></td>
+<td>(buffer group)</td>
+<td>(buffer group)</td>
+<td>Never execute</td>
+</tr>
+<tr>
+<td><strong>F</strong></td>
+<td>F2</td>
+<td>F2</td>
+<td>Simple</td>
+</tr>
+<tr>
+<td><strong>G</strong></td>
+<td>D2 R</td>
+<td>R' D2</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>H</strong></td>
+<td>D2</td>
+<td>D2</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>I</strong></td>
+<td>F' D</td>
+<td>D' F</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>J</strong></td>
+<td>F2 D</td>
+<td>D' F2</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>K</strong></td>
+<td>D R</td>
+<td>R' D'</td>
+<td>Common</td>
+</tr>
+<tr>
+<td><strong>L</strong></td>
+<td>D</td>
+<td>D'</td>
+<td>Very simple</td>
+</tr>
+<tr>
+<td><strong>M</strong></td>
+<td>R'</td>
+<td>R</td>
+<td>Very simple</td>
+</tr>
+<tr>
+<td><strong>N</strong></td>
+<td>R2</td>
+<td>R2</td>
+<td>Simple</td>
+</tr>
+<tr>
+<td><strong>O</strong></td>
+<td>R</td>
+<td>R'</td>
+<td>Very simple</td>
+</tr>
+<tr>
+<td><strong>P</strong></td>
+<td>—</td>
+<td>—</td>
+<td>Already at P</td>
+</tr>
+<tr>
+<td><strong>Q</strong></td>
+<td>R' F</td>
+<td>F' R</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>R</strong></td>
+<td>(buffer group)</td>
+<td>(buffer group)</td>
+<td>Never execute</td>
+</tr>
+<tr>
+<td><strong>S</strong></td>
+<td>D' R</td>
+<td>R' D</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>T</strong></td>
+<td>D'</td>
+<td>D</td>
+<td>Very simple</td>
+</tr>
+<tr>
+<td><strong>U</strong></td>
+<td>F'</td>
+<td>F</td>
+<td>Very simple</td>
+</tr>
+<tr>
+<td><strong>V</strong></td>
+<td>D' F'</td>
+<td>F D</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>W</strong></td>
+<td>D2 F'</td>
+<td>F D2</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>X</strong></td>
+<td>D F'</td>
+<td>F D'</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> Letters in the buffer triplet (A-E-R) should never be executed.</p>
+<hr />
+<h2 id="appendix-d-algorithm-quick-reference">APPENDIX D: ALGORITHM QUICK REFERENCE</h2>
+<h3 id="edge-algorithm-t-perm_1">Edge Algorithm: T-Perm</h3>
+<pre><code>R U R' U' R' F R2 U' R' U' R U R' F'
+</code></pre>
+<p><strong>Effect:</strong> Swaps UR (buffer b*) with UF (position d after setup)</p>
+<hr />
+<h3 id="corner-algorithm-modified-y-perm_1">Corner Algorithm: Modified Y-Perm</h3>
+<pre><code>R U' R' U' R U R' F' R U R' U' R' F R
+</code></pre>
+<p><strong>Effect:</strong> Swaps UBL (buffer A*) with DFR (position P after setup)</p>
+<hr />
+<h3 id="parity-algorithm-r-perm_1">Parity Algorithm: R-Perm</h3>
+<pre><code>R U R' F' R U2 R' U2 R' F R U R U2 R' U'
+</code></pre>
+<p><strong>When:</strong> After all edges, if edge count was odd<br />
+<strong>Setup:</strong> None needed—execute directly</p>
+<hr />
+<h2 id="appendix-e-blindfold-solve-checklist">APPENDIX E: BLINDFOLD SOLVE CHECKLIST</h2>
+<h3 id="pre-solve-setup">Pre-Solve Setup</h3>
+<ul>
+<li>[ ] Cube scrambled</li>
+<li>[ ] Orientation: White up, Green front</li>
+<li>[ ] Buffer positions confirmed (UR = b<em>, UBL = A</em>)</li>
+<li>[ ] Paper and pencil ready (for memo)</li>
+</ul>
+<h3 id="phase-1-tracing">Phase 1: Tracing</h3>
+<ul>
+<li>[ ] Edge tracing complete</li>
+<li>[ ] Edge cycles closed properly</li>
+<li>[ ] Edge memo written down: <strong><em>_</em></strong>______</li>
+<li>[ ] Edge count: _____ (odd = parity!)</li>
+<li>[ ] Corner tracing complete</li>
+<li>[ ] Corner cycles closed properly</li>
+<li>[ ] Corner memo written down: <strong><em>_</em></strong>______</li>
+</ul>
+<h3 id="phase-2-memorization">Phase 2: Memorization</h3>
+<ul>
+<li>[ ] Edge memo chunked into pairs</li>
+<li>[ ] Edge story/images created</li>
+<li>[ ] Edge memo rehearsed 3+ times</li>
+<li>[ ] Corner memo chunked into pairs</li>
+<li>[ ] Corner story/images created</li>
+<li>[ ] Corner memo rehearsed 3+ times</li>
+<li>[ ] Parity remembered (if needed)</li>
+</ul>
+<h3 id="phase-3-execution">Phase 3: Execution</h3>
+<ul>
+<li>[ ] Blindfold on</li>
+<li>[ ] Orientation verified (white up, green front)</li>
+<li>[ ] All edges executed (setup → algorithm → undo)</li>
+<li>[ ] Parity applied (if edge count was odd)</li>
+<li>[ ] All corners executed (setup → algorithm → undo)</li>
+<li>[ ] Blindfold removed</li>
+<li>[ ] Cube solved! ✅</li>
+</ul>
+<h3 id="post-solve-review">Post-Solve Review</h3>
+<ul>
+<li>[ ] If failed: Identify what went wrong</li>
+<li>[ ] Tracing error?</li>
+<li>[ ] Memo forgotten?</li>
+<li>[ ] Execution mistake?</li>
+<li>[ ] If succeeded: Celebrate! 🎉</li>
+<li>[ ] Record time: _____</li>
+<li>[ ] Notes for next solve: <strong><em>_</em></strong>______</li>
+</ul>
+<hr />
+<h2 id="appendix-f-practice-drills">APPENDIX F: PRACTICE DRILLS</h2>
+<h3 id="drill-1-letter-recognition-5-min">Drill 1: Letter Recognition (5 min)</h3>
+<p><strong>Goal:</strong> Instantly recognize letter for any sticker</p>
+<ol>
+<li>Have lettering scheme visible</li>
+<li>Point to random stickers on cube</li>
+<li>Say the letter out loud</li>
+<li>Repeat until automatic</li>
+</ol>
+<hr />
+<h3 id="drill-2-piece-identification-5-min">Drill 2: Piece Identification (5 min)</h3>
+<p><strong>Goal:</strong> Know where each piece belongs</p>
+<ol>
+<li>Scramble cube</li>
+<li>Point to any piece</li>
+<li>Say where it belongs (which letter)</li>
+<li>Verify by checking solved cube</li>
+<li>Repeat with 10-15 pieces</li>
+</ol>
+<hr />
+<h3 id="drill-3-tracing-without-writing-10-min">Drill 3: Tracing Without Writing (10 min)</h3>
+<p><strong>Goal:</strong> Build tracing speed and accuracy</p>
+<ol>
+<li>Start at buffer</li>
+<li>Trace aloud: "Buffer goes to m, m goes to f, f goes to j..."</li>
+<li>Don't write anything</li>
+<li>When cycle complete, verify by checking</li>
+</ol>
+<hr />
+<h3 id="drill-4-setup-move-practice-10-min">Drill 4: Setup Move Practice (10 min)</h3>
+<p><strong>Goal:</strong> Memorize setup moves</p>
+<ol>
+<li>Pick 5 random letters</li>
+<li>For each: perform setup, check position, undo</li>
+<li>Repeat until smooth</li>
+<li>Next session: pick 5 different letters</li>
+</ol>
+<hr />
+<h3 id="drill-5-memo-creation-10-min">Drill 5: Memo Creation (10 min)</h3>
+<p><strong>Goal:</strong> Fast memorization</p>
+<ol>
+<li>Generate random letter sequence (8-10 letters)</li>
+<li>Chunk into pairs</li>
+<li>Create story</li>
+<li>Time how long to memorize</li>
+<li>Try to beat your time</li>
+</ol>
+<hr />
+<h3 id="drill-6-execution-without-memo-10-min">Drill 6: Execution Without Memo (10 min)</h3>
+<p><strong>Goal:</strong> Algorithm muscle memory</p>
+<ol>
+<li>Have memo written down</li>
+<li>Execute with blindfold</li>
+<li>Can look at memo between letters</li>
+<li>Focus on smooth setup → alg → undo</li>
+</ol>
+<hr />
+<h3 id="drill-7-full-solve-with-pauses">Drill 7: Full Solve with Pauses</h3>
+<p><strong>Goal:</strong> Build confidence</p>
+<ol>
+<li>Trace and memo normally</li>
+<li>Blindfold on</li>
+<li>Execute, but <strong>pause</strong> after each letter</li>
+<li>Take time to verify orientation</li>
+<li>Continue to completion</li>
+</ol>
+<hr />
+<h2 id="final-notes">FINAL NOTES</h2>
+<h3 id="youve-got-this">You've Got This!</h3>
+<p>Blindfold solving is a journey, not a destination. Every cuber who can do this started exactly where you are now—confused, uncertain, but curious.</p>
+<p><strong>Remember:</strong>
+- Your first success will feel amazing
+- Each failure teaches you something valuable
+- The community is supportive and helpful
+- There's no timeline—go at your own pace</p>
+<h3 id="next-steps">Next Steps</h3>
+<ol>
+<li><strong>Memorize the letter scheme</strong> (Appendix A)</li>
+<li><strong>Practice tracing</strong> with simple scrambles</li>
+<li><strong>Learn the algorithms</strong> until they're automatic</li>
+<li><strong>Start with short sequences</strong> (6-8 letters)</li>
+<li><strong>Gradually increase difficulty</strong></li>
+</ol>
+<h3 id="additional-resources">Additional Resources</h3>
+<ul>
+<li><strong>Online practice tools:</strong> Use the drills on this website</li>
+<li><strong>Community forums:</strong> Ask questions, share progress</li>
+<li><strong>Video tutorials:</strong> Watch examples of tracing and execution</li>
+<li><strong>Cube timers:</strong> Track your progress</li>
+</ul>
+<h3 id="good-luck">Good Luck!</h3>
+<p>Your first blindfolded solve is closer than you think. Trust the process, stay patient, and enjoy the journey!</p>
+<hr />
+<p><strong>Document Version:</strong> 1.0<br />
+<strong>Last Updated:</strong> 2024<br />
+<strong>Method:</strong> Old Pochmann<br />
+<strong>License:</strong> Free for personal and educational use  </p>
+<hr />
+      </div>
+    </section>
+
+    <!-- Image placeholders page -->
+    <section class="page">
+      <h2 class="image-page-title">Image Placeholders</h2>
+      <p class="image-page-subtitle">
+        These correspond to the recommendations in <code>image_recommendations.md</code>.
+        Replace the grey boxes with real <code>&lt;img&gt;</code> tags (keeping the
+        IDs if you want to anchor/link from the text).
+      </p>
+      <div class="image-grid">
+        <figure class="image-placeholder" id="image-1">
+          <div class="image-box">
+            IMAGE 1
+          </div>
+          <figcaption>
+            <div class="img-label">Image 1 · Three-Phase Flow Diagram</div>
+            Visual representation of the three phases:
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-2">
+          <div class="image-box">
+            IMAGE 2
+          </div>
+          <figcaption>
+            <div class="img-label">Image 2 · Piece-by-Piece vs Layer-by-Layer Comparison</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-3">
+          <div class="image-box">
+            IMAGE 3
+          </div>
+          <figcaption>
+            <div class="img-label">Image 3 · Cube Anatomy Diagram</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-4">
+          <div class="image-box">
+            IMAGE 4
+          </div>
+          <figcaption>
+            <div class="img-label">Image 4 · Piece Identity vs Position Example</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-5">
+          <div class="image-box">
+            IMAGE 5
+          </div>
+          <figcaption>
+            <div class="img-label">Image 5 · Standard Cube Orientation (3D View)</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-6">
+          <div class="image-box">
+            IMAGE 6
+          </div>
+          <figcaption>
+            <div class="img-label">Image 6 · Orientation Check Points</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-7">
+          <div class="image-box">
+            IMAGE 7
+          </div>
+          <figcaption>
+            <div class="img-label">Image 7 · Edge Buffer Position (UR = b*)</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-8">
+          <div class="image-box">
+            IMAGE 8
+          </div>
+          <figcaption>
+            <div class="img-label">Image 8 · Corner Buffer Position (UBL = A*)</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-9">
+          <div class="image-box">
+            IMAGE 9
+          </div>
+          <figcaption>
+            <div class="img-label">Image 9 · Buffer Swap Mechanism</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-10">
+          <div class="image-box">
+            IMAGE 10
+          </div>
+          <figcaption>
+            <div class="img-label">Image 10 · Target Swap Positions (d and P)</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-11">
+          <div class="image-box">
+            IMAGE 11
+          </div>
+          <figcaption>
+            <div class="img-label">Image 11 · Complete Edge Lettering Map (2D Net)</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-12">
+          <div class="image-box">
+            IMAGE 12
+          </div>
+          <figcaption>
+            <div class="img-label">Image 12 · Complete Corner Lettering Map (2D Net)</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-13">
+          <div class="image-box">
+            IMAGE 13
+          </div>
+          <figcaption>
+            <div class="img-label">Image 13 · Edge Letter Pairs Visualization</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-14">
+          <div class="image-box">
+            IMAGE 14
+          </div>
+          <figcaption>
+            <div class="img-label">Image 14 · Corner Letter Triplets Visualization</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-15">
+          <div class="image-box">
+            IMAGE 15
+          </div>
+          <figcaption>
+            <div class="img-label">Image 15 · Letter Assignment Pattern (Clockwise)</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-16">
+          <div class="image-box">
+            IMAGE 16
+          </div>
+          <figcaption>
+            <div class="img-label">Image 16 · Tracing Step-by-Step Visual</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-17">
+          <div class="image-box">
+            IMAGE 17
+          </div>
+          <figcaption>
+            <div class="img-label">Image 17 · Example 1 - Single Cycle Visualization</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-18">
+          <div class="image-box">
+            IMAGE 18
+          </div>
+          <figcaption>
+            <div class="img-label">Image 18 · Example 2 - Multiple Cycles Visualization</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-19">
+          <div class="image-box">
+            IMAGE 19
+          </div>
+          <figcaption>
+            <div class="img-label">Image 19 · Cycle Completion Indicators</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-20">
+          <div class="image-box">
+            IMAGE 20
+          </div>
+          <figcaption>
+            <div class="img-label">Image 20 · Circuit Breaking Process</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-21">
+          <div class="image-box">
+            IMAGE 21
+          </div>
+          <figcaption>
+            <div class="img-label">Image 21 · Corner Tracing Example</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-22">
+          <div class="image-box">
+            IMAGE 22
+          </div>
+          <figcaption>
+            <div class="img-label">Image 22 · Full Tracing Example - Before/After</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-24">
+          <div class="image-box">
+            IMAGE 24
+          </div>
+          <figcaption>
+            <div class="img-label">Image 24 · Execution Formula Diagram</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-25">
+          <div class="image-box">
+            IMAGE 25
+          </div>
+          <figcaption>
+            <div class="img-label">Image 25 · T-Perm Effect Visualization</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-26">
+          <div class="image-box">
+            IMAGE 26
+          </div>
+          <figcaption>
+            <div class="img-label">Image 26 · Edge Execution Example (Letter j)</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-27">
+          <div class="image-box">
+            IMAGE 27
+          </div>
+          <figcaption>
+            <div class="img-label">Image 27 · Setup Move Concept</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-28">
+          <div class="image-box">
+            IMAGE 28
+          </div>
+          <figcaption>
+            <div class="img-label">Image 28 · Safe vs Unsafe Moves for Edges</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-29">
+          <div class="image-box">
+            IMAGE 29
+          </div>
+          <figcaption>
+            <div class="img-label">Image 29 · Parity Detection Visual</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-30">
+          <div class="image-box">
+            IMAGE 30
+          </div>
+          <figcaption>
+            <div class="img-label">Image 30 · Parity Fix Timing</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-31">
+          <div class="image-box">
+            IMAGE 31
+          </div>
+          <figcaption>
+            <div class="img-label">Image 31 · Y-Perm Effect Visualization</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-32">
+          <div class="image-box">
+            IMAGE 32
+          </div>
+          <figcaption>
+            <div class="img-label">Image 32 · Corner Execution Example (Letter K)</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-33">
+          <div class="image-box">
+            IMAGE 33
+          </div>
+          <figcaption>
+            <div class="img-label">Image 33 · Safe vs Unsafe Moves for Corners</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-34">
+          <div class="image-box">
+            IMAGE 34
+          </div>
+          <figcaption>
+            <div class="img-label">Image 34 · Complete Execution Flow</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-35">
+          <div class="image-box">
+            IMAGE 35
+          </div>
+          <figcaption>
+            <div class="img-label">Image 35 · High-Quality Edge Lettering Map</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-36">
+          <div class="image-box">
+            IMAGE 36
+          </div>
+          <figcaption>
+            <div class="img-label">Image 36 · High-Quality Corner Lettering Map</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-37">
+          <div class="image-box">
+            IMAGE 37
+          </div>
+          <figcaption>
+            <div class="img-label">Image 37 · Edge Pairs Reference Chart</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-38">
+          <div class="image-box">
+            IMAGE 38
+          </div>
+          <figcaption>
+            <div class="img-label">Image 38 · Corner Triplets Reference Chart</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-39">
+          <div class="image-box">
+            IMAGE 39
+          </div>
+          <figcaption>
+            <div class="img-label">Image 39 · Position d Reference</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-40">
+          <div class="image-box">
+            IMAGE 40
+          </div>
+          <figcaption>
+            <div class="img-label">Image 40 · Common Edge Setup Moves Visual Guide</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-41">
+          <div class="image-box">
+            IMAGE 41
+          </div>
+          <figcaption>
+            <div class="img-label">Image 41 · Position P Reference</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-42">
+          <div class="image-box">
+            IMAGE 42
+          </div>
+          <figcaption>
+            <div class="img-label">Image 42 · Common Corner Setup Moves Visual Guide</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-43">
+          <div class="image-box">
+            IMAGE 43
+          </div>
+          <figcaption>
+            <div class="img-label">Image 43 · Algorithm Notation Guide</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-44">
+          <div class="image-box">
+            IMAGE 44
+          </div>
+          <figcaption>
+            <div class="img-label">Image 44 · T-Perm Animation/Sequence</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-45">
+          <div class="image-box">
+            IMAGE 45
+          </div>
+          <figcaption>
+            <div class="img-label">Image 45 · Y-Perm Animation/Sequence</div>
+            
+          </figcaption>
+        </figure>
+        <figure class="image-placeholder" id="image-46">
+          <div class="image-box">
+            IMAGE 46
+          </div>
+          <figcaption>
+            <div class="img-label">Image 46 · R-Perm Animation/Sequence</div>
+            
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
