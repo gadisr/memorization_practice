@@ -48,6 +48,7 @@ import { renderEdgeSquares, renderCornerSquares, renderNotationResults } from '.
 import { TracingRenderer } from './ui/tracing-renderer.js';
 import { OnboardingManager } from './onboarding/onboarding-manager.js';
 import { loadChartJS } from './ui/chart-renderer.js';
+import { initializePlayground } from './ui/playground.js';
 import { getSessionRank, getNotationSessionRank } from './services/session-ranker.js';
 import {
   createColorMemorizationSession,
@@ -116,6 +117,28 @@ export async function initializeApp(): Promise<void> {
 }
 
 function attachEventListeners(): void {
+  // Navigation link handlers - use event delegation on document
+  // This must be set up early to catch all navigation clicks
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    // Check if clicked element or any parent is a link with data-route
+    const link = target.closest('a[data-route]') as HTMLAnchorElement;
+    if (link) {
+      const route = link.getAttribute('data-route');
+      if (route) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Navigation link clicked, route:', route);
+        try {
+          router.navigate(route);
+        } catch (error) {
+          console.error('Error navigating to route:', route, error);
+        }
+        return false;
+      }
+    }
+  }, true); // Use capture phase to catch events early
+  
   // Setup screen
   const drillSelect = document.getElementById('drill-select') as HTMLSelectElement;
   const pairCountInput = document.getElementById('pair-count') as HTMLInputElement;
@@ -307,21 +330,7 @@ function attachEventListeners(): void {
   // Home dashboard event listeners
   setupHomeDashboardListeners();
   
-  // Back to dashboard button (from setup screen)
-  const backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
-  if (backToDashboardBtn) {
-    backToDashboardBtn.addEventListener('click', () => {
-      router.navigate('/');
-    });
-  }
-  
-  // Back to home dashboard button (from Stats page)
-  const backToHomeDashboardBtn = document.getElementById('back-to-home-dashboard-btn');
-  if (backToHomeDashboardBtn) {
-    backToHomeDashboardBtn.addEventListener('click', () => {
-      router.navigate('/');
-    });
-  }
+  // Back to dashboard button removed - using header navigation instead
   
   // Listen for auth state changes to refresh dashboard
   window.addEventListener('auth-state-changed', async () => {
@@ -379,6 +388,7 @@ function setupHomeDashboardListeners(): void {
  * Load and render home dashboard
  */
 async function loadAndRenderHomeDashboard(): Promise<void> {
+  console.log('loadAndRenderHomeDashboard called - reloading dashboard data');
   // Track dashboard view
   trackEvent('dashboard_view', {
     view_type: 'home_dashboard'
@@ -389,9 +399,11 @@ async function loadAndRenderHomeDashboard(): Promise<void> {
     const authState = getAuthState();
     const isAuthenticated = authState.isAuthenticated;
     
+    console.log('Loading sessions and notation sessions...');
     // Load sessions (from API if authenticated, from localStorage if not)
     const sessions = await getAllSessions();
     const notationSessions = await getAllNotationSessions();
+    console.log('Loaded sessions:', sessions.length, 'notation sessions:', notationSessions.length);
     
     // Load population stats (available for all users - public endpoint)
     let populationStats = null;
@@ -405,12 +417,8 @@ async function loadAndRenderHomeDashboard(): Promise<void> {
     // Render home dashboard
     renderHomeDashboard(sessions, notationSessions, populationStats);
     
-    // Show home dashboard screen if we're not already on a session screen
-    const currentScreen = document.querySelector('.screen:not(.hidden)');
-    if (!currentScreen || currentScreen.id === 'home-dashboard-screen' || 
-        currentScreen.id === 'setup-screen' || currentScreen.id === 'dashboard-screen') {
-      showScreen('home-dashboard-screen');
-    }
+    // Always show home dashboard screen when navigating to home route
+    showScreen('home-dashboard-screen');
   } catch (error) {
     console.error('Error loading dashboard:', error);
     // Show dashboard with empty data
@@ -456,12 +464,27 @@ async function loadAndRenderStatsPage(): Promise<void> {
   }
 }
 
+async function loadAndRenderPlayground(): Promise<void> {
+  try {
+    // Show playground screen
+    showScreen('playground-screen');
+    
+    // Initialize playground functionality
+    await initializePlayground();
+  } catch (error) {
+    console.error('Error loading playground:', error);
+    showNotification('Failed to load playground. Please try again.', 'error');
+  }
+}
+
 /**
  * Set up route handlers
  */
 function setupRoutes(): void {
   // Home route
   router.register('/', async () => {
+    // Always reload data when navigating to dashboard to ensure fresh data
+    // This is especially important when coming back from static pages
     await loadAndRenderHomeDashboard();
   });
 
@@ -475,6 +498,16 @@ function setupRoutes(): void {
     const configs = getAllDrillConfigs();
     renderSetupScreen(configs);
     showScreen('setup-screen');
+  });
+
+  // Playground route
+  router.register('/playground', async () => {
+    await loadAndRenderPlayground();
+  });
+
+  // Tutorials route
+  router.register('/tutorials', async () => {
+    showScreen('tutorials-screen');
   });
 }
 

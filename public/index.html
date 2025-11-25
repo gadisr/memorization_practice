@@ -125,15 +125,26 @@
     <nav id="main-navigation" class="main-navigation">
       <div class="nav-container">
         <a href="/" class="nav-logo">
-          <img src="media/logo.png" alt="BLD Trainer" class="nav-logo-image" />
+          <img src="media/32x.svg" alt="BLD Trainer" class="nav-logo-image" />
         </a>
         <div class="nav-links">
-          <a href="intro.html">Beginner's Guide</a>
-          <a href="features.html">Features</a>
-          <a href="guides/improve-visualization-memory.html">Visualization Guide</a>
-          <a href="guides/speffz-notation.html">Speffz Notation</a>
-          <a href="lettering-system.html">Lettering System</a>
-          <a href="guides/progress-tracking.html">Progress Tracking</a>
+          <a href="#" data-route="/">Dashboard</a>
+          <a href="#" data-route="/drill">Drills</a>
+          <a href="#" data-route="/stats">History</a>
+          <a href="#" data-route="/tutorials">Tutorials</a>
+          <a href="#" data-route="/playground">Playground</a>
+        </div>
+        <!-- Auth Container in Navigation -->
+        <div id="auth-container-nav" class="auth-container-nav">
+          <button id="login-button-nav" class="btn btn-auth">
+            Sign in
+          </button>
+          
+          <div id="user-profile-nav" class="user-profile hidden">
+            <img id="user-avatar-nav" src="" alt="User profile avatar" class="avatar" />
+            <span id="user-email-nav" class="user-email"></span>
+            <button id="logout-button-nav" class="btn btn-text">Sign Out</button>
+          </div>
         </div>
       </div>
     </nav>
@@ -143,19 +154,6 @@
       <header>
         <h1>Blindfold Cubing Training Dashboard</h1>
         <p class="subtitle">Track your progress, improve your skills, and compare with other users</p>
-        
-        <!-- Auth Container -->
-        <div id="auth-container-dashboard" class="auth-container">
-          <button id="login-button-dashboard" class="btn btn-auth">
-            Sign in
-          </button>
-          
-          <div id="user-profile-dashboard" class="user-profile hidden">
-            <img id="user-avatar-dashboard" src="" alt="User profile avatar" class="avatar" />
-            <span id="user-email-dashboard" class="user-email"></span>
-            <button id="logout-button-dashboard" class="btn btn-text">Sign Out</button>
-          </div>
-        </div>
       </header>
 
       <!-- Registration Prompt (for unauthenticated users) -->
@@ -183,11 +181,7 @@
     <!-- Setup Screen (for starting drills) -->
     <div id="setup-screen" class="screen hidden">
       <header>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <button id="back-to-dashboard-btn" class="btn btn-text">← Back to Dashboard</button>
-          <h1 style="flex: 1; text-align: center; margin: 0;">Start Training Session</h1>
-          <div style="width: 120px;"></div>
-        </div>
+        <h1>Start Training Session</h1>
         <p class="subtitle">Choose a drill and start practicing your BLD skills</p>
       </header>
 
@@ -382,25 +376,7 @@
     <!-- Stats Screen -->
     <div id="stats-screen" class="screen hidden">
       <header>
-        <div class="stats-header-top">
-          <button id="back-to-home-dashboard-btn" class="btn btn-text">← Back to Home</button>
-          <h1>📊 Stats</h1>
-          <div class="stats-header-right">
-            <!-- Auth Container -->
-            <div id="auth-container-stats" class="auth-container">
-              <button id="login-button-stats" class="btn btn-auth">
-                Sign in
-              </button>
-              
-              <div id="user-profile-stats" class="user-profile hidden">
-                <img id="user-avatar-stats" src="" alt="User profile avatar" class="avatar" />
-                <span id="user-email-stats" class="user-email"></span>
-                <button id="logout-button-stats" class="btn btn-text">Sign Out</button>
-              </div>
-            </div>
-            <button id="export-btn-stats" class="btn btn-secondary btn-small">Export CSV</button>
-          </div>
-        </div>
+        <h1>History</h1>
       </header>
 
       <div class="stats-grid">
@@ -481,7 +457,192 @@
           </p>
         </div>
         <div id="stats-pagination-container"></div>
-        <button id="clear-all-btn-stats" class="btn btn-danger-text">Clear All Data</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; gap: 1rem;">
+          <button id="clear-all-btn-stats" class="btn btn-danger-text">Clear All Data</button>
+          <button id="export-btn-stats" class="btn btn-secondary btn-small" style="width: 100px; flex-shrink: 0;">Export CSV</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Playground Screen -->
+    <div id="playground-screen" class="screen hidden">
+      <div class="card">
+        <div class="cube-container">
+          <div id="cube"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label for="moveInput">Add Move (e.g., R, U', F2, Lw, etc.)</label>
+          <div style="display: flex; gap: 0.75rem;">
+            <input type="text" id="moveInput" class="input-field" placeholder="Enter a move (R, U', F2, etc.)">
+            <button id="add-move-btn" class="btn btn-primary">Add Move</button>
+          </div>
+          <div class="move-buttons">
+            <button class="btn btn-secondary" data-quick-move="R">R</button>
+            <button class="btn btn-secondary" data-quick-move="R'">R'</button>
+            <button class="btn btn-secondary" data-quick-move="R2">R2</button>
+            <button class="btn btn-secondary" data-quick-move="L">L</button>
+            <button class="btn btn-secondary" data-quick-move="L'">L'</button>
+            <button class="btn btn-secondary" data-quick-move="L2">L2</button>
+            <button class="btn btn-secondary" data-quick-move="U">U</button>
+            <button class="btn btn-secondary" data-quick-move="U'">U'</button>
+            <button class="btn btn-secondary" data-quick-move="U2">U2</button>
+            <button class="btn btn-secondary" data-quick-move="D">D</button>
+            <button class="btn btn-secondary" data-quick-move="D'">D'</button>
+            <button class="btn btn-secondary" data-quick-move="D2">D2</button>
+            <button class="btn btn-secondary" data-quick-move="F">F</button>
+            <button class="btn btn-secondary" data-quick-move="F'">F'</button>
+            <button class="btn btn-secondary" data-quick-move="F2">F2</button>
+            <button class="btn btn-secondary" data-quick-move="B">B</button>
+            <button class="btn btn-secondary" data-quick-move="B'">B'</button>
+            <button class="btn btn-secondary" data-quick-move="B2">B2</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Current Sequence</label>
+          <div class="sequence-display" id="sequenceDisplay">
+            <span class="empty">No moves added yet</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button id="execute-sequence-btn" class="btn btn-success">Execute Sequence</button>
+            <button id="execute-last-move-btn" class="btn btn-primary">Execute Last Move</button>
+            <button id="clear-sequence-btn" class="btn btn-danger">Clear Sequence</button>
+            <button id="reset-cube-btn" class="btn btn-secondary">Reset Cube</button>
+            <button id="toggle-letters-btn" class="btn btn-secondary">Show Letters</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="info">
+          <strong>Tips:</strong>
+          <ul style="margin-top: 10px; margin-left: 20px;">
+            <li>Enter moves like <code>R</code>, <code>U'</code>, <code>F2</code> and click "Add Move"</li>
+            <li>Click "Execute Sequence" to perform all moves in order</li>
+            <li>Click "Execute Last Move" to perform only the most recently added move</li>
+            <li>Use the quick buttons above to add common moves</li>
+            <li>You can also drag the cube to rotate it manually</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card reference-section">
+        <h2 id="reference-toggle" style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+          <span>📚</span>
+          <span>Setup Moves & Swap Algorithms Reference</span>
+          <span id="toggleIcon" style="margin-left: auto; font-size: 0.8em;">▼</span>
+        </h2>
+        <div id="referenceContent" class="reference-content">
+          <h3>Swap Algorithms</h3>
+          <div class="algorithm-box">
+            <strong>Edge Swap Algorithm:</strong><br>
+            <span id="edgeSwapAlg" class="clickable-move" title="Click to set as current sequence">R U R' U' R' F R2 U' R' U' R U R' F'</span>
+          </div>
+          <div class="algorithm-box">
+            <strong>Corner Swap Algorithm:</strong><br>
+            <span id="cornerSwapAlg" class="clickable-move" title="Click to set as current sequence">R U' R' U' R U R' F' R U R' U' R' F R</span>
+          </div>
+
+          <h3>Edge Setup Moves</h3>
+          <table class="setup-table">
+            <thead>
+              <tr>
+                <th>Letter</th>
+                <th>Setup Move</th>
+                <th>Unsetup Move (Inverse)</th>
+              </tr>
+            </thead>
+            <tbody id="edgeSetupTable">
+            </tbody>
+          </table>
+
+          <h3>Corner Setup Moves</h3>
+          <table class="setup-table">
+            <thead>
+              <tr>
+                <th>Letter</th>
+                <th>Setup Move</th>
+                <th>Unsetup Move (Inverse)</th>
+              </tr>
+            </thead>
+            <tbody id="cornerSetupTable">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tutorials Screen -->
+    <div id="tutorials-screen" class="screen hidden">
+      <header>
+        <h1>Tutorials & Guides</h1>
+        <p class="subtitle">Learn blindfold cubing with our comprehensive tutorials and guides</p>
+      </header>
+
+      <div class="card">
+        <h2>Getting Started</h2>
+        <ul style="list-style: none; padding: 0;">
+          <li style="margin-bottom: 1rem;">
+            <a href="intro.html" style="font-size: 1.1rem; font-weight: 600; color: var(--color-primary); text-decoration: none;">
+              Beginner's Guide to Blindfold Cubing
+            </a>
+            <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+              A comprehensive introduction to blindfold cubing. Learn the basics of BLD solving, memory techniques, and get started with your first blindfold solve.
+            </p>
+          </li>
+          <li style="margin-bottom: 1rem;">
+            <a href="lettering-system.html" style="font-size: 1.1rem; font-weight: 600; color: var(--color-primary); text-decoration: none;">
+              Lettering System
+            </a>
+            <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+              Understand how the Rubik's cube is mapped to letters for memorization. Learn the standard lettering system used in blindfold cubing.
+            </p>
+          </li>
+          <li style="margin-bottom: 1rem;">
+            <a href="features.html" style="font-size: 1.1rem; font-weight: 600; color: var(--color-primary); text-decoration: none;">
+              Features & How It Works
+            </a>
+            <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+              Learn about the features of this training tool and how to use it effectively for improving your blindfold cubing skills.
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Advanced Techniques</h2>
+        <ul style="list-style: none; padding: 0;">
+          <li style="margin-bottom: 1rem;">
+            <a href="guides/improve-visualization-memory.html" style="font-size: 1.1rem; font-weight: 600; color: var(--color-primary); text-decoration: none;">
+              Visualization & Memory Guide
+            </a>
+            <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+              Master visualization techniques and memory methods for blindfold cubing. Learn how to create vivid mental images and improve your recall accuracy.
+            </p>
+          </li>
+          <li style="margin-bottom: 1rem;">
+            <a href="guides/speffz-notation.html" style="font-size: 1.1rem; font-weight: 600; color: var(--color-primary); text-decoration: none;">
+              Speffz Notation Guide
+            </a>
+            <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+              Learn Speffz notation, the standard lettering system for blindfold cubing. Understand how to identify and memorize piece positions.
+            </p>
+          </li>
+          <li style="margin-bottom: 1rem;">
+            <a href="guides/progress-tracking.html" style="font-size: 1.1rem; font-weight: 600; color: var(--color-primary); text-decoration: none;">
+              Progress Tracking Guide
+            </a>
+            <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+              Learn how to track your progress, analyze your performance, and identify areas for improvement in your blindfold cubing journey.
+            </p>
+          </li>
+        </ul>
       </div>
     </div>
 

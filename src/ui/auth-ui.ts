@@ -19,12 +19,19 @@ export function initializeAuthUI(): void {
   const userEmail = document.getElementById('user-email');
   const userAvatar = document.getElementById('user-avatar');
   
-  // Dashboard screen elements
-  const loginButtonDashboard = document.getElementById('login-button-dashboard');
-  const logoutButtonDashboard = document.getElementById('logout-button-dashboard');
-  const userProfileDashboard = document.getElementById('user-profile-dashboard');
-  const userEmailDashboard = document.getElementById('user-email-dashboard');
-  const userAvatarDashboard = document.getElementById('user-avatar-dashboard');
+  // Navigation auth elements (moved from dashboard header to nav)
+  const loginButtonNav = document.getElementById('login-button-nav');
+  const logoutButtonNav = document.getElementById('logout-button-nav');
+  const userProfileNav = document.getElementById('user-profile-nav');
+  const userEmailNav = document.getElementById('user-email-nav');
+  const userAvatarNav = document.getElementById('user-avatar-nav');
+  
+  // Stats screen elements
+  const loginButtonStats = document.getElementById('login-button-stats');
+  const logoutButtonStats = document.getElementById('logout-button-stats');
+  const userProfileStats = document.getElementById('user-profile-stats');
+  const userEmailStats = document.getElementById('user-email-stats');
+  const userAvatarStats = document.getElementById('user-avatar-stats');
   
   // Subscribe to auth state changes
   subscribeToAuthState(async (state: AuthState) => {
@@ -34,16 +41,23 @@ export function initializeAuthUI(): void {
     }
     
     if (state.isAuthenticated && state.user) {
-      // User is logged in - update both screens
+      // User is logged in - update all auth UI locations
       updateAuthUI(true, state.user, {
         loginButton, logoutButton, userProfile, userEmail, userAvatar
       });
       updateAuthUI(true, state.user, {
-        loginButton: loginButtonDashboard, 
-        logoutButton: logoutButtonDashboard, 
-        userProfile: userProfileDashboard, 
-        userEmail: userEmailDashboard, 
-        userAvatar: userAvatarDashboard
+        loginButton: loginButtonNav, 
+        logoutButton: logoutButtonNav, 
+        userProfile: userProfileNav, 
+        userEmail: userEmailNav, 
+        userAvatar: userAvatarNav
+      });
+      updateAuthUI(true, state.user, {
+        loginButton: loginButtonStats, 
+        logoutButton: logoutButtonStats, 
+        userProfile: userProfileStats, 
+        userEmail: userEmailStats, 
+        userAvatar: userAvatarStats
       });
       
       // Migrate local data if any exists
@@ -56,16 +70,23 @@ export function initializeAuthUI(): void {
       // Refresh dashboard with API data
       await refreshDashboard();
     } else {
-      // User is logged out - update both screens
+      // User is logged out - update all auth UI locations
       updateAuthUI(false, null, {
         loginButton, logoutButton, userProfile, userEmail, userAvatar
       });
       updateAuthUI(false, null, {
-        loginButton: loginButtonDashboard, 
-        logoutButton: logoutButtonDashboard, 
-        userProfile: userProfileDashboard, 
-        userEmail: userEmailDashboard, 
-        userAvatar: userAvatarDashboard
+        loginButton: loginButtonNav, 
+        logoutButton: logoutButtonNav, 
+        userProfile: userProfileNav, 
+        userEmail: userEmailNav, 
+        userAvatar: userAvatarNav
+      });
+      updateAuthUI(false, null, {
+        loginButton: loginButtonStats, 
+        logoutButton: logoutButtonStats, 
+        userProfile: userProfileStats, 
+        userEmail: userEmailStats, 
+        userAvatar: userAvatarStats
       });
     }
   });
@@ -79,8 +100,13 @@ export function initializeAuthUI(): void {
     showAuthModal('login');
   });
   
-  // Dashboard screen login button handler
-  loginButtonDashboard?.addEventListener('click', () => {
+  // Navigation login button handler
+  loginButtonNav?.addEventListener('click', () => {
+    showAuthModal('login');
+  });
+  
+  // Stats screen login button handler
+  loginButtonStats?.addEventListener('click', () => {
     showAuthModal('login');
   });
   
@@ -93,8 +119,17 @@ export function initializeAuthUI(): void {
     }
   });
   
-  // Dashboard screen logout button handler
-  logoutButtonDashboard?.addEventListener('click', async () => {
+  // Navigation logout button handler
+  logoutButtonNav?.addEventListener('click', async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  });
+  
+  // Stats screen logout button handler
+  logoutButtonStats?.addEventListener('click', async () => {
     try {
       await logOut();
     } catch (error) {
@@ -127,19 +162,24 @@ function updateAuthUI(isAuthenticated: boolean, user: any, elements: {
       userAvatar.classList.add('hidden');
     }
   } else {
-    // User is logged out - hide login button in header on home dashboard only if registration prompt is visible
-    // Check if we're on the home dashboard and if registration prompt is visible
-    const registrationPromptContainer = document.getElementById('registration-prompt-container');
-    const isHomeDashboard = registrationPromptContainer !== null;
-    const isRegistrationPromptVisible = registrationPromptContainer && !registrationPromptContainer.classList.contains('hidden');
-    
-    if (isHomeDashboard && loginButton?.id === 'login-button-dashboard' && isRegistrationPromptVisible) {
-      // Hide the header sign-in button on home dashboard only when registration prompt is visible
-      // The registration prompt provides a clearer sign-in option
-      loginButton?.classList.add('hidden');
-    } else {
-      // Show login button on other screens or when registration prompt is hidden/dismissed
+    // User is logged out - show login button
+    // For nav button, always show it (it's in the navigation bar)
+    if (loginButton?.id === 'login-button-nav') {
+      // Always show nav login button
       loginButton?.classList.remove('hidden');
+    } else {
+      // For other buttons, check if we should hide based on registration prompt
+      const registrationPromptContainer = document.getElementById('registration-prompt-container');
+      const isHomeDashboard = registrationPromptContainer !== null;
+      const isRegistrationPromptVisible = registrationPromptContainer && !registrationPromptContainer.classList.contains('hidden');
+      
+      if (isHomeDashboard && isRegistrationPromptVisible) {
+        // Hide login button when registration prompt is visible
+        loginButton?.classList.add('hidden');
+      } else {
+        // Show login button on other screens or when registration prompt is hidden/dismissed
+        loginButton?.classList.remove('hidden');
+      }
     }
     userProfile?.classList.add('hidden');
     
@@ -170,53 +210,72 @@ export function refreshAuthUI(): void {
   const userEmail = document.getElementById('user-email');
   const userAvatar = document.getElementById('user-avatar');
   
-  // Dashboard/stats screen elements - find within visible screen to avoid duplicate ID issues
-  // Since home-dashboard-screen, stats-screen have elements with same IDs,
-  // we need to find them within the visible screen
-  let loginButtonDashboard: HTMLElement | null = null;
-  let logoutButtonDashboard: HTMLElement | null = null;
-  let userProfileDashboard: HTMLElement | null = null;
-  let userEmailDashboard: HTMLElement | null = null;
-  let userAvatarDashboard: HTMLElement | null = null;
+  // Navigation auth elements
+  const loginButtonNav = document.getElementById('login-button-nav');
+  const logoutButtonNav = document.getElementById('logout-button-nav');
+  const userProfileNav = document.getElementById('user-profile-nav');
+  const userEmailNav = document.getElementById('user-email-nav');
+  const userAvatarNav = document.getElementById('user-avatar-nav');
+  
+  // Stats screen elements - find within visible screen to avoid duplicate ID issues
+  let loginButtonStats: HTMLElement | null = null;
+  let logoutButtonStats: HTMLElement | null = null;
+  let userProfileStats: HTMLElement | null = null;
+  let userEmailStats: HTMLElement | null = null;
+  let userAvatarStats: HTMLElement | null = null;
   
   if (visibleScreen) {
-    loginButtonDashboard = visibleScreen.querySelector('#login-button-dashboard, #login-button-stats') as HTMLElement;
-    logoutButtonDashboard = visibleScreen.querySelector('#logout-button-dashboard, #logout-button-stats') as HTMLElement;
-    userProfileDashboard = visibleScreen.querySelector('#user-profile-dashboard, #user-profile-stats') as HTMLElement;
-    userEmailDashboard = visibleScreen.querySelector('#user-email-dashboard, #user-email-stats') as HTMLElement;
-    userAvatarDashboard = visibleScreen.querySelector('#user-avatar-dashboard, #user-avatar-stats') as HTMLElement;
+    loginButtonStats = visibleScreen.querySelector('#login-button-stats') as HTMLElement;
+    logoutButtonStats = visibleScreen.querySelector('#logout-button-stats') as HTMLElement;
+    userProfileStats = visibleScreen.querySelector('#user-profile-stats') as HTMLElement;
+    userEmailStats = visibleScreen.querySelector('#user-email-stats') as HTMLElement;
+    userAvatarStats = visibleScreen.querySelector('#user-avatar-stats') as HTMLElement;
   }
   
-  // Fallback to getElementById if not found in visible screen (for backwards compatibility)
-  if (!loginButtonDashboard) loginButtonDashboard = document.getElementById('login-button-dashboard');
-  if (!logoutButtonDashboard) logoutButtonDashboard = document.getElementById('logout-button-dashboard');
-  if (!userProfileDashboard) userProfileDashboard = document.getElementById('user-profile-dashboard');
-  if (!userEmailDashboard) userEmailDashboard = document.getElementById('user-email-dashboard');
-  if (!userAvatarDashboard) userAvatarDashboard = document.getElementById('user-avatar-dashboard');
+  // Fallback to getElementById if not found in visible screen
+  if (!loginButtonStats) loginButtonStats = document.getElementById('login-button-stats');
+  if (!logoutButtonStats) logoutButtonStats = document.getElementById('logout-button-stats');
+  if (!userProfileStats) userProfileStats = document.getElementById('user-profile-stats');
+  if (!userEmailStats) userEmailStats = document.getElementById('user-email-stats');
+  if (!userAvatarStats) userAvatarStats = document.getElementById('user-avatar-stats');
   
   if (authState.isAuthenticated && authState.user) {
-    // User is logged in - update both screens
+    // User is logged in - update all auth UI locations
     updateAuthUI(true, authState.user, {
       loginButton, logoutButton, userProfile, userEmail, userAvatar
     });
     updateAuthUI(true, authState.user, {
-      loginButton: loginButtonDashboard, 
-      logoutButton: logoutButtonDashboard, 
-      userProfile: userProfileDashboard, 
-      userEmail: userEmailDashboard, 
-      userAvatar: userAvatarDashboard
+      loginButton: loginButtonNav, 
+      logoutButton: logoutButtonNav, 
+      userProfile: userProfileNav, 
+      userEmail: userEmailNav, 
+      userAvatar: userAvatarNav
+    });
+    updateAuthUI(true, authState.user, {
+      loginButton: loginButtonStats, 
+      logoutButton: logoutButtonStats, 
+      userProfile: userProfileStats, 
+      userEmail: userEmailStats, 
+      userAvatar: userAvatarStats
     });
   } else {
-    // User is logged out - update both screens
+    // User is logged out - update all auth UI locations
     updateAuthUI(false, null, {
       loginButton, logoutButton, userProfile, userEmail, userAvatar
     });
     updateAuthUI(false, null, {
-      loginButton: loginButtonDashboard, 
-      logoutButton: logoutButtonDashboard, 
-      userProfile: userProfileDashboard, 
-      userEmail: userEmailDashboard, 
-      userAvatar: userAvatarDashboard
+      loginButton: loginButtonNav, 
+      logoutButton: logoutButtonNav, 
+      userProfile: userProfileNav, 
+      userEmail: userEmailNav, 
+      userAvatar: userAvatarNav
+    });
+    updateAuthUI(false, null, {
+      loginButton: loginButtonStats, 
+      logoutButton: logoutButtonStats, 
+      userProfile: userProfileStats, 
+      userEmail: userEmailStats, 
+      userAvatar: userAvatarStats
     });
   }
 }

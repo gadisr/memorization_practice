@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimCubeJS Playground</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-top: 100px; /* Add space for navigation */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .cube-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+        }
+
+        #cube {
+            background: #fff;
+            border-radius: 8px;
+            width: 350px;
+            height: 350px;
+            min-width: 350px;
+            min-height: 350px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4a5568;
+        }
+
+        .sequence-display {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 60px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            word-wrap: break-word;
+        }
+
+        .sequence-display.empty {
+            color: #999;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .button-group button {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .info {
+            background: #e6f3ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .info strong {
+            color: #667eea;
+        }
+
+        .move-buttons {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .move-buttons button {
+            padding: 8px;
+            font-size: 14px;
+            background: #edf2f7;
+            color: #2d3748;
+            border: 1px solid #cbd5e0;
+        }
+
+        .move-buttons button:hover {
+            background: #e2e8f0;
+            border-color: #a0aec0;
+        }
+
+        .reference-section {
+            margin-top: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .reference-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reference-section h2:hover {
+            color: #667eea;
+        }
+
+        .reference-section h3 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .reference-content {
+            display: none;
+        }
+
+        .reference-content.expanded {
+            display: block;
+        }
+
+        .algorithm-box {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .setup-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .setup-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .setup-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .setup-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .setup-table tr:hover {
+            background: #f0f0f0;
+        }
+
+        .buffer-cell {
+            background: #fff3cd;
+            font-weight: bold;
+        }
+
+        .clickable-move {
+            cursor: pointer;
+            color: #667eea;
+            font-weight: 600;
+            transition: all 0.2s;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .clickable-move:hover {
+            background: #e6f3ff;
+            color: #5568d3;
+            transform: scale(1.05);
+        }
+
+        .clickable-move:active {
+            transform: scale(0.98);
+        }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="main-navigation" class="main-navigation">
+      <div class="nav-container">
+        <a href="index.html" class="nav-logo">
+          <img src="media/32x.svg" alt="BLD Trainer" class="nav-logo-image" />
+        </a>
+        <div class="nav-links">
+          <a href="index.html" data-route="/">Dashboard</a>
+          <a href="index.html" data-route="/drill">Drills</a>
+          <a href="index.html" data-route="/stats">History</a>
+          <a href="tutorials.html">Tutorials</a>
+          <a href="playground.html">Playground</a>
+        </div>
+      </div>
+    </nav>
+    
+    <div class="container">
+        <h1>🧊 AnimCubeJS Playground</h1>
+        
+        <div class="cube-container">
+            <div id="cube"></div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Add Move (e.g., R, U', F2, Lw, etc.)</label>
+                <div class="input-group">
+                    <input type="text" id="moveInput" placeholder="Enter a move (R, U', F2, etc.)">
+                    <button class="btn-primary" onclick="addMove()">Add Move</button>
+                </div>
+                <div class="move-buttons">
+                    <button onclick="quickAddMove('R')">R</button>
+                    <button onclick="quickAddMove('R\'')">R'</button>
+                    <button onclick="quickAddMove('R2')">R2</button>
+                    <button onclick="quickAddMove('L')">L</button>
+                    <button onclick="quickAddMove('L\'')">L'</button>
+                    <button onclick="quickAddMove('L2')">L2</button>
+                    <button onclick="quickAddMove('U')">U</button>
+                    <button onclick="quickAddMove('U\'')">U'</button>
+                    <button onclick="quickAddMove('U2')">U2</button>
+                    <button onclick="quickAddMove('D')">D</button>
+                    <button onclick="quickAddMove('D\'')">D'</button>
+                    <button onclick="quickAddMove('D2')">D2</button>
+                    <button onclick="quickAddMove('F')">F</button>
+                    <button onclick="quickAddMove('F\'')">F'</button>
+                    <button onclick="quickAddMove('F2')">F2</button>
+                    <button onclick="quickAddMove('B')">B</button>
+                    <button onclick="quickAddMove('B\'')">B'</button>
+                    <button onclick="quickAddMove('B2')">B2</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Current Sequence</label>
+                <div class="sequence-display" id="sequenceDisplay">
+                    <span class="empty">No moves added yet</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="button-group">
+                    <button class="btn-success" onclick="executeSequence()">Execute Sequence</button>
+                    <button class="btn-primary" onclick="executeLastMove()">Execute Last Move</button>
+                    <button class="btn-danger" onclick="clearSequence()">Clear Sequence</button>
+                    <button class="btn-secondary" onclick="resetCube()">Reset Cube</button>
+                    <button class="btn-secondary" onclick="toggleLetters()" id="toggleLettersBtn">Show Letters</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>Tips:</strong>
+            <ul style="margin-top: 10px; margin-left: 20px;">
+                <li>Enter moves like <code>R</code>, <code>U'</code>, <code>F2</code> and click "Add Move"</li>
+                <li>Click "Execute Sequence" to perform all moves in order</li>
+                <li>Click "Execute Last Move" to perform only the most recently added move</li>
+                <li>Use the quick buttons above to add common moves</li>
+                <li>You can also drag the cube to rotate it manually</li>
+            </ul>
+        </div>
+
+        <div class="reference-section">
+            <h2 onclick="toggleReference()">
+                <span>📚</span>
+                <span>Setup Moves & Swap Algorithms Reference</span>
+                <span id="toggleIcon" style="margin-left: auto; font-size: 0.8em;">▼</span>
+            </h2>
+            <div id="referenceContent" class="reference-content">
+                <h3>Swap Algorithms</h3>
+                <div class="algorithm-box">
+                    <strong>Edge Swap Algorithm:</strong><br>
+                    <span id="edgeSwapAlg" class="clickable-move" title="Click to set as current sequence">R U R' U' R' F R2 U' R' U' R U R' F'</span>
+                </div>
+                <div class="algorithm-box">
+                    <strong>Corner Swap Algorithm:</strong><br>
+                    <span id="cornerSwapAlg" class="clickable-move" title="Click to set as current sequence">R U' R' U' R U R' F' R U R' U' R' F R</span>
+                </div>
+
+                <h3>Edge Setup Moves</h3>
+                <table class="setup-table">
+                    <thead>
+                        <tr>
+                            <th>Letter</th>
+                            <th>Setup Move</th>
+                            <th>Unsetup Move (Inverse)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="edgeSetupTable">
+                    </tbody>
+                </table>
+
+                <h3>Corner Setup Moves</h3>
+                <table class="setup-table">
+                    <thead>
+                        <tr>
+                            <th>Letter</th>
+                            <th>Setup Move</th>
+                            <th>Unsetup Move (Inverse)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cornerSetupTable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sequence = [];
+        let cubeInitialized = false;
+        let currentCubeState = ''; // Track moves that have been applied to maintain cube state
+        var acjs_removeListeners = []; // Required for proper cleanup when reinitializing cubes
+        var acjs_toggleLetters = []; // Array to store toggleLetters function references
+        var acjs_showLetters = []; // Array to store showLetters state
+        var acjs_setLetters = []; // Array to store setLetters function references
+        var acjs_setShowLetters = []; // Array to store setShowLetters function references
+        var acjs_letterOrientations = []; // Array to store letter orientation settings per cube
+        
+        // Cube positions data - embedded from cube-positions.json
+        const cubePositionsData = [
+            {"plane": "U", "center": "white", "letters": [["A", "a", "B"], ["d", "*", "b"], ["D", "c", "C"]]},
+            {"plane": "L", "center": "orange", "letters": [["E", "e", "F"], ["h", "*", "f"], ["H", "g", "G"]]},
+            {"plane": "F", "center": "green", "letters": [["I", "i", "J"], ["l", "*", "j"], ["L", "k", "K"]]},
+            {"plane": "R", "center": "red", "letters": [["M", "m", "N"], ["o", "Q", "n"], ["O", "p", "P"]]},
+            {"plane": "B", "center": "blue", "letters": [["Q", "q", "R"], ["s", "T", "r"], ["S", "t", "T"]]},
+            {"plane": "D", "center": "yellow", "letters": [["U", "u", "V"], ["w", "X", "v"], ["W", "x", "X"]]}
+        ];
+
+        // Load AnimCubeJS script dynamically from local file
+        // Using local version from ../AnimCubeJS/AnimCube3.js (copied to public/)
+        function loadAnimCubeJS() {
+            return new Promise((resolve, reject) => {
+                // Check if already loaded
+                if (typeof AnimCube3 !== 'undefined') {
+                    console.log('AnimCubeJS already loaded');
+                    resolve();
+                    return;
+                }
+
+                console.log('Loading AnimCubeJS script from local file...');
+                const script = document.createElement('script');
+                script.src = 'public/AnimCube3.js';
+                script.async = true;
+                script.onload = () => {
+                    console.log('AnimCubeJS script loaded successfully');
+                    // Wait a bit for AnimCube3 to be fully available
+                    setTimeout(() => {
+                        if (typeof AnimCube3 !== 'undefined') {
+                            console.log('AnimCube3 is available');
+                            resolve();
+                        } else {
+                            console.error('AnimCube3 not available after load');
+                            reject(new Error('AnimCube3 not available'));
+                        }
+                    }, 200);
+                };
+                script.onerror = () => {
+                    console.error('Failed to load local AnimCubeJS script. Make sure public/AnimCube3.js exists.');
+                    console.error('You may need to copy AnimCube3.js from ../AnimCubeJS/ to public/');
+                    reject(new Error('Failed to load AnimCubeJS script'));
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        // Initialize the cube and populate tables when the page loads
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Populate setup moves tables
+            populateSetupTables();
+            
+            // Add click handlers for swap algorithms
+            const edgeSwapAlg = document.getElementById('edgeSwapAlg');
+            const cornerSwapAlg = document.getElementById('cornerSwapAlg');
+            if (edgeSwapAlg) {
+                edgeSwapAlg.onclick = () => setSequenceFromMoves("R U R' U' R' F R2 U' R' U' R U R' F'");
+            }
+            if (cornerSwapAlg) {
+                cornerSwapAlg.onclick = () => setSequenceFromMoves("R U' R' U' R U R' F' R U R' U' R' F R");
+            }
+            
+            // Load and initialize cube
+            try {
+                await loadAnimCubeJS();
+                initializeCube();
+            } catch (error) {
+                console.error('Failed to load AnimCubeJS:', error);
+                document.getElementById('cube').innerHTML = '<p style="color: red; padding: 20px;">Failed to load cube. Please refresh the page.</p>';
+            }
+        });
+
+        function initializeCube() {
+            const container = document.getElementById('cube');
+            if (!container) {
+                console.error('Cube container not found');
+                return;
+            }
+
+            // Ensure container is ready
+            if (typeof AnimCube3 === 'undefined') {
+                console.error('AnimCube3 not available');
+                setTimeout(initializeCube, 100);
+                return;
+            }
+
+            try {
+                const params = [
+                    'id=cube',
+                    'size=350',
+                    'bgColor=white',
+                    'scheme=WOBGRY',
+                    'edit=0',
+                    'buttons=1',
+                    'sliders=1',
+                    'colors=WOBGRY',
+                    'speed=1',
+                    'wca=1',
+                    'facelets=wwwwwwwwwyyyyyyyyygggggggggbbbbbbbbbooooooooorrrrrrrrr',
+                    'initmove='
+                ].join('&');
+                
+                console.log('Initializing cube with params:', params);
+                AnimCube3(params);
+                
+                // Wait a bit and check if cube was created
+                setTimeout(() => {
+                    const cubeElement = document.getElementById('cube');
+                    if (cubeElement && cubeElement.children.length > 0) {
+                        cubeInitialized = true;
+                        console.log('Cube initialized successfully');
+                        // Load and apply letters from JSON after a delay to ensure AnimCube3 is fully initialized
+                        setTimeout(() => {
+                            // Retry a few times if setLetters isn't available yet
+                            let retries = 0;
+                            const maxRetries = 10;
+                            const tryApply = () => {
+                                if (acjs_setLetters && acjs_setLetters['cube'] && typeof acjs_setLetters['cube'] === 'function') {
+                                    applyLettersFromJSON();
+                                } else if (retries < maxRetries) {
+                                    retries++;
+                                    setTimeout(tryApply, 200);
+                                } else {
+                                    console.error('Failed to apply letters: setLetters function not available after retries');
+                                }
+                            };
+                            tryApply();
+                        }, 800);
+                    } else {
+                        console.warn('Cube container appears empty, retrying...');
+                        setTimeout(initializeCube, 200);
+                    }
+                }, 300);
+            } catch (error) {
+                console.error('Error initializing cube:', error);
+            }
+        }
+
+        function addMove() {
+            const input = document.getElementById('moveInput');
+            const move = input.value.trim();
+            
+            if (move) {
+                sequence.push(move);
+                updateSequenceDisplay();
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function quickAddMove(move) {
+            document.getElementById('moveInput').value = move;
+            addMove();
+        }
+
+        function updateSequenceDisplay() {
+            const display = document.getElementById('sequenceDisplay');
+            if (sequence.length === 0) {
+                display.innerHTML = '<span class="empty">No moves added yet</span>';
+                display.classList.add('empty');
+            } else {
+                display.textContent = sequence.join(' ');
+                display.classList.remove('empty');
+            }
+        }
+
+        function executeSequence() {
+            if (sequence.length === 0) {
+                alert('No moves to execute!');
+                return;
+            }
+
+            if (!cubeInitialized) {
+                alert('Cube is still loading. Please wait...');
+                return;
+            }
+
+            const sequenceString = sequence.join(' ');
+            console.log('Executing sequence:', sequenceString);
+            console.log('Current cube state (initmove):', currentCubeState);
+            
+            // Clean up event listeners before reinitializing (if cube was already initialized)
+            if (acjs_removeListeners['cube']) {
+                acjs_removeListeners['cube']();
+            }
+            
+            // Use initmove to preserve current cube state, then apply new moves
+            const params = [
+                'id=cube',
+                'size=350',
+                'bgColor=white',
+                'scheme=WOBGRY',
+                'edit=0',
+                'buttons=1',
+                'sliders=1',
+                'colors=WOBGRY',
+                'speed=1',
+                'wca=1',
+                'facelets=wwwwwwwwwyyyyyyyyygggggggggbbbbbbbbbooooooooorrrrrrrrr',
+                `initmove=${currentCubeState}`,
+                `move=${sequenceString}`
+            ].join('&');
+            
+            AnimCube3(params);
+            
+            // Update current cube state to include the executed sequence
+            if (currentCubeState) {
+                currentCubeState = currentCubeState + ' ' + sequenceString;
+            } else {
+                currentCubeState = sequenceString;
+            }
+            
+            // Auto-trigger the play button after a short delay to ensure cube is ready
+            setTimeout(() => {
+                triggerPlayButton();
+            }, 200);
+        }
+        
+        function triggerPlayButton() {
+            const cubeContainer = document.getElementById('cube');
+            if (!cubeContainer) return;
+            
+            // Strategy 1: Try using AnimCubeJS direct access API (acjs_ functions)
+            // AnimCubeJS exposes functions like acjs_cube_move, acjs_cube_animating, etc.
+            try {
+                // Check if direct access functions are available
+                const directAccessVars = Object.keys(window).filter(key => key.startsWith('acjs_cube_'));
+                if (directAccessVars.length > 0) {
+                    // Try to set animating state directly
+                    if (window.acjs_cube_animating !== undefined) {
+                        window.acjs_cube_animating = true;
+                        console.log('Animation started via direct access API');
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.log('Direct access API not available, trying button click');
+            }
+            
+            // Strategy 2: Find and click the play button
+            // AnimCubeJS creates buttons - look for play button
+            const buttons = cubeContainer.querySelectorAll('input[type="button"], button');
+            for (const btn of buttons) {
+                const value = btn.value || btn.textContent || '';
+                const title = btn.title || '';
+                const className = btn.className || '';
+                
+                // Check for play indicators (AnimCubeJS typically uses "▶" or similar)
+                if (value.toLowerCase().includes('play') || 
+                    value === '▶' || 
+                    value === '>' ||
+                    value === '\u25B6' || // Play symbol
+                    title.toLowerCase().includes('play') ||
+                    className.toLowerCase().includes('play')) {
+                    btn.click();
+                    console.log('Play button clicked automatically');
+                    return;
+                }
+            }
+            
+            // Strategy 3: Click first button in form (usually play when move is set)
+            const forms = cubeContainer.querySelectorAll('form');
+            for (const form of forms) {
+                const inputs = form.querySelectorAll('input[type="button"]');
+                if (inputs.length > 0) {
+                    // Try the first button (usually play)
+                    inputs[0].click();
+                    console.log('First button clicked (assuming play)');
+                    return;
+                }
+            }
+            
+            // Strategy 4: Try clicking canvas area where play button might be
+            // This is a fallback - not ideal but might work
+            console.log('Could not find play button automatically');
+        }
+
+        function executeLastMove() {
+            if (sequence.length === 0) {
+                alert('No moves to execute!');
+                return;
+            }
+
+            if (!cubeInitialized) {
+                alert('Cube is still loading. Please wait...');
+                return;
+            }
+
+            const lastMove = sequence[sequence.length - 1];
+            console.log('Executing last move:', lastMove);
+            console.log('Current cube state (initmove):', currentCubeState);
+            
+            // Clean up event listeners before reinitializing (if cube was already initialized)
+            if (acjs_removeListeners['cube']) {
+                acjs_removeListeners['cube']();
+            }
+            
+            // Use initmove to preserve current cube state, then apply the last move
+            const params = [
+                'id=cube',
+                'size=350',
+                'bgColor=#ffffff',
+                'scheme=WOBGRY',
+                'edit=0',
+                'buttons=1',
+                'sliders=1',
+                'colors=WOBGRY',
+                'speed=1',
+                'wca=1',
+                'facelets=wwwwwwwwwyyyyyyyyygggggggggbbbbbbbbbooooooooorrrrrrrrr',
+                `initmove=${currentCubeState}`,
+                `move=${lastMove}`
+            ].join('&');
+            
+            AnimCube3(params);
+            
+            // Update current cube state to include the executed move
+            if (currentCubeState) {
+                currentCubeState = currentCubeState + ' ' + lastMove;
+            } else {
+                currentCubeState = lastMove;
+            }
+            
+            // Auto-trigger the play button after a short delay
+            setTimeout(() => {
+                triggerPlayButton();
+            }, 200);
+        }
+
+        function clearSequence() {
+            sequence = [];
+            updateSequenceDisplay();
+        }
+
+        /**
+         * Load letters from JSON data and convert to AnimCube3 format
+         * 
+         * Facelet layout on each face (3x3 grid, indices 0-8):
+         * ```
+         *   0  1  2    (top row)
+         *   3  4  5    (middle row)
+         *   6  7  8    (bottom row)
+         * ```
+         * 
+         * CORNER MAPPING (with current 'flip-both' transformation):
+         * For U (white) face:
+         * - Index 0: bottom-right corner (UBR - white/blue/red) [FLIPPED from original]
+         * - Index 2: bottom-left corner (UBL - white/blue/orange) [FLIPPED from original]
+         * - Index 6: top-right corner (UFR - white/green/red) [FLIPPED from original]
+         * - Index 8: top-left corner (UFL - white/green/orange) [FLIPPED from original]
+         * 
+         * TRANSFORMATION IMPACT:
+         * - 'none': JSON[0][0] → Index 0 (UFL), JSON[2][0] → Index 6 (UBL)
+         * - 'flip-both' (current): JSON[0][0] → Index 8 (UBR), JSON[2][0] → Index 2 (UBL) ✓
+         * - 'flip-horizontal': JSON[0][0] → Index 2 (UFR), JSON[2][0] → Index 8 (UBR)
+         * - 'flip-vertical': JSON[0][0] → Index 6 (UBL), JSON[2][0] → Index 0 (UFL)
+         * 
+         * To place 'A' at white-blue-orange corner (UBL):
+         * - With 'flip-both': put at letters[2][0] in JSON → maps to Index 2 (UBL) ✓
+         * - With 'none': put at letters[2][0] in JSON → maps to Index 6 (UBL)
+         * - With 'flip-vertical': put at letters[0][0] in JSON → maps to Index 6 (UBL)
+         */
+        function loadLettersFromJSON() {
+            try {
+                // Create array to hold all 54 letters, initialized with spaces (or empty strings)
+                // AnimCube3 face order: U=0, D=1, F=2, B=3, L=4, R=5
+                const lettersArray = new Array(54).fill('');
+                
+                // Create orientation settings object for each face (6 faces)
+                // Orientation options: 'normal', 'flip-vertical', 'rotate-90-cw', 'rotate-90-ccw', 'rotate-180'
+                const orientationSettings = {
+                    0: 'flip-vertical',  // U face (white) - upside down
+                    1: 'flip-vertical',  // D face (yellow) - upside down
+                    2: 'rotate-180',     // F face (green) - 180° rotation (top→white, bottom→yellow)
+                    3: 'flip-vertical',  // B face (blue) - upside down
+                    4: 'flip-vertical',  // L face (orange) - upside down (top→yellow, bottom→white)
+                    5: 'flip-vertical'   // R face (red) - upside down
+                };
+                
+                // Individual functions for each face with explicit letter mappings
+                // Facelet indices: 0-2 (top row), 3-5 (middle row), 6-8 (bottom row)
+                // Format: [top-left, top-center, top-right, middle-left, center, middle-right, bottom-left, bottom-center, bottom-right]
+                
+                function setFaceU(lettersArray, orientationSettings) {
+                    // U face (white) - AnimCube3 index 0
+                    // JSON: [["A", "a", "B"], ["d", "*", "b"], ["D", "c", "C"]]
+                    // With flip-horizontal transformation: [2-row, col]
+                    // Top row (row 0) → Bottom row (row 2)
+                    // Middle row (row 1) → Middle row (row 1)
+                    // Bottom row (row 2) → Top row (row 0)
+                    lettersArray[0*9 + 6] = 'A'; // JSON[0,0] → facelet[2,0]
+                    lettersArray[0*9 + 7] = 'a'; // JSON[0,1] → facelet[2,1]
+                    lettersArray[0*9 + 8] = 'B'; // JSON[0,2] → facelet[2,2]
+                    lettersArray[0*9 + 3] = 'd'; // JSON[1,0] → facelet[1,0]
+                    lettersArray[0*9 + 4] = '*'; // JSON[1,1] → facelet[1,1]
+                    lettersArray[0*9 + 5] = 'b'; // JSON[1,2] → facelet[1,2]
+                    lettersArray[0*9 + 0] = 'D'; // JSON[2,0] → facelet[0,0]
+                    lettersArray[0*9 + 1] = 'c'; // JSON[2,1] → facelet[0,1]
+                    lettersArray[0*9 + 2] = 'C'; // JSON[2,2] → facelet[0,2]
+                    
+                    // Letter orientation: flip-vertical (upside down)
+                    orientationSettings[0] = 'flip-vertical';
+                }
+                
+                function setFaceD(lettersArray, orientationSettings) {
+                    // D face (yellow) - AnimCube3 index 1
+                    // JSON: [["U", "u", "V"], ["w", "X", "v"], ["W", "x", "X"]]
+                    // No transformation - direct mapping
+                    lettersArray[1*9 + 0] = 'U';
+                    lettersArray[1*9 + 1] = 'x';
+                    lettersArray[1*9 + 2] = 'X';
+                    lettersArray[1*9 + 3] = 'u';
+                    lettersArray[1*9 + 4] = '*';
+                    lettersArray[1*9 + 5] = 'w';
+                    lettersArray[1*9 + 6] = 'V';
+                    lettersArray[1*9 + 7] = 'v';
+                    lettersArray[1*9 + 8] = 'W';
+                    
+                    // Letter orientation: flip-vertical (upside down)
+                    orientationSettings[1] = 'flip-vertical';
+                }
+                
+                function setFaceF(lettersArray, orientationSettings) {
+                    // F face (green) - AnimCube3 index 2
+                    // JSON: [["I", "i", "J"], ["l", "*", "j"], ["L", "k", "K"]]
+                    // With 90° CCW rotation: [2-col, row]
+                    // [0,0]→[2,0]=6, [0,1]→[1,0]=3, [0,2]→[0,0]=0
+                    // [1,0]→[2,1]=7, [1,1]→[1,1]=4, [1,2]→[0,1]=1
+                    // [2,0]→[2,2]=8, [2,1]→[1,2]=5, [2,2]→[0,2]=2
+                    lettersArray[2*9 + 0] = 'I'; // [0,0]→[2,0]
+                    lettersArray[2*9 + 3] = 'i'; // [0,1]→[1,0]
+                    lettersArray[2*9 + 6] = 'J'; // [0,2]→[0,0]
+                    lettersArray[2*9 + 1] = 'l'; // [1,0]→[2,1]
+                    lettersArray[2*9 + 4] = '*'; // [1,1]→[1,1]
+                    lettersArray[2*9 + 7] = 'j'; // [1,2]→[0,1]
+                    lettersArray[2*9 + 2] = 'L'; // [2,0]→[2,2]
+                    lettersArray[2*9 + 5] = 'k'; // [2,1]→[1,2]
+                    lettersArray[2*9 + 8] = 'K'; // [2,2]→[0,2]
+                    
+                    // Letter orientation: rotate-180 (180° rotation) - so top points toward white, bottom toward yellow
+                    // orientationSettings[2] = 'flip-horizontal';
+                }
+                
+                function setFaceB(lettersArray, orientationSettings) {
+                    // B face (blue) - AnimCube3 index 3
+                    // JSON: [["Q", "q", "R"], ["s", "T", "r"], ["S", "t", "T"]]
+                    // No transformation - direct mapping
+                    lettersArray[3*9 + 0] = 'Q';
+                    lettersArray[3*9 + 1] = 't';
+                    lettersArray[3*9 + 2] = 'T';
+                    lettersArray[3*9 + 3] = 'q';
+                    lettersArray[3*9 + 4] = '*';
+                    lettersArray[3*9 + 5] = 's';
+                    lettersArray[3*9 + 6] = 'R';
+                    lettersArray[3*9 + 7] = 'r';
+                    lettersArray[3*9 + 8] = 'S';
+                    
+                    // Letter orientation: flip-vertical (upside down)
+                    orientationSettings[3] = 'flip-vertical';
+                }
+                
+                function setFaceL(lettersArray, orientationSettings) {
+                    // L face (orange) - AnimCube3 index 4
+                    // JSON: [["E", "e", "F"], ["h", "*", "f"], ["H", "g", "G"]]
+                    // Horizontal flip: [2-col] for each row
+                    lettersArray[4*9 + 0] = 'F'; // JSON[0,2]
+                    lettersArray[4*9 + 1] = 'e'; // JSON[0,1]
+                    lettersArray[4*9 + 2] = 'E'; // JSON[0,0]
+                    lettersArray[4*9 + 3] = 'f'; // JSON[1,2]
+                    lettersArray[4*9 + 4] = '*'; // JSON[1,1]
+                    lettersArray[4*9 + 5] = 'h'; // JSON[1,0]
+                    lettersArray[4*9 + 6] = 'G'; // JSON[2,2]
+                    lettersArray[4*9 + 7] = 'g'; // JSON[2,1]
+                    lettersArray[4*9 + 8] = 'H'; // JSON[2,0]
+                    
+                    // Letter orientation: same as green (top→white, bottom→yellow)
+                    // Using 'custom' marker - handled in AnimCube3.js with corner reordering
+                    orientationSettings[4] = 'custom-orange';
+                }
+                
+                function setFaceR(lettersArray, orientationSettings) {
+                    // R face (red) - AnimCube3 index 5
+                    // JSON: [["M", "m", "N"], ["o", "Q", "n"], ["O", "p", "P"]]
+                    // Custom mapping to display as: [M,m,N], [p,*,n], [P,o,O]
+                    lettersArray[5*9 + 0] = 'M'; // JSON[0,0]
+                    lettersArray[5*9 + 1] = 'p'; // JSON[0,1]
+                    lettersArray[5*9 + 2] = 'P'; // JSON[0,2]
+                    lettersArray[5*9 + 3] = 'm'; // JSON[2,1]
+                    lettersArray[5*9 + 4] = '*'; // center
+                    lettersArray[5*9 + 5] = 'o'; // JSON[1,2]
+                    lettersArray[5*9 + 6] = 'N'; // JSON[2,2]
+                    lettersArray[5*9 + 7] = 'n'; // JSON[1,0]
+                    lettersArray[5*9 + 8] = 'O'; // JSON[2,0]
+                    
+                    // Letter orientation: handled by AnimCube3.js corner reordering (90° CW from orange)
+                    orientationSettings[5] = 'flip-vertical';
+                }
+                
+                // Call individual face functions
+                setFaceU(lettersArray, orientationSettings);
+                setFaceD(lettersArray, orientationSettings);
+                setFaceF(lettersArray, orientationSettings);
+                setFaceB(lettersArray, orientationSettings);
+                setFaceL(lettersArray, orientationSettings);
+                setFaceR(lettersArray, orientationSettings);
+                
+                // Store orientation settings globally for use in rendering
+                if (!acjs_letterOrientations['cube']) {
+                    acjs_letterOrientations['cube'] = {};
+                }
+                Object.assign(acjs_letterOrientations['cube'], orientationSettings);
+                
+                // Convert to 54-character string (replace empty strings with spaces to ensure proper length)
+                let lettersString = '';
+                for (let i = 0; i < 54; i++) {
+                    lettersString += lettersArray[i] || ' '; // Use space for empty positions
+                }
+                
+                console.log('Generated letters string:', lettersString);
+                console.log('Letters string length:', lettersString.length);
+                console.log('Breakdown by face:');
+                console.log('U (0-8):', lettersString.substring(0, 9), '→', JSON.stringify(lettersString.substring(0, 9)));
+                console.log('D (9-17):', lettersString.substring(9, 18), '→', JSON.stringify(lettersString.substring(9, 18)));
+                console.log('F (18-26):', lettersString.substring(18, 27), '→', JSON.stringify(lettersString.substring(18, 27)));
+                console.log('B (27-35):', lettersString.substring(27, 36), '→', JSON.stringify(lettersString.substring(27, 36)));
+                console.log('L (36-44):', lettersString.substring(36, 45), '→', JSON.stringify(lettersString.substring(36, 45)));
+                console.log('R (45-53):', lettersString.substring(45, 54), '→', JSON.stringify(lettersString.substring(45, 54)));
+                
+                if (lettersString.length !== 54) {
+                    console.error(`Invalid letters string length: ${lettersString.length}, expected 54`);
+                    return null;
+                }
+                
+                return lettersString;
+            } catch (error) {
+                console.error('Error loading letters from JSON:', error);
+                return null;
+            }
+        }
+        
+        function applyLettersFromJSON() {
+            const lettersString = loadLettersFromJSON();
+            if (lettersString) {
+                console.log('Attempting to apply letters. String:', JSON.stringify(lettersString));
+                console.log('acjs_setLetters available:', !!acjs_setLetters);
+                console.log('acjs_setLetters[\'cube\'] available:', !!acjs_setLetters['cube']);
+                console.log('Type of acjs_setLetters[\'cube\']:', typeof acjs_setLetters['cube']);
+                
+                if (acjs_setLetters && acjs_setLetters['cube'] && typeof acjs_setLetters['cube'] === 'function') {
+                    acjs_setLetters['cube'](lettersString);
+                    console.log('✓ Letters applied from cube-positions.json');
+                    console.log('Applied string (first 20 chars):', lettersString.substring(0, 20) + '...');
+                    return true;
+                } else {
+                    console.warn('setLetters function not available yet');
+                    return false;
+                }
+            } else {
+                console.error('Failed to load letters from embedded JSON data');
+                return false;
+            }
+        }
+        
+        function toggleLetters() {
+            if (!cubeInitialized) {
+                alert('Cube is still loading. Please wait...');
+                return;
+            }
+            if (acjs_toggleLetters && acjs_toggleLetters['cube'] && typeof acjs_toggleLetters['cube'] === 'function') {
+                acjs_toggleLetters['cube']();
+                const btn = document.getElementById('toggleLettersBtn');
+                if (btn && acjs_showLetters && acjs_showLetters['cube'] !== undefined) {
+                    btn.textContent = acjs_showLetters['cube'] ? 'Hide Letters' : 'Show Letters';
+                } else if (btn) {
+                    btn.textContent = btn.textContent === 'Show Letters' ? 'Hide Letters' : 'Show Letters';
+                }
+            }
+        }
+        
+        function resetCube() {
+            if (!cubeInitialized) {
+                alert('Cube is still loading. Please wait...');
+                return;
+            }
+
+            // Clean up event listeners before reinitializing
+            if (acjs_removeListeners['cube']) {
+                acjs_removeListeners['cube']();
+            }
+            
+            // Reinitialize cube to solved state
+            const params = [
+                'id=cube',
+                'size=350',
+                'bgColor=white',
+                'scheme=WOBGRY',
+                'edit=0',
+                'buttons=1',
+                'sliders=1',
+                'colors=WOBGRY',
+                'speed=1',
+                'wca=1',
+                'facelets=wwwwwwwwwyyyyyyyyygggggggggbbbbbbbbbooooooooorrrrrrrrr',
+                'initmove='
+            ].join('&');
+            
+            AnimCube3(params);
+            currentCubeState = ''; // Reset tracked cube state
+            clearSequence();
+            
+            // Reload letters after reset
+            setTimeout(() => {
+                cubeInitialized = true;
+                applyLettersFromJSON();
+            }, 500);
+        }
+
+        // Allow Enter key to add move
+        document.getElementById('moveInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addMove();
+            }
+        });
+
+        // Setup moves data from move-applier.ts
+        const edgeSetupMoves = {
+            "a": "Lw2 D' L2",
+            "b": "", // Buffer position
+            "c": "Lw2 D L2",
+            "d": "", // No setup move needed
+            "e": "L' Dw L'",
+            "f": "Dw' L",
+            "g": "L Dw L'",
+            "h": "Dw L'",
+            "i": "Lw D' L2",
+            "j": "Dw2 L",
+            "k": "Lw D L2",
+            "l": "L'",
+            "n": "Dw L",
+            "o": "D' Lw D L2",
+            "p": "Dw' L'",
+            "q": "Lw' D L2",
+            "r": "L",
+            "s": "Lw' D' L2",
+            "t": "Dw2 L'",
+            "u": "D' L2",
+            "v": "D2 L2",
+            "w": "D L2",
+            "x": "L2"
+        };
+
+        const cornerSetupMoves = {
+            "B": "R D'",
+            "C": "F",
+            "D": "F R'",
+            "F": "F2",
+            "G": "D2 R",
+            "H": "D2",
+            "I": "F' D",
+            "J": "F2 D",
+            "K": "D R",
+            "L": "D",
+            "M": "R'",
+            "N": "R2",
+            "O": "R",
+            "P": "", // Buffer position
+            "Q": "R' F",
+            "S": "D' R",
+            "T": "D'",
+            "U": "F'",
+            "V": "D' F'",
+            "W": "D2 F'",
+            "X": "D F'"
+        };
+
+        // Get inverse of a single move
+        function getInverseSingleMove(move) {
+            if (move.endsWith("'")) {
+                return move.slice(0, -1); // Remove prime
+            } else if (move.endsWith("2")) {
+                return move; // Double moves are their own inverse
+            } else {
+                return move + "'"; // Add prime
+            }
+        }
+
+        // Get inverse of a move sequence
+        function getInverseMove(moveSequence) {
+            if (!moveSequence || moveSequence.trim() === '') {
+                return '';
+            }
+            const moves = moveSequence.trim().split(/\s+/);
+            const inverseMoves = [];
+            
+            // Process moves in reverse order
+            for (let i = moves.length - 1; i >= 0; i--) {
+                const move = moves[i];
+                const inverseMove = getInverseSingleMove(move);
+                inverseMoves.push(inverseMove);
+            }
+            
+            return inverseMoves.join(' ');
+        }
+
+        // Set sequence from a move string
+        function setSequenceFromMoves(moveString) {
+            if (!moveString || moveString.trim() === '') {
+                return;
+            }
+            
+            // Split the move string into individual moves
+            const moves = moveString.trim().split(/\s+/).filter(m => m.length > 0);
+            sequence = moves;
+            updateSequenceDisplay();
+            
+            // Scroll to the sequence display
+            document.getElementById('sequenceDisplay').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Highlight the sequence display briefly
+            const display = document.getElementById('sequenceDisplay');
+            display.style.transition = 'background-color 0.3s';
+            display.style.backgroundColor = '#d4edda';
+            setTimeout(() => {
+                display.style.backgroundColor = '';
+            }, 1000);
+        }
+
+        // Populate setup moves tables
+        function populateSetupTables() {
+            const edgeTable = document.getElementById('edgeSetupTable');
+            const cornerTable = document.getElementById('cornerSetupTable');
+
+            // Populate edge setup moves
+            for (const [letter, setupMove] of Object.entries(edgeSetupMoves).sort()) {
+                const row = document.createElement('tr');
+                const unsetupMove = getInverseMove(setupMove);
+                
+                if (setupMove === '') {
+                    row.innerHTML = `
+                        <td class="buffer-cell">${letter}</td>
+                        <td class="buffer-cell">(Buffer - no setup)</td>
+                        <td class="buffer-cell">-</td>
+                    `;
+                } else {
+                    const letterCell = document.createElement('td');
+                    letterCell.innerHTML = `<strong>${letter}</strong>`;
+                    
+                    const setupCell = document.createElement('td');
+                    const setupSpan = document.createElement('span');
+                    setupSpan.className = 'clickable-move';
+                    setupSpan.textContent = setupMove;
+                    setupSpan.title = 'Click to set as current sequence';
+                    setupSpan.onclick = () => setSequenceFromMoves(setupMove);
+                    setupCell.appendChild(setupSpan);
+                    
+                    const unsetupCell = document.createElement('td');
+                    const unsetupSpan = document.createElement('span');
+                    unsetupSpan.className = 'clickable-move';
+                    unsetupSpan.textContent = unsetupMove;
+                    unsetupSpan.title = 'Click to set as current sequence';
+                    unsetupSpan.onclick = () => setSequenceFromMoves(unsetupMove);
+                    unsetupCell.appendChild(unsetupSpan);
+                    
+                    row.appendChild(letterCell);
+                    row.appendChild(setupCell);
+                    row.appendChild(unsetupCell);
+                }
+                edgeTable.appendChild(row);
+            }
+
+            // Populate corner setup moves
+            for (const [letter, setupMove] of Object.entries(cornerSetupMoves).sort()) {
+                const row = document.createElement('tr');
+                const unsetupMove = getInverseMove(setupMove);
+                
+                if (setupMove === '') {
+                    row.innerHTML = `
+                        <td class="buffer-cell">${letter}</td>
+                        <td class="buffer-cell">(Buffer - no setup)</td>
+                        <td class="buffer-cell">-</td>
+                    `;
+                } else {
+                    const letterCell = document.createElement('td');
+                    letterCell.innerHTML = `<strong>${letter}</strong>`;
+                    
+                    const setupCell = document.createElement('td');
+                    const setupSpan = document.createElement('span');
+                    setupSpan.className = 'clickable-move';
+                    setupSpan.textContent = setupMove;
+                    setupSpan.title = 'Click to set as current sequence';
+                    setupSpan.onclick = () => setSequenceFromMoves(setupMove);
+                    setupCell.appendChild(setupSpan);
+                    
+                    const unsetupCell = document.createElement('td');
+                    const unsetupSpan = document.createElement('span');
+                    unsetupSpan.className = 'clickable-move';
+                    unsetupSpan.textContent = unsetupMove;
+                    unsetupSpan.title = 'Click to set as current sequence';
+                    unsetupSpan.onclick = () => setSequenceFromMoves(unsetupMove);
+                    unsetupCell.appendChild(unsetupSpan);
+                    
+                    row.appendChild(letterCell);
+                    row.appendChild(setupCell);
+                    row.appendChild(unsetupCell);
+                }
+                cornerTable.appendChild(row);
+            }
+        }
+
+        // Toggle reference section
+        function toggleReference() {
+            const content = document.getElementById('referenceContent');
+            const icon = document.getElementById('toggleIcon');
+            content.classList.toggle('expanded');
+            icon.textContent = content.classList.contains('expanded') ? '▲' : '▼';
+        }
+        
+        // Handle navigation links for static pages
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-links a[data-route]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const route = link.getAttribute('data-route');
+                    // Navigate to index.html with route as query parameter
+                    window.location.href = `index.html?route=${encodeURIComponent(route)}`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -469,9 +469,9 @@ function renderStatsPageSessionsTable(
           >
             Previous
           </button>
-          <span class="pagination-page-info">
-            Page ${currentPage} of ${totalPages || 1}
-          </span>
+          <div class="pagination-page-info">
+            Page <strong>${currentPage}</strong> of <strong>${totalPages || 1}</strong>
+          </div>
           <button 
             id="stats-next-page" 
             class="btn btn-secondary" 
