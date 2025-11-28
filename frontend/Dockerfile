@@ -41,5 +41,8 @@ EXPOSE 3000
 # Set environment variable for API base URL (can be overridden by docker-compose)
 ENV API_BASE_URL=https://blindfoldcubing.com/api/v1
 
+# Force unbuffered Python output for Docker logs
+ENV PYTHONUNBUFFERED=1
+
 # Set the command to run the development server
 CMD ["python3", "serve.py"]

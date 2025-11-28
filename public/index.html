@@ -98,7 +98,26 @@
   }
   </script>
   
-  <link rel="stylesheet" href="styles.css">
+  <!-- Resource Hints for Performance -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://animcubejs.cubing.net">
+  
+  <!-- Preload Critical CSS with fallback -->
+  <link rel="preload" href="styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="styles.css"></noscript>
+  <script>
+    // Fallback for browsers that don't support onload on link tags
+    (function() {
+      var link = document.querySelector('link[rel="preload"][href="styles.css"]');
+      if (link && !link.onload) {
+        link.rel = 'stylesheet';
+      }
+    })();
+  </script>
+  
+  <!-- Defer Firebase loading - will be loaded dynamically when needed -->
   <script type="importmap">
     {
       "imports": {
@@ -686,7 +705,19 @@
     </footer>
   </div>
 
-  <script type="module" src="../dist/app.js"></script>
+  <!-- Load main app script with defer for non-blocking execution -->
+  <script type="module" src="../dist/app.js" defer></script>
+  
+  <!-- Google Analytics - moved to end for non-blocking -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0S54NJRN55"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0S54NJRN55', {
+      send_page_view: false
+    });
+  </script>
 </body>
 </html>
 

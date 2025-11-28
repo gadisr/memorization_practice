@@ -7,6 +7,11 @@ Run: python serve.py
 import http.server
 import socketserver
 import os
+import sys
+
+# Force unbuffered output for Docker logs
+sys.stdout.reconfigure(line_buffering=True)
+sys.stderr.reconfigure(line_buffering=True)
 
 PORT = int(os.environ.get('PORT', '3000'))
 DIRECTORY = "."
@@ -14,6 +19,11 @@ DIRECTORY = "."
 class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
+    
+    def log_message(self, format, *args):
+        """Override to ensure logs are flushed immediately"""
+        message = format % args
+        print(f"[{self.log_date_time_string()}] {message}", flush=True)
     
     def end_headers(self):
         # Allow ES modules
@@ -27,6 +37,20 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         # Serve TXT files with proper MIME type for SEO
         elif self.path.endswith('.txt'):
             self.send_header('Content-Type', 'text/plain; charset=utf-8')
+        
+        # Performance optimizations: Cache headers and compression hints
+        path_lower = self.path.lower()
+        if any(path_lower.endswith(ext) for ext in ['.js', '.css', '.png', '.jpg', '.jpeg', '.svg', '.woff', '.woff2', '.ico']):
+            # Cache static assets for 1 year
+            self.send_header('Cache-Control', 'public, max-age=31536000, immutable')
+        elif path_lower.endswith('.html'):
+            # Cache HTML for shorter period, allow revalidation
+            self.send_header('Cache-Control', 'public, max-age=3600, must-revalidate')
+        
+        # Compression hint (actual compression would need middleware)
+        if any(path_lower.endswith(ext) for ext in ['.js', '.css', '.html', '.json', '.xml']):
+            self.send_header('Vary', 'Accept-Encoding')
+        
         super().end_headers()
     
     def do_GET(self):
@@ -82,9 +106,13 @@ if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     
     with socketserver.TCPServer(("", PORT), MyHTTPRequestHandler) as httpd:
-        print("🧠 BLD Memory Trainer development server running...")
-        print(f"📍 Open http://localhost:{PORT}/public/ in your browser")
-        print("Press Ctrl+C to stop the server")
-        httpd.serve_forever()
+        print("🧠 BLD Memory Trainer development server running...", flush=True)
+        print(f"📍 Server listening on port {PORT}", flush=True)
+        print(f"📍 Serving files from: {os.getcwd()}", flush=True)
+        print("Press Ctrl+C to stop the server", flush=True)
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\n🛑 Server stopped by user", flush=True)
 
 

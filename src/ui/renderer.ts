@@ -293,9 +293,9 @@ function renderStatsPageFilters(): void {
   filterContainer.innerHTML = `
     <div class="stats-filters">
       <div class="filter-group">
-        <label for="drill-filter-select">Filter by Drill:</label>
-        <select id="drill-filter-select" class="input-field">
-          <option value="">All Drills</option>
+        <label for="drill-filter-select">Drill:</label>
+        <select id="drill-filter-select" class="input-field filter-select-small">
+          <option value="">All</option>
           ${allDrills.map(drill => `
             <option value="${drill.type}">${formatDrillName(drill.type)}</option>
           `).join('')}
@@ -398,18 +398,28 @@ function renderStatsPageSessionsTable(
     avgTimeCell.textContent = formatTime(session.averageTime);
     
     const totalTimeCell = document.createElement('td');
-    let totalTime = session.totalTime;
+    // Calculate total time as pairs x avg time (or totalPieces x avg time for notation)
+    let totalTime: number | undefined;
     
-    // Fallback: calculate from timings/attempts if totalTime not available
-    if (totalTime === undefined || totalTime === null) {
-      if (session.isNotation && session.attempts) {
+    if (session.isNotation) {
+      // For notation sessions: totalPieces * averageTime
+      if (session.totalPieces !== undefined && session.averageTime !== undefined) {
+        totalTime = session.totalPieces * session.averageTime;
+      } else if (session.attempts) {
+        // Fallback: sum of all attempt times
         totalTime = session.attempts.reduce((sum: number, attempt: any) => sum + attempt.timeSeconds, 0);
-      } else if (!session.isNotation && session.timings) {
+      }
+    } else {
+      // For regular sessions: pairCount * averageTime
+      if (session.pairCount !== undefined && session.averageTime !== undefined) {
+        totalTime = session.pairCount * session.averageTime;
+      } else if (session.timings && session.timings.length > 0) {
+        // Fallback: sum of all timing values
         totalTime = session.timings.reduce((sum: number, time: number) => sum + time, 0);
       }
     }
     
-    if (totalTime !== undefined && totalTime !== null) {
+    if (totalTime !== undefined && totalTime !== null && !isNaN(totalTime)) {
       totalTimeCell.textContent = formatTime(totalTime);
     } else {
       totalTimeCell.textContent = '-';
@@ -605,18 +615,28 @@ function renderSessionsTable(sessions: SessionData[], notationSessions: any[] = 
     avgTimeCell.textContent = formatTime(session.averageTime);
     
     const totalTimeCell = document.createElement('td');
-    let totalTime = session.totalTime;
+    // Calculate total time as pairs x avg time (or totalPieces x avg time for notation)
+    let totalTime: number | undefined;
     
-    // Fallback: calculate from timings/attempts if totalTime not available
-    if (totalTime === undefined || totalTime === null) {
-      if (session.isNotation && session.attempts) {
+    if (session.isNotation) {
+      // For notation sessions: totalPieces * averageTime
+      if (session.totalPieces !== undefined && session.averageTime !== undefined) {
+        totalTime = session.totalPieces * session.averageTime;
+      } else if (session.attempts) {
+        // Fallback: sum of all attempt times
         totalTime = session.attempts.reduce((sum: number, attempt: any) => sum + attempt.timeSeconds, 0);
-      } else if (!session.isNotation && session.timings) {
+      }
+    } else {
+      // For regular sessions: pairCount * averageTime
+      if (session.pairCount !== undefined && session.averageTime !== undefined) {
+        totalTime = session.pairCount * session.averageTime;
+      } else if (session.timings && session.timings.length > 0) {
+        // Fallback: sum of all timing values
         totalTime = session.timings.reduce((sum: number, time: number) => sum + time, 0);
       }
     }
     
-    if (totalTime !== undefined && totalTime !== null) {
+    if (totalTime !== undefined && totalTime !== null && !isNaN(totalTime)) {
       totalTimeCell.textContent = formatTime(totalTime);
     } else {
       totalTimeCell.textContent = '-';
@@ -782,7 +802,14 @@ export function renderSessionDetail(session: SessionData | NotationSessionData, 
     const drillTypeName = formatDrillName(notationSession.drillType);
     titleEl.textContent = `Session Details - ${drillTypeName}`;
     
-    const totalTime = notationSession.attempts.reduce((sum, a) => sum + a.timeSeconds, 0);
+    // Calculate total time as totalPieces * averageTime
+    let totalTime: number;
+    if (notationSession.totalPieces !== undefined && notationSession.averageTime !== undefined) {
+      totalTime = notationSession.totalPieces * notationSession.averageTime;
+    } else {
+      // Fallback: sum of all attempt times
+      totalTime = notationSession.attempts.reduce((sum, a) => sum + a.timeSeconds, 0);
+    }
     
     bodyEl.innerHTML = `
       <div class="session-detail-section">
@@ -802,7 +829,7 @@ export function renderSessionDetail(session: SessionData | NotationSessionData, 
           </div>
           <div class="stat">
             <span class="stat-label">Total Time:</span>
-            <span class="stat-value">${totalTime.toFixed(2)}s</span>
+            <span class="stat-value">${formatTime(totalTime)}</span>
           </div>
         </div>
       </div>
@@ -861,12 +888,25 @@ export function renderSessionDetail(session: SessionData | NotationSessionData, 
             <span class="stat-label">Avg Time/Pair:</span>
             <span class="stat-value">${formatTime(regularSession.averageTime)}</span>
           </div>
-          ${regularSession.totalTime ? `
-            <div class="stat">
-              <span class="stat-label">Total Time:</span>
-              <span class="stat-value">${formatTime(regularSession.totalTime)}</span>
-            </div>
-          ` : ''}
+          ${(() => {
+            // Calculate total time as pairCount * averageTime
+            let calculatedTotalTime: number | undefined;
+            if (regularSession.pairCount !== undefined && regularSession.averageTime !== undefined) {
+              calculatedTotalTime = regularSession.pairCount * regularSession.averageTime;
+            } else if (regularSession.timings && regularSession.timings.length > 0) {
+              calculatedTotalTime = regularSession.timings.reduce((sum: number, time: number) => sum + time, 0);
+            }
+            
+            if (calculatedTotalTime !== undefined && !isNaN(calculatedTotalTime)) {
+              return `
+                <div class="stat">
+                  <span class="stat-label">Total Time:</span>
+                  <span class="stat-value">${formatTime(calculatedTotalTime)}</span>
+                </div>
+              `;
+            }
+            return '';
+          })()}
           ${regularSession.vividness !== undefined ? `
             <div class="stat">
               <span class="stat-label">Vividness:</span>
