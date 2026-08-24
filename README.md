@@ -1,6 +1,28 @@
-# 🧠 BLD Memory Trainer
+# BLD Memory Trainer
+
+Live site: https://blindfoldcubing.com
 
 A lightweight web-based training application for blindfold cubers to improve visualization speed, story fluency, and recall accuracy using personalized letter-pair systems.
+
+## Deploy (production)
+
+Push to `main` (or **Actions → Deploy → Run workflow**) SSHs to the droplet and runs:
+
+```bash
+git pull --ff-only origin main
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --remove-orphans
+```
+
+Set these GitHub Actions secrets on this repo:
+
+| Secret | What it is |
+| --- | --- |
+| `DEPLOY_HOST` | Droplet IP or hostname |
+| `DEPLOY_USER` | SSH user |
+| `DEPLOY_SSH_PRIVATE_KEY` | Private key with no passphrase |
+| `DEPLOY_PATH` | App directory on the droplet |
+
+The checkout on the server must already exist and have `production.env` + SSL. Do not put those values in this repo.
 
 ## Features
 
@@ -35,7 +57,7 @@ A lightweight web-based training application for blindfold cubers to improve vis
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/gadisr/memorization_practice.git
    cd memorization_practice
    ```
 
@@ -89,42 +111,6 @@ Some browsers allow opening `public/index.html` directly, but a local server is 
 - Export your data to CSV for analysis
 - Track improvements over time
 
-## File Structure
-
-```
-memorization_practice/
-├── public/
-│   ├── index.html           # Main HTML structure
-│   └── styles.css           # Application styles
-├── src/
-│   ├── types.ts             # TypeScript type definitions
-│   ├── app.ts              # Main application controller
-│   ├── config/
-│   │   └── drill-config.ts  # Drill mode configurations
-│   ├── data/
-│   │   └── pair-reference.json  # All letter pairs (AA-ZZ)
-│   ├── services/
-│   │   ├── pair-generator.ts    # Random pair generation
-│   │   ├── timer.ts            # Timing functions
-│   │   ├── session-manager.ts  # Session state management
-│   │   ├── csv-exporter.ts     # CSV export functionality
-│   │   └── quality-adapter.ts  # Quality metric logic
-│   ├── storage/
-│   │   └── session-storage.ts  # LocalStorage persistence
-│   ├── ui/
-│   │   ├── renderer.ts         # UI rendering functions
-│   │   └── keyboard-handler.ts # Keyboard shortcuts
-│   └── utils/
-│       └── validators.ts       # Input validation
-├── docs/
-│   ├── application_brief.md    # Product specification
-│   └── features/
-│       └── 0001_PLAN.md       # Technical implementation plan
-├── package.json
-├── tsconfig.json
-└── README.md
-```
-
 ## Data Storage
 
 Drill sessions and stats stay in your browser's localStorage (key prefix `bld_trainer_`). Optional sign-in uses Firebase. The live site also uses Google Analytics.
@@ -172,7 +158,3 @@ Feel free to submit issues and enhancement requests!
 ## License
 
 MIT
-
----
-
-**Happy training! 🎲🧠**

@@ -1,0 +1,46 @@
+# Deploy https://blindfoldcubing.com on push to main.
+# Required repo secrets (Settings → Secrets and variables → Actions):
+#   DEPLOY_HOST              droplet IP or hostname
+#   DEPLOY_USER              SSH user
+#   DEPLOY_SSH_PRIVATE_KEY   private key that can log in (no passphrase)
+#   DEPLOY_PATH              app directory on the droplet (e.g. /opt/memorization_practice)
+# The server checkout must already exist, track origin/main, and have
+# production.env + SSL in place. This does not run deploy-production.sh
+# (that script is interactive).
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy on droplet
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          envs: DEPLOY_PATH
+          script_stop: true
+          script: |
+            set -eu
+            cd "${DEPLOY_PATH:?set DEPLOY_PATH secret}"
+            git fetch origin main
+            git checkout main
+            git pull --ff-only origin main
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --remove-orphans
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml ps
