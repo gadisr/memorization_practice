@@ -3,10 +3,13 @@
 #   DEPLOY_HOST              droplet IP or hostname
 #   DEPLOY_USER              SSH user
 #   DEPLOY_SSH_PRIVATE_KEY   private key that can log in (no passphrase)
-#   DEPLOY_PATH              app directory on the droplet (e.g. /opt/memorization_practice)
+#   DEPLOY_PATH              app directory on the droplet (e.g. /root/memorization_practice)
 # The server checkout must already exist, track origin/main, and have
-# production.env + SSL in place. This does not run deploy-production.sh
-# (that script is interactive).
+# production.env + SSL in place.
+#
+# Production uses edge-proxy (container edge-nginx) on host 80/443.
+# This workflow only rebuilds/restarts postgres, backend, frontend.
+# It does NOT start nginx (would conflict with edge-proxy).
 
 name: Deploy
 
@@ -42,5 +45,5 @@ jobs:
             git fetch origin main
             git checkout main
             git pull --ff-only origin main
-            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --remove-orphans
-            docker compose -f docker-compose.yml -f docker-compose.prod.yml ps
+            docker compose -f docker-compose.yml up -d --build --no-deps frontend backend
+            docker compose -f docker-compose.yml ps

@@ -4,26 +4,6 @@ Live site: https://blindfoldcubing.com
 
 A lightweight web-based training application for blindfold cubers to improve visualization speed, story fluency, and recall accuracy using personalized letter-pair systems.
 
-## Deploy (production)
-
-Push to `main` (or **Actions → Deploy → Run workflow**) SSHs to the droplet and runs:
-
-```bash
-git pull --ff-only origin main
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --remove-orphans
-```
-
-Set these GitHub Actions secrets on this repo:
-
-| Secret | What it is |
-| --- | --- |
-| `DEPLOY_HOST` | Droplet IP or hostname |
-| `DEPLOY_USER` | SSH user |
-| `DEPLOY_SSH_PRIVATE_KEY` | Private key with no passphrase |
-| `DEPLOY_PATH` | App directory on the droplet |
-
-The checkout on the server must already exist and have `production.env` + SSL. Do not put those values in this repo.
-
 ## Features
 
 ### Training Modes
@@ -150,6 +130,56 @@ The app currently uses vanilla JavaScript with `.ts` file extensions and type an
 - PWA conversion for mobile installation
 - Audio mode for pairs
 - Scene recall mode
+
+## Production Deployment
+
+### Architecture
+
+The production deployment uses:
+- **edge-proxy** (container `edge-nginx`) on host ports 80/443 for routing
+- **bld_trainer_frontend** and **bld_trainer_api** containers on the external Docker network `edge`
+- The app's own nginx service is NOT used in production (would conflict with edge-proxy)
+
+### Deployment Process
+
+The app deploys automatically via GitHub Actions on push to `main`:
+
+1. SSH into the production droplet
+2. Pull latest code from `main` branch
+3. Rebuild and restart only `frontend` and `backend` containers:
+   ```bash
+   docker compose -f docker-compose.yml up -d --build --no-deps frontend backend
+   ```
+
+**Important:** The workflow does NOT:
+- Start the nginx service (conflicts with edge-proxy)
+- Use `docker-compose.prod.yml` (not needed for edge-proxy setup)
+- Use `--remove-orphans` flag (would affect other stacks)
+
+### Required GitHub Secrets
+
+Configure these in repository Settings → Secrets and variables → Actions:
+- `DEPLOY_HOST` - Droplet IP or hostname
+- `DEPLOY_USER` - SSH username
+- `DEPLOY_SSH_PRIVATE_KEY` - Private key for SSH authentication (no passphrase)
+- `DEPLOY_PATH` - App directory on droplet (e.g., `/root/memorization_practice`)
+
+### Manual Deployment
+
+To deploy manually on the production server:
+
+```bash
+cd /root/memorization_practice
+git pull origin main
+docker compose -f docker-compose.yml up -d --build --no-deps frontend backend
+```
+
+### Network Configuration
+
+The `docker-compose.yml` is configured for production edge-proxy compatibility:
+- `backend` and `frontend` use `expose` (not `ports`) to avoid binding host ports
+- Both services join the external `edge` network for edge-proxy routing
+- Frontend `API_BASE_URL` is set to `/api/v1` (proxied by edge-nginx)
 
 ## Contributing
 
