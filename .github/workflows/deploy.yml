@@ -44,6 +44,6 @@ jobs:
             cd "${DEPLOY_PATH:?set DEPLOY_PATH secret}"
             git fetch origin main
             git checkout main
-            git pull --ff-only origin main
+            git reset --hard origin/main  # discard tracked drift; keeps untracked production.env + SSL
             docker compose -f docker-compose.yml up -d --build --no-deps frontend backend
             docker compose -f docker-compose.yml ps
