@@ -127,7 +127,7 @@ memorization_practice/
 
 ## Data Storage
 
-All session data is stored locally in your browser's localStorage. No data is sent to any server.
+Drill sessions and stats stay in your browser's localStorage (key prefix `bld_trainer_`). Optional sign-in uses Firebase. The live site also uses Google Analytics.
 
 - **Storage location:** Browser localStorage
 - **Key prefix:** `bld_trainer_`
