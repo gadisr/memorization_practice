@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -129,14 +129,14 @@
     .feature-section {
       margin: 40px 0;
       padding: 30px;
-      background: white;
+      background: var(--bg-secondary);
       border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      border-left: 5px solid #667eea;
+      box-shadow: var(--shadow);
+      border-left: 5px solid var(--color-primary);
     }
     
     .feature-section h2 {
-      color: #333;
+      color: var(--text-primary);
       font-size: 1.8em;
       margin: 0 0 20px 0;
     }
@@ -149,10 +149,10 @@
     }
     
     .feature-card {
-      background: #f8f9ff;
+      background: var(--bg-muted);
       padding: 20px;
       border-radius: 10px;
-      border-left: 4px solid #667eea;
+      border-left: 4px solid var(--color-primary);
     }
     
     .feature-card h3 {
@@ -183,6 +183,14 @@
     .back-to-app {
       text-align: center;
       margin: 40px 0;
+    }
+
+    .step {
+      background: var(--bg-muted);
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 10px;
+      border-left: 4px solid var(--color-primary);
     }
     
     @media (max-width: 768px) {
@@ -273,22 +281,22 @@
     <section class="feature-section">
       <h2>Key Benefits of Offline & Mobile Training</h2>
       
-      <div class="step" style="background: #f8f9ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 4px solid #667eea;">
+      <div class="step">
         <strong>Practice Anywhere</strong> 🌍<br>
         Train during commutes, in waiting rooms, or anywhere you have a few minutes. No WiFi required.
       </div>
       
-      <div class="step" style="background: #f8f9ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 4px solid #667eea;">
+      <div class="step">
         <strong>Consistent Practice</strong> 📅<br>
         Regular practice is key to improvement. With offline and mobile access, you can maintain consistency even when away from home.
       </div>
       
-      <div class="step" style="background: #f8f9ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 4px solid #667eea;">
+      <div class="step">
         <strong>Privacy & Security</strong> 🔒<br>
         Drill data stays in your browser. Optional sign-in uses Firebase. We use Google Analytics on the live site. See <a href="privacy.html">Privacy</a>.
       </div>
       
-      <div class="step" style="background: #f8f9ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 4px solid #667eea;">
+      <div class="step">
         <strong>No Subscriptions</strong> 💰<br>
         Completely free to use. No subscriptions, no in-app purchases, no limitations.
       </div>
@@ -298,25 +306,25 @@
       <h2>Getting Started with Offline & Mobile Training</h2>
       <p>Using our offline and mobile features is simple:</p>
       
-      <div class="step" style="background: #f8f9ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 4px solid #667eea;">
+      <div class="step">
         <span style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px;">1</span>
         <strong>Load the Application</strong><br>
         Visit blindfoldcubing.com on your device and wait for the page to fully load (requires internet for initial load).
       </div>
       
-      <div class="step" style="background: #f8f9ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 4px solid #667eea;">
+      <div class="step">
         <span style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px;">2</span>
         <strong>Go Offline</strong><br>
         Once loaded, you can disconnect from the internet and continue using all features offline.
       </div>
       
-      <div class="step" style="background: #f8f9ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 4px solid #667eea;">
+      <div class="step">
         <span style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px;">3</span>
         <strong>Practice Anywhere</strong><br>
         Use the application on your mobile device or desktop, online or offline, anytime you want to practice.
       </div>
       
-      <div class="step" style="background: #f8f9ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 4px solid #667eea;">
+      <div class="step">
         <span style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px;">4</span>
         <strong>Sync When Online</strong><br>
         When you're back online, your data remains available. Optional cloud sync available for multi-device access (requires authentication).
@@ -335,16 +343,16 @@
     </section>
 
     <nav class="back-to-app">
-      <a href="index.html" class="btn-primary">
+      <a href="index.html?route=/" class="btn-primary">
         🚀 Start Your Free Training Session
       </a>
     </nav>
     
-    <section class="feature-section" style="background: #f8f9ff; padding: 20px;">
+    <section class="feature-section">
       <h3>Related Resources</h3>
       <ul style="list-style: none; padding: 0;">
         <li style="margin: 10px 0;">
-          <a href="index.html" style="color: #667eea; text-decoration: underline; font-weight: 500;">🏠 Back to Training App</a>
+          <a href="index.html?route=/" style="color: #667eea; text-decoration: underline; font-weight: 500;">🏠 Back to Training App</a>
         </li>
         <li style="margin: 10px 0;">
           <a href="intro.html" style="color: #667eea; text-decoration: underline; font-weight: 500;">📚 Beginner's Guide to Blindfold Cubing</a>

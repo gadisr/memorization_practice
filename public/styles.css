@@ -6,6 +6,7 @@
 :root {
   --bg-primary: #F7F9FC;
   --bg-secondary: #FFFFFF;
+  --bg-muted: #F8F9FF;
   --text-primary: #1A1F2E;
   --text-secondary: #6B7280;
   --color-primary: #6366F1;
@@ -20,6 +21,29 @@
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
+  --bg-warning: #FFF3CD;
+  --text-warning: #856404;
+  --border-warning: #FFEAA7;
+  --bg-info: #E6F3FF;
+}
+
+html.dark {
+  color-scheme: dark;
+  --bg-primary: #101622;
+  --bg-secondary: #161D2B;
+  --bg-muted: #1C2436;
+  --text-primary: #F6F6F8;
+  --text-secondary: #9DA6B9;
+  --color-primary: #135BEC;
+  --color-primary-dark: #3B7AF0;
+  --border-color: #282E39;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.45);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5);
+  --bg-warning: rgba(245, 158, 11, 0.15);
+  --text-warning: #FBBF24;
+  --border-warning: rgba(245, 158, 11, 0.35);
+  --bg-info: rgba(19, 91, 236, 0.15);
 }
 
 * {
@@ -2451,7 +2475,7 @@ tr:hover {
 }
 
 .buffer-cell {
-  background: #fff3cd;
+  background: var(--bg-warning);
   font-weight: bold;
 }
 

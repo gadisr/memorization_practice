@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -192,14 +192,14 @@
     .section {
       margin: 40px 0;
       padding: 30px;
-      background: white;
+      background: var(--bg-secondary);
       border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      border-left: 5px solid #667eea;
+      box-shadow: var(--shadow);
+      border-left: 5px solid var(--color-primary);
     }
     
     .section h2 {
-      color: #333;
+      color: var(--text-primary);
       font-size: 1.8em;
       margin: 0 0 20px 0;
       display: flex;
@@ -208,17 +208,17 @@
     }
     
     .section h3 {
-      color: #555;
+      color: var(--text-secondary);
       font-size: 1.4em;
       margin: 25px 0 15px 0;
     }
     
     .step {
-      background: #f8f9ff;
+      background: var(--bg-muted);
       padding: 20px;
       margin: 15px 0;
       border-radius: 10px;
-      border-left: 4px solid #667eea;
+      border-left: 4px solid var(--color-primary);
     }
     
     .step-number {
@@ -235,15 +235,15 @@
     }
     
     .analogy {
-      background: #fff3cd;
-      border: 2px solid #ffeaa7;
+      background: var(--bg-warning);
+      border: 2px solid var(--border-warning);
       padding: 20px;
       border-radius: 10px;
       margin: 20px 0;
     }
     
     .analogy h4 {
-      color: #856404;
+      color: var(--text-warning);
       margin: 0 0 10px 0;
       font-size: 1.2em;
     }
@@ -326,7 +326,7 @@
     }
     
     .highlight {
-      background: #fff3cd;
+      background: var(--bg-warning);
       padding: 2px 6px;
       border-radius: 4px;
       font-weight: bold;
@@ -522,39 +522,30 @@
       
       <div class="step">
         <span class="step-number">1</span>
-        <strong>Try the Interactive Tutorial</strong> 🎯<br>
-        New to our training app? Start with our interactive onboarding tutorial to learn how to use each drill effectively.
-      </div>
-      
-      <div class="step">
-        <span class="step-number">2</span>
         <strong>Begin with Flash Pairs</strong> ⚡<br>
         Start with the Flash Pairs drill to practice individual letter pair visualization. This builds your foundational speed and clarity.
       </div>
       
       <div class="step">
-        <span class="step-number">3</span>
+        <span class="step-number">2</span>
         <strong>Progress to Notation Drills</strong> 🔤<br>
         Once comfortable with pairs, practice Edge and Corner Notation drills to improve your Speffz notation recognition speed.
       </div>
       
       <div class="step">
-        <span class="step-number">4</span>
+        <span class="step-number">3</span>
         <strong>Track Your Progress</strong> 📊<br>
         Use our progress dashboard to monitor your improvement over time. Track accuracy, speed, and visualization quality.
       </div>
     </section>
 
     <nav class="back-to-app">
-      <a href="index.html" class="btn-primary">
+      <a href="index.html?route=/" class="btn-primary">
         🚀 Start Your Free Training Session
-      </a>
-      <a href="onboarding.html" class="btn-primary" style="margin-left: 1rem; background: #667eea; opacity: 0.9;">
-        🎯 Try Interactive Tutorial
       </a>
     </nav>
     
-    <section class="section" style="margin-top: 2rem; background: #f8f9ff; padding: 20px;">
+    <section class="section" style="margin-top: 2rem;">
       <h3>Continue Learning</h3>
       <p style="margin-bottom: 1rem;">Explore more resources to improve your blindfold cubing skills:</p>
       <ul style="list-style: none; padding: 0;">
