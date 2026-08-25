@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -187,30 +187,30 @@
     .section {
       margin: 40px 0;
       padding: 30px;
-      background: white;
+      background: var(--bg-secondary);
       border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      border-left: 5px solid #667eea;
+      box-shadow: var(--shadow);
+      border-left: 5px solid var(--color-primary);
     }
     
     .section h2 {
-      color: #333;
+      color: var(--text-primary);
       font-size: 1.8em;
       margin: 0 0 20px 0;
     }
     
     .section h3 {
-      color: #555;
+      color: var(--text-secondary);
       font-size: 1.4em;
       margin: 25px 0 15px 0;
     }
     
     .step {
-      background: #f8f9ff;
+      background: var(--bg-muted);
       padding: 20px;
       margin: 15px 0;
       border-radius: 10px;
-      border-left: 4px solid #667eea;
+      border-left: 4px solid var(--color-primary);
     }
     
     .btn-primary {
@@ -488,16 +488,16 @@
     </section>
 
     <nav class="back-to-app">
-      <a href="../index.html" class="btn-primary">
+      <a href="../index.html?route=/" class="btn-primary">
         🚀 Launch Edge Notation Drill
       </a>
     </nav>
     
-    <section class="section" style="background: #f8f9ff; padding: 20px;">
+    <section class="section">
       <h3>Related Resources</h3>
       <ul style="list-style: none; padding: 0;">
         <li style="margin: 10px 0;">
-          <a href="../index.html" style="color: #667eea; text-decoration: underline; font-weight: 500;">🏠 Back to Training App</a>
+          <a href="../index.html?route=/" style="color: #667eea; text-decoration: underline; font-weight: 500;">🏠 Back to Training App</a>
         </li>
         <li style="margin: 10px 0;">
           <a href="../intro.html" style="color: #667eea; text-decoration: underline; font-weight: 500;">📚 Beginner's Guide to Blindfold Cubing</a>
