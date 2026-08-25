@@ -201,9 +201,13 @@ export async function updateChartsWithFilters(
   let filteredNotationSessions = notationSessions;
 
   // Apply time range filter
-  const days = timeRange === 'all' ? 'all' : parseInt(timeRange);
-  filteredSessions = filterSessionsByDateRange(filteredSessions, days);
-  filteredNotationSessions = filterNotationSessionsByDateRange(filteredNotationSessions, days);
+  const range = timeRange === 'all'
+    ? 'all'
+    : timeRange === 'year'
+      ? 'year'
+      : parseInt(timeRange);
+  filteredSessions = filterSessionsByDateRange(filteredSessions, range);
+  filteredNotationSessions = filterNotationSessionsByDateRange(filteredNotationSessions, range);
 
   // Re-render all charts with filtered data
   renderFlashPairsChart(filteredSessions);

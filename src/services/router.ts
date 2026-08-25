@@ -112,10 +112,10 @@ class Router {
     
     if (routeParam) {
       // Use route from query parameter
-      this.handleRouteChange(this.normalizePath(routeParam));
-      // Clean up URL by removing query parameter
-      const normalizedPath = this.normalizePath(window.location.pathname);
-      window.history.replaceState({}, '', normalizedPath);
+      const normalizedRoute = this.normalizePath(routeParam);
+      this.handleRouteChange(normalizedRoute);
+      // Update URL to the route path (not just remove query parameter)
+      window.history.replaceState({}, '', normalizedRoute);
     } else {
       // Use pathname as before, normalized
       const initialPath = this.normalizePath(window.location.pathname);

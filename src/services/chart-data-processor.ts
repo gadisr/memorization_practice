@@ -910,19 +910,32 @@ export function processCornerMemorizationData(sessions: SessionData[]): ChartDat
   };
 }
 
+export type StatsDateRange = number | 'all' | 'year';
+
+type StatsCutoffRange = number | 'year';
+
+function getStatsCutoffDate(range: StatsCutoffRange): Date {
+  const cutoffDate = new Date();
+  if (range === 'year') {
+    cutoffDate.setMonth(0, 1);
+    cutoffDate.setHours(0, 0, 0, 0);
+    return cutoffDate;
+  }
+  cutoffDate.setDate(cutoffDate.getDate() - range);
+  return cutoffDate;
+}
+
 /**
  * Filter sessions by date range
  */
 export function filterSessionsByDateRange(
-  sessions: SessionData[], 
-  days: number | 'all'
+  sessions: SessionData[],
+  range: StatsDateRange
 ): SessionData[] {
-  if (days === 'all') return sessions;
+  if (range === 'all') return sessions;
 
-  const cutoffDate = new Date();
-  cutoffDate.setDate(cutoffDate.getDate() - days);
-
-  return sessions.filter(session => 
+  const cutoffDate = getStatsCutoffDate(range);
+  return sessions.filter(session =>
     new Date(session.date) >= cutoffDate
   );
 }
@@ -931,15 +944,13 @@ export function filterSessionsByDateRange(
  * Filter notation sessions by date range
  */
 export function filterNotationSessionsByDateRange(
-  sessions: NotationSessionData[], 
-  days: number | 'all'
+  sessions: NotationSessionData[],
+  range: StatsDateRange
 ): NotationSessionData[] {
-  if (days === 'all') return sessions;
+  if (range === 'all') return sessions;
 
-  const cutoffDate = new Date();
-  cutoffDate.setDate(cutoffDate.getDate() - days);
-
-  return sessions.filter(session => 
+  const cutoffDate = getStatsCutoffDate(range);
+  return sessions.filter(session =>
     new Date(session.date) >= cutoffDate
   );
 }

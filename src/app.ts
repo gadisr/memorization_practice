@@ -26,6 +26,7 @@ import {
   renderDashboard,
   renderHomeDashboard,
   renderStatsPage,
+  renderDashboardStats,
   showNotification,
   showPairCountWarning,
   clearPairCountWarning,
@@ -46,9 +47,9 @@ import {
 import { validateEdgeAnswer, validateCornerAnswer } from './services/notation-validator.js';
 import { renderEdgeSquares, renderCornerSquares, renderNotationResults } from './ui/notation-renderer.js';
 import { TracingRenderer } from './ui/tracing-renderer.js';
-import { OnboardingManager } from './onboarding/onboarding-manager.js';
 import { loadChartJS } from './ui/chart-renderer.js';
 import { initializePlayground } from './ui/playground.js';
+import { renderTutorialsGrid } from './ui/tutorials-renderer.js';
 import { getSessionRank, getNotationSessionRank } from './services/session-ranker.js';
 import {
   createColorMemorizationSession,
@@ -64,6 +65,11 @@ import {
 import { initializeAnalytics, trackPageView, trackEvent } from './services/analytics.js';
 import { measurementId } from './config/firebase-config.js';
 import { router } from './services/router.js';
+import { initializeDarkMode, toggleDarkMode } from './services/dark-mode.js';
+import {
+  filterSessionsByDateRange,
+  filterNotationSessionsByDateRange
+} from './services/chart-data-processor.js';
 
 // Application state
 let currentPairIndex = 0;
@@ -82,19 +88,32 @@ let tracingRenderer: TracingRenderer | null = null;
 let currentColorMemorizationPieceIndex = 0;
 let currentColorMemorizationTimer = 0;
 
+type StatsTimeRangeKey = '7' | '30' | 'year' | 'all';
+
+let statsPageSessions: SessionData[] = [];
+let statsPageNotationSessions: NotationSessionData[] = [];
+
+const STATS_TIME_RANGE_LABELS: Record<StatsTimeRangeKey, string> = {
+  '7': 'Last 7 Days',
+  '30': 'Last 30 Days',
+  year: 'This Year',
+  all: 'All Time',
+};
+
+const STATS_TIME_RANGE_ACTIVE_CLASSES =
+  'flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary/20 px-3 text-sm font-medium text-primary';
+const STATS_TIME_RANGE_INACTIVE_CLASSES =
+  'flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg border border-white/20 bg-background-dark px-3 text-sm font-medium text-gray-300 hover:bg-white/5';
+
 // Initialize the application
 export async function initializeApp(): Promise<void> {
+  // Initialize dark mode first
+  initializeDarkMode();
+  
   // Initialize Google Analytics
   if (measurementId) {
     initializeAnalytics(measurementId);
     trackPageView(window.location.pathname, document.title);
-  }
-  
-  // Check if user should see onboarding
-  if (OnboardingManager.shouldShowOnboarding()) {
-    // Redirect to onboarding
-    window.location.href = 'onboarding.html';
-    return;
   }
   
   const configs = getAllDrillConfigs();
@@ -102,12 +121,6 @@ export async function initializeApp(): Promise<void> {
   attachEventListeners();
   initializeAuthUI();
   initializeKeyboardHandler();
-  
-  // Check for onboarding recommendations
-  checkOnboardingRecommendations();
-  
-  // Show appropriate tutorial button based on onboarding status
-  setupTutorialButtons();
   
   // Set up routes
   setupRoutes();
@@ -189,15 +202,33 @@ function attachEventListeners(): void {
   
   if (startTutorialBtn) {
     startTutorialBtn.addEventListener('click', () => {
-      localStorage.setItem('onboarding_force', 'true');
-      window.location.href = 'onboarding.html';
+      // Tutorial functionality removed
     });
   }
   
   if (reviewTutorialBtn) {
     reviewTutorialBtn.addEventListener('click', () => {
-      localStorage.setItem('onboarding_force', 'true');
-      window.location.href = 'onboarding.html';
+      // Tutorial functionality removed
+    });
+  }
+  
+  // Dark mode toggle
+  const darkModeToggle = document.getElementById('dark-mode-toggle');
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+      toggleDarkMode();
+    });
+  }
+
+  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (mobileMenuToggle && mobileMenu) {
+    mobileMenuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    mobileMenu.addEventListener('click', (event) => {
+      const link = (event.target as HTMLElement).closest('a[data-route]');
+      if (link) mobileMenu.classList.add('hidden');
     });
   }
   
@@ -326,6 +357,8 @@ function attachEventListeners(): void {
   if (timeRangeSelect) {
     timeRangeSelect.addEventListener('change', handleChartFilterChange);
   }
+
+  setupStatsTimeRangeListeners();
   
   // Home dashboard event listeners
   setupHomeDashboardListeners();
@@ -442,12 +475,16 @@ async function loadAndRenderStatsPage(): Promise<void> {
     // Load sessions (from API if authenticated, from localStorage if not)
     const sessions = await getAllSessions();
     const notationSessions = await getAllNotationSessions();
-    
+
+    statsPageSessions = sessions;
+    statsPageNotationSessions = notationSessions;
+
     // Show Stats screen first (this will trigger refreshAuthUI via showScreen)
     showScreen('stats-screen');
-    
+
     // Render Stats Page (refreshAuthUI is already called by showScreen, but we call it again to be safe)
     renderStatsPage(sessions, notationSessions);
+    await applyStatsTimeRange('30');
     
     // Ensure auth UI is refreshed after screen is shown and DOM is ready
     setTimeout(() => {
@@ -457,7 +494,10 @@ async function loadAndRenderStatsPage(): Promise<void> {
     console.error('Error loading Stats Page:', error);
     // Show stats page with empty data
     showScreen('stats-screen');
+    statsPageSessions = [];
+    statsPageNotationSessions = [];
     renderStatsPage([], []);
+    await applyStatsTimeRange('30');
     setTimeout(() => {
       refreshAuthUI();
     }, 100);
@@ -508,6 +548,12 @@ function setupRoutes(): void {
   // Tutorials route
   router.register('/tutorials', async () => {
     showScreen('tutorials-screen');
+    renderTutorialsGrid();
+  });
+
+  // Settings route
+  router.register('/settings', async () => {
+    showScreen('settings-screen');
   });
 }
 
@@ -1391,56 +1437,68 @@ function handleCancelNotation(): void {
   }
 }
 
-// Check for onboarding recommendations and apply them
-function checkOnboardingRecommendations(): void {
-  const recommendedDrillType = localStorage.getItem('recommended_drill_type');
-  const recommendedPairCount = localStorage.getItem('recommended_pair_count');
-  const redirectView = localStorage.getItem('onboarding_redirect_view');
-  
-  if (recommendedDrillType && recommendedPairCount) {
-    // Set the recommended drill type and pair count
-    const drillSelect = document.getElementById('drill-select') as HTMLSelectElement;
-    const pairCountInput = document.getElementById('pair-count') as HTMLInputElement;
-    
-    if (drillSelect) {
-      drillSelect.value = recommendedDrillType;
-      // Trigger change event to update description
-      drillSelect.dispatchEvent(new Event('change'));
-    }
-    
-    if (pairCountInput) {
-      pairCountInput.value = recommendedPairCount;
-    }
-    
-    // Clear the recommendations
-    localStorage.removeItem('recommended_drill_type');
-    localStorage.removeItem('recommended_pair_count');
-    
-    // Show a notification about the recommendations
-    showNotification('Welcome! We\'ve set up your first session based on your onboarding preferences.', 'success');
-  }
 
-  if (redirectView === 'dashboard') {
-    localStorage.removeItem('onboarding_redirect_view');
-    const viewDashboardBtn = document.getElementById('view-dashboard-btn') as HTMLButtonElement | null;
-    viewDashboardBtn?.click();
+function setupStatsTimeRangeListeners(): void {
+  const buttons: Array<{ id: string; rangeKey: StatsTimeRangeKey }> = [
+    { id: 'time-range-7', rangeKey: '7' },
+    { id: 'time-range-30', rangeKey: '30' },
+    { id: 'time-range-year', rangeKey: 'year' },
+    { id: 'time-range-all', rangeKey: 'all' },
+  ];
+
+  buttons.forEach(({ id, rangeKey }) => {
+    const button = document.getElementById(id);
+    if (!button) return;
+
+    button.addEventListener('click', () => {
+      void applyStatsTimeRange(rangeKey);
+    });
+  });
+}
+
+function updateStatsTimeRangeButtons(activeKey: StatsTimeRangeKey): void {
+  const buttons: Array<{ id: string; rangeKey: StatsTimeRangeKey }> = [
+    { id: 'time-range-7', rangeKey: '7' },
+    { id: 'time-range-30', rangeKey: '30' },
+    { id: 'time-range-year', rangeKey: 'year' },
+    { id: 'time-range-all', rangeKey: 'all' },
+  ];
+
+  buttons.forEach(({ id, rangeKey }) => {
+    const button = document.getElementById(id);
+    if (!button) return;
+    button.className = rangeKey === activeKey
+      ? STATS_TIME_RANGE_ACTIVE_CLASSES
+      : STATS_TIME_RANGE_INACTIVE_CLASSES;
+  });
+}
+
+function updateStatsChartSubtitle(rangeKey: StatsTimeRangeKey): void {
+  const label = document.getElementById('stats-chart-time-range-label');
+  if (label) {
+    label.textContent = STATS_TIME_RANGE_LABELS[rangeKey];
   }
 }
 
-// Setup tutorial buttons based on onboarding status
-function setupTutorialButtons(): void {
-  const startTutorialBtn = document.getElementById('start-tutorial-btn');
-  const reviewTutorialBtn = document.getElementById('review-tutorial-btn');
-  
-  if (OnboardingManager.hasCompletedOnboarding()) {
-    // User has completed onboarding, show review button
-    if (startTutorialBtn) startTutorialBtn.style.display = 'none';
-    if (reviewTutorialBtn) reviewTutorialBtn.style.display = 'inline-block';
-  } else {
-    // User hasn't completed onboarding, show start button
-    if (startTutorialBtn) startTutorialBtn.style.display = 'inline-block';
-    if (reviewTutorialBtn) reviewTutorialBtn.style.display = 'none';
-  }
+async function applyStatsTimeRange(rangeKey: StatsTimeRangeKey): Promise<void> {
+  const range = rangeKey === 'all'
+    ? 'all'
+    : rangeKey === 'year'
+      ? 'year'
+      : parseInt(rangeKey, 10);
+
+  const filteredSessions = filterSessionsByDateRange(statsPageSessions, range);
+  const filteredNotationSessions = filterNotationSessionsByDateRange(
+    statsPageNotationSessions,
+    range
+  );
+
+  renderDashboardStats(filteredSessions, filteredNotationSessions);
+  updateStatsTimeRangeButtons(rangeKey);
+  updateStatsChartSubtitle(rangeKey);
+
+  const { updateChartsWithFilters } = await import('./ui/chart-renderer.js');
+  await updateChartsWithFilters(rangeKey, statsPageSessions, statsPageNotationSessions);
 }
 
 // Handle chart filter changes

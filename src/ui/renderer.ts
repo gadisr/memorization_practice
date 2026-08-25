@@ -260,25 +260,11 @@ export function renderDashboard(sessions: SessionData[], notationSessions: any[]
  * Render Stats Page with filtering and pagination
  */
 export function renderStatsPage(sessions: SessionData[], notationSessions: any[] = []): void {
-  renderDashboardStats(sessions, notationSessions);
   renderStatsPageFilters();
   renderStatsPageSessionsTable(sessions, notationSessions);
-  
+
   // Refresh auth UI to ensure correct authentication state is displayed
   refreshAuthUI();
-  
-  // Initialize charts - load Chart.js first if needed
-  if (typeof window !== 'undefined') {
-    import('./chart-renderer.js').then(async ({ initializeCharts, loadChartJS }) => {
-      // Load Chart.js if not already loaded
-      if (typeof (window as any).Chart === 'undefined') {
-        await loadChartJS();
-      }
-      initializeCharts(sessions, notationSessions);
-    }).catch(error => {
-      console.error('Failed to load chart renderer:', error);
-    });
-  }
 }
 
 /**
@@ -532,35 +518,26 @@ function renderStatsPageSessionsTable(
   }
 }
 
-function renderDashboardStats(sessions: SessionData[], notationSessions: any[] = []): void {
-  const totalSessions = sessions.length + notationSessions.length;
-  const totalPairs = sessions.reduce((sum, s) => sum + s.pairCount, 0);
-  
-  // Calculate average accuracy from both session types
-  const sessionAccuracy = sessions.length > 0
-    ? sessions.reduce((sum, s) => sum + s.recallAccuracy, 0) / sessions.length
-    : 0;
-  const notationAccuracy = notationSessions.length > 0
-    ? notationSessions.reduce((sum, s) => sum + s.accuracy, 0) / notationSessions.length
-    : 0;
-  
-  const avgAccuracy = totalSessions > 0
-    ? (sessionAccuracy * sessions.length + notationAccuracy * notationSessions.length) / totalSessions
-    : 0;
-    
-  const avgSpeed = sessions.length > 0
-    ? sessions.reduce((sum, s) => sum + s.averageTime, 0) / sessions.length
-    : 0;
-  
+export function renderDashboardStats(sessions: SessionData[], notationSessions: any[] = []): void {
+  const userStats = calculateUserStats(sessions, notationSessions);
+
+  const avgSolveTimeEl = document.getElementById('avg-solve-time');
+  const successRateEl = document.getElementById('success-rate');
+  const bestTimeEl = document.getElementById('best-time');
   const totalSessionsEl = document.getElementById('total-sessions');
   const totalPairsEl = document.getElementById('total-pairs');
   const avgAccuracyEl = document.getElementById('avg-accuracy');
   const avgSpeedEl = document.getElementById('avg-speed');
-  
-  if (totalSessionsEl) totalSessionsEl.textContent = totalSessions.toString();
-  if (totalPairsEl) totalPairsEl.textContent = totalPairs.toString();
-  if (avgAccuracyEl) avgAccuracyEl.textContent = `${avgAccuracy.toFixed(1)}%`;
-  if (avgSpeedEl) avgSpeedEl.textContent = formatTime(avgSpeed);
+
+  if (avgSolveTimeEl) avgSolveTimeEl.textContent = formatTime(userStats.avgSpeed);
+  if (successRateEl) successRateEl.textContent = `${userStats.avgAccuracy.toFixed(1)}%`;
+  if (bestTimeEl) {
+    bestTimeEl.textContent = userStats.bestSpeed > 0 ? formatTime(userStats.bestSpeed) : 'N/A';
+  }
+  if (totalSessionsEl) totalSessionsEl.textContent = userStats.totalSessions.toString();
+  if (totalPairsEl) totalPairsEl.textContent = userStats.totalPairs.toString();
+  if (avgAccuracyEl) avgAccuracyEl.textContent = `${userStats.avgAccuracy.toFixed(1)}%`;
+  if (avgSpeedEl) avgSpeedEl.textContent = formatTime(userStats.avgSpeed);
 }
 
 function renderSessionsTable(sessions: SessionData[], notationSessions: any[] = []): void {
@@ -1021,10 +998,11 @@ export function renderHomeDashboard(
   // Render drill quick access
   renderDrillQuickAccess(userStats, isAuthenticated);
   
-  // Render insights and motivation side by side
-  if (populationStats && (isAuthenticated || userStats.totalSessions > 0)) {
-    // Show insights if user has sessions
-    renderValueIndicators(userStats, populationStats);
+  // Keep dynamic insights off the marketing homepage; stats live on /stats
+  const valueIndicatorsContainer = document.getElementById('value-indicators-container');
+  if (valueIndicatorsContainer) {
+    valueIndicatorsContainer.classList.add('hidden');
+    valueIndicatorsContainer.innerHTML = '';
   }
   renderEncouragementSection(userStats, isAuthenticated, populationStats);
 }

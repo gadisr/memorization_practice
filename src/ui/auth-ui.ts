@@ -154,12 +154,14 @@ function updateAuthUI(isAuthenticated: boolean, user: any, elements: {
     
     // Update user information
     if (userEmail) userEmail.textContent = user.email || '';
-    if (userAvatar && user.photoURL) {
-      (userAvatar as HTMLImageElement).src = user.photoURL;
-      (userAvatar as HTMLImageElement).alt = user.displayName || 'User avatar';
-      userAvatar.classList.remove('hidden');
-    } else if (userAvatar) {
-      userAvatar.classList.add('hidden');
+    if (userAvatar) {
+      if (user.photoURL) {
+        (userAvatar as HTMLImageElement).src = user.photoURL;
+        (userAvatar as HTMLImageElement).alt = user.displayName || 'User avatar';
+        userAvatar.classList.remove('hidden');
+      } else {
+        userAvatar.classList.add('hidden');
+      }
     }
   } else {
     // User is logged out - show login button
