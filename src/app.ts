@@ -553,6 +553,13 @@ function setupRoutes(): void {
 
   // Settings route
   router.register('/settings', async () => {
+    await waitForAuthInit();
+    const { isAuthenticated } = getAuthState();
+    if (!isAuthenticated) {
+      const { showAuthModal } = await import('./ui/auth-ui.js');
+      showAuthModal('login');
+      return;
+    }
     showScreen('settings-screen');
   });
 }
