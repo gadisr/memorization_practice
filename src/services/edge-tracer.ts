@@ -483,3 +483,110 @@ export function traceEdgesFromScrambler(scramblerCube: ScramblerCubeState): stri
   const edgeCubeState = tracer.convertFromScramblerCube(scramblerCube);
   return tracer.do_full_trace(edgeCubeState);
 }
+
+export interface TraceStats {
+  cycleCount: number;
+  letterCount: number;
+  isBufferVisited: boolean;
+}
+
+const EDGE_BUFFER_LETTER = 'b';
+
+const edgePairByLetter = buildEdgePairByLetter();
+
+function buildEdgePairByLetter(): ReadonlyMap<string, string> {
+  const pairs = new Map<string, string>();
+  const entries = Object.entries(EDGE_PIECES);
+  for (const [letter, colors] of entries) {
+    const partner = entries.find(
+      ([otherLetter, edgeColors]) =>
+        otherLetter !== letter && edgeColors[0] === colors[1] && edgeColors[1] === colors[0]
+    );
+    if (partner) pairs.set(letter, partner[0]);
+  }
+  return pairs;
+}
+
+function collectTraceLetters(trace: string): string[] {
+  const letters: string[] = [];
+  for (const char of trace.toLowerCase()) {
+    if (char >= 'a' && char <= 'x') letters.push(char);
+  }
+  return letters;
+}
+
+function isEdgeIncluded(letter: string, visited: readonly string[]): boolean {
+  const pair = edgePairByLetter.get(letter);
+  return visited.includes(letter) || (pair !== undefined && visited.includes(pair));
+}
+
+function isBufferLetter(letter: string): boolean {
+  return letter === EDGE_BUFFER_LETTER || edgePairByLetter.get(EDGE_BUFFER_LETTER) === letter;
+}
+
+// A later cycle is written with its break-in letter and closes on that letter or its pair.
+function isClosedCycle(letters: readonly string[], start: number, end: number): boolean {
+  if (end <= start) return false;
+  const startLetter = letters[start];
+  const endLetter = letters[end];
+  const startPair = edgePairByLetter.get(startLetter);
+  if (endLetter !== startLetter && endLetter !== startPair) return false;
+
+  const visited: string[] = [];
+  for (let index = start; index < end; index++) {
+    if (isEdgeIncluded(letters[index], visited)) return false;
+    visited.push(letters[index]);
+  }
+  return isEdgeIncluded(endLetter, visited);
+}
+
+// The first cycle omits the return to the buffer, so its letters stay distinct.
+function isOpenCycle(letters: readonly string[], endExclusive: number): boolean {
+  const visited: string[] = [];
+  for (let index = 0; index < endExclusive; index++) {
+    if (isEdgeIncluded(letters[index], visited)) return false;
+    visited.push(letters[index]);
+  }
+  return true;
+}
+
+function countCycles(letters: readonly string[]): number {
+  const letterCount = letters.length;
+  if (letterCount === 0) return 0;
+
+  const minClosedFrom = new Array<number>(letterCount + 1).fill(-1);
+  minClosedFrom[letterCount] = 0;
+
+  for (let start = letterCount - 1; start >= 0; start--) {
+    for (let end = start + 1; end < letterCount; end++) {
+      if (!isClosedCycle(letters, start, end) || minClosedFrom[end + 1] < 0) continue;
+      const candidate = 1 + minClosedFrom[end + 1];
+      if (minClosedFrom[start] < 0 || candidate < minClosedFrom[start]) {
+        minClosedFrom[start] = candidate;
+      }
+    }
+  }
+
+  let best = minClosedFrom[0];
+  for (let openEnd = 1; openEnd <= letterCount; openEnd++) {
+    if (!isOpenCycle(letters, openEnd)) continue;
+    const rest = openEnd === letterCount ? 0 : minClosedFrom[openEnd];
+    if (rest < 0) continue;
+    const total = 1 + rest;
+    if (best < 0 || total < best) best = total;
+  }
+
+  return best < 0 ? 1 : best;
+}
+
+// Summarize an edge memo. `|` is ignored as a cycle separator; cycle breaks are
+// recovered from the letter sequence (first cycle omits the buffer, later cycles
+// close on their break-in letter or its pair).
+export function traceStats(trace: string): TraceStats {
+  const letters = collectTraceLetters(trace);
+  return {
+    cycleCount: countCycles(letters),
+    letterCount: letters.length,
+    isBufferVisited: letters.some(isBufferLetter),
+  };
+}

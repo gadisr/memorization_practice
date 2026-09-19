@@ -1,4 +1,4 @@
-import { EdgeTracer, traceEdges } from '../services/edge-tracer.js';
+import { EdgeTracer, traceEdges, traceStats } from '../services/edge-tracer.js';
 import { CubeState } from '../models/cube-models.js';
 
 // Simple test runner for edge tracer
@@ -170,7 +170,81 @@ function runEdgeTracerTests() {
     expect(result.trim()).toBe('');
   });
 
-  // Test 12: Colors by letter
+  function expectTraceStats(
+    trace: string,
+    expected: { cycleCount: number; letterCount: number; isBufferVisited: boolean }
+  ) {
+    const stats = traceStats(trace);
+    expect(stats.cycleCount).toBe(expected.cycleCount);
+    expect(stats.letterCount).toBe(expected.letterCount);
+    expect(stats.isBufferVisited).toBe(expected.isBufferVisited);
+  }
+
+  // Test 12: Empty memo
+  test('traceStats returns zeros for an empty trace', () => {
+    expectTraceStats('', { cycleCount: 0, letterCount: 0, isBufferVisited: false });
+    expectTraceStats('   |  ', { cycleCount: 0, letterCount: 0, isBufferVisited: false });
+  });
+
+  // Test 13: Single open cycle, buffer letter omitted
+  test('traceStats counts one cycle when the buffer letter is omitted', () => {
+    expectTraceStats('a c', { cycleCount: 1, letterCount: 2, isBufferVisited: false });
+  });
+
+  // Test 14: Tutorial memo with an explicit cycle break
+  test('traceStats counts letters and cycles in a multi-cycle memo', () => {
+    expectTraceStats('m f j | r k e r', { cycleCount: 2, letterCount: 7, isBufferVisited: true });
+  });
+
+  // Test 15: Buffer letter written into the memo
+  test('traceStats detects a written buffer letter', () => {
+    expectTraceStats('d b', { cycleCount: 1, letterCount: 2, isBufferVisited: true });
+  });
+
+  // Test 16: Closed break-in cycle
+  test('traceStats treats a repeated break-in letter as one cycle', () => {
+    expectTraceStats('c d c', { cycleCount: 1, letterCount: 3, isBufferVisited: false });
+  });
+
+  // Test 17: First cycle plus a later cycle, no pipe separator
+  test('traceStats splits a first cycle from a later closed cycle', () => {
+    expectTraceStats('a c d c', { cycleCount: 2, letterCount: 4, isBufferVisited: false });
+  });
+
+  // Test 18: Stats agree with traces the edge tracer actually emits
+  test('traceStats matches tracer output for solved, swap, and two cycles', () => {
+    const solvedStats = traceStats(tracer.do_full_trace(tracer.createSolvedCubeState()));
+    expect(solvedStats.cycleCount).toBe(0);
+    expect(solvedStats.letterCount).toBe(0);
+    expect(solvedStats.isBufferVisited).toBe(false);
+
+    const swapCube = tracer.createSolvedCubeState();
+    const swappedA = swapCube['a'];
+    swapCube['a'] = swapCube['b'];
+    swapCube['b'] = swappedA;
+    expectTraceStats(tracer.do_full_trace(swapCube), {
+      cycleCount: 1,
+      letterCount: 1,
+      isBufferVisited: false,
+    });
+
+    const multiCube = tracer.createSolvedCubeState();
+    const pieceA = multiCube['a'];
+    const pieceB = multiCube['b'];
+    const pieceC = multiCube['c'];
+    const pieceD = multiCube['d'];
+    multiCube['a'] = pieceB;
+    multiCube['b'] = pieceA;
+    multiCube['c'] = pieceD;
+    multiCube['d'] = pieceC;
+    expectTraceStats(tracer.do_full_trace(multiCube), {
+      cycleCount: 2,
+      letterCount: 4,
+      isBufferVisited: false,
+    });
+  });
+
+  // Test 19: Colors by letter
   test('get_colors_by_letter should return correct colors', () => {
     const solvedCube = tracer.createSolvedCubeState();
     const colors = tracer.get_colors_by_letter('a', solvedCube);
@@ -187,6 +261,7 @@ function runEdgeTracerTests() {
     console.log('🎉 All tests passed!');
   } else {
     console.log('❌ Some tests failed');
+    process.exitCode = 1;
   }
 }
 
